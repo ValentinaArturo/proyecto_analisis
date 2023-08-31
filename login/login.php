@@ -42,9 +42,17 @@ $db = 'mysql:host=' . DB_HOSTNAME . ';dbname=' . DB_NAME;
 $dbhost = new PDO($db, DB_USERNAME, DB_PASSWORD, $options);
 
 $query_validation = "SELECT 
-T1.IdUsuario,T1.IdStatusUsuario, T2.Nombre 
+T1.IdUsuario,T1.IdStatusUsuario, 
+T2.Nombre,
+T1.Apellido, 
+T1.Nombre as NombreUsuario, 
+T1.RequiereCambiarPassword, 
+T1.UltimaFechaCambioPassword,
+T4.PasswordCantidadCaducidadDias
 FROM Nomina.USUARIO AS T1
 LEFT JOIN STATUS_USUARIO AS T2 ON T1.IdStatusUsuario = T2.IdStatusUsuario
+LEFT JOIN SUCURSAL T3 ON T1.IdSucursal = T3.IdSucursal
+LEFT JOIN EMPRESA T4 ON T3.IdEmpresa = T4.IdEmpresa
 WHERE CorreoElectronico =:email AND Password =:password ";
 $stmt_validation = $dbhost->prepare($query_validation);
 $stmt_validation->bindParam(':email', $email);
@@ -73,7 +81,7 @@ if ($stmt_validation->rowCount() == 0 ){
 
     if ($stmt_username->rowCount() == 0 ){
         echo json_encode(array(
-            "status" => 400,
+            "status" => 401,
             "msg" => "Credenciales Invalidas"
         ));
     }else{
@@ -88,8 +96,8 @@ if ($stmt_validation->rowCount() == 0 ){
                    $stmt_block->execute();
 
                    echo json_encode(array(
-                        "status" => 400,
-                        "msg" => "Credenciales Invalidas ACTUALIZO BLOQUEADO"
+                        "status" => 401,
+                        "msg" => "Credenciales Invalidas"
                     ));
                     die();
 
@@ -104,10 +112,8 @@ if ($stmt_validation->rowCount() == 0 ){
                     $stmt_intento->execute();
 
                     echo json_encode(array(
-                        "status" => 400,
-                        "msg" => "Credenciales Invalidas SUMO UNO",
-                        "new" => $IntentosDeAcceso,
-                        "idUser"=> $IdUsuario
+                        "status" => 401,
+                        "msg" => "Credenciales Invalidas"
                     ));
                     die();
                 }
@@ -115,7 +121,7 @@ if ($stmt_validation->rowCount() == 0 ){
                 break;
             default:
                 echo json_encode(array(
-                    "status" => 400,
+                    "status" => 401,
                     "msg" => $message_error
                 ));
                 die();
@@ -128,9 +134,15 @@ if ($stmt_validation->rowCount() == 0 ){
     $idUsuario = $row['IdUsuario'];
     $IdStatusUsuario = $row['IdStatusUsuario'];
     $message_error = $row['Nombre'];
-  
+    $RequiereCambiarPassword = $row['RequiereCambiarPassword'];
+    $UltimaFechaCambioPassword = $row['UltimaFechaCambioPassword'];
+    $fecha_formateada = new DateTime($UltimaFechaCambioPassword);
+    $fechaActual = new DateTime();
+    $PasswordCantidadCaducidadDias = (int) $row['PasswordCantidadCaducidadDias'];
+
     switch ($IdStatusUsuario) {
         case '1':
+
             $token = Token::SignIn(['id'=>$idUsuario],KEY,60*8);
 
             $query_login = "UPDATE USUARIO SET IntentosDeAcceso = 0, JWT =:token
@@ -140,17 +152,45 @@ if ($stmt_validation->rowCount() == 0 ){
             $stmt_login->bindParam(':token', $token);
             $stmt_login->execute();
 
-            echo json_encode(array(
-                "status" => 200,
-                "msg" => "Bienvenido",
-                "token"=>$token,
-                "idUsuario"=>$idUsuario
-            ));
-            die();
+            if($RequiereCambiarPassword == '1'){
+
+                $intervalo = $fechaActual->diff($fecha_formateada);
+                $diferenciaEnDias = $intervalo->days;
+
+                if ($diferenciaEnDias >= $PasswordCantidadCaducidadDias) {
+                    echo json_encode(array(
+                        "status" => 33,
+                        "msg" => "Cambia tu contraseña por favor",
+                        "token"=> $token,
+                        "data"=>$row
+                    ));
+                    die();
+                } else {
+                    echo json_encode(array(
+                        "status" => 200,
+                        "msg" => "Bienvenido",
+                        "token"=> $token,
+                        "data"=>$row
+                    ));
+                    die();
+                }
+            }else{
+                echo json_encode(array(
+                    "status" => 200,
+                    "msg" => "Bienvenido",
+                    "token"=>$token,
+                    "data"=>$row
+                ));
+                die();
+            }
+
             break;
+
+
+        
         default:
             echo json_encode(array(
-                "status" => 400,
+                "status" => 401,
                 "msg" => $message_error
             ));
             die();
