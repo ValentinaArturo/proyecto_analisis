@@ -26,7 +26,7 @@ $email = $data->email;
 $password = $data->password;
 
 require '../auth/Token.php';
-require '../auth/config.php';
+require '../db/config.php';
 
 //Secret Key
 const KEY = 'analisisDeSistemas1234#';
