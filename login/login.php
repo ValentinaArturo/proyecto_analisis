@@ -41,7 +41,11 @@ $options = array(
 $db = 'mysql:host=' . DB_HOSTNAME . ';dbname=' . DB_NAME;
 $dbhost = new PDO($db, DB_USERNAME, DB_PASSWORD, $options);
 
-$query_validation = "SELECT idUsuario FROM Nomina.USUARIO WHERE CorreoElectronico =:email AND Password =:password ";
+$query_validation = "SELECT 
+T1.IdUsuario,T1.IdStatusUsuario, T2.Nombre 
+FROM Nomina.USUARIO AS T1
+LEFT JOIN STATUS_USUARIO AS T2 ON T1.IdStatusUsuario = T2.IdStatusUsuario
+WHERE CorreoElectronico =:email AND Password =:password ";
 $stmt_validation = $dbhost->prepare($query_validation);
 $stmt_validation->bindParam(':email', $email);
 $stmt_validation->bindParam(':password', $password);
@@ -49,26 +53,111 @@ $stmt_validation->execute();
 
 
 if ($stmt_validation->rowCount() == 0 ){
-    echo json_encode(array(
-        "status" => 400,
-        "msg" => "Credenciales Invalidas"
-    ));
+
+    $query_username = "SELECT T1.IdUsuario,T1.IntentosDeAcceso, T3.PasswordIntentosAntesDeBloquear, T1.IdStatusUsuario, T4.Nombre 
+    FROM USUARIO T1
+    LEFT JOIN SUCURSAL T2 ON T1.IdSucursal = T2.IdSucursal
+    LEFT JOIN EMPRESA T3 ON T2.IdEmpresa = T3.IdEmpresa
+    LEFT JOIN STATUS_USUARIO T4 ON T1.IdStatusUsuario = T4.IdStatusUsuario
+    WHERE T1.CorreoElectronico =:email";
+    $stmt_username = $dbhost->prepare($query_username);
+    $stmt_username->bindParam(':email', $email);
+    $stmt_username->execute();
+
+    $row = $stmt_username->fetch(PDO::FETCH_ASSOC);
+    $IntentosDeAcceso = (int)$row['IntentosDeAcceso'];
+    $PasswordIntentosAntesDeBloquear = (int)$row['PasswordIntentosAntesDeBloquear'];
+    $IdStatusUsuario = $row['IdStatusUsuario'];
+    $IdUsuario = $row['IdUsuario'];
+    $message_error = $row['Nombre'];
+
+    if ($stmt_username->rowCount() == 0 ){
+        echo json_encode(array(
+            "status" => 400,
+            "msg" => "Credenciales Invalidas"
+        ));
+    }else{
+        switch ($IdStatusUsuario) {
+            case '1':
+
+                if($IntentosDeAcceso >= $PasswordIntentosAntesDeBloquear){
+                    
+                   $query_block = "UPDATE USUARIO SET IdStatusUsuario = 2 WHERE idUsuario =:idUser";
+                   $stmt_block = $dbhost->prepare($query_block);
+                   $stmt_block->bindParam(':idUser', $IdUsuario);
+                   $stmt_block->execute();
+
+                   echo json_encode(array(
+                        "status" => 400,
+                        "msg" => "Credenciales Invalidas ACTUALIZO BLOQUEADO"
+                    ));
+                    die();
+
+                }else{
+                    $newIntento = $IntentosDeAcceso + 1;
+                    
+                    $query_intento = "UPDATE USUARIO SET IntentosDeAcceso =:newIntento
+                     WHERE idUsuario =:idUser";
+                    $stmt_intento = $dbhost->prepare($query_intento);
+                    $stmt_intento->bindParam(':newIntento', $newIntento,PDO::PARAM_INT);
+                    $stmt_intento->bindParam(':idUser', $IdUsuario);
+                    $stmt_intento->execute();
+
+                    echo json_encode(array(
+                        "status" => 400,
+                        "msg" => "Credenciales Invalidas SUMO UNO",
+                        "new" => $IntentosDeAcceso,
+                        "idUser"=> $IdUsuario
+                    ));
+                    die();
+                }
+                
+                break;
+            default:
+                echo json_encode(array(
+                    "status" => 400,
+                    "msg" => $message_error
+                ));
+                die();
+                break;
+        }
+    }
 }else{
 
     $row = $stmt_validation->fetch(PDO::FETCH_ASSOC);
-    $idUsuario = $row['idUsuario'];
-    $token = Token::SignIn(['id'=>$idUsuario],KEY,60*8);
+    $idUsuario = $row['IdUsuario'];
+    $IdStatusUsuario = $row['IdStatusUsuario'];
+    $message_error = $row['Nombre'];
+  
+    switch ($IdStatusUsuario) {
+        case '1':
+            $token = Token::SignIn(['id'=>$idUsuario],KEY,60*8);
 
-    echo json_encode(array(
-        "status" => 200,
-        "msg" => "Bienvenido",
-        "token"=>$token,
-        "idUsuario"=> $idUsuario
-    ));
+            $query_login = "UPDATE USUARIO SET IntentosDeAcceso = 0, JWT =:token
+            WHERE idUsuario =:idUser";
+            $stmt_login = $dbhost->prepare($query_login);
+            $stmt_login->bindParam(':idUser', $idUsuario);
+            $stmt_login->bindParam(':token', $token);
+            $stmt_login->execute();
 
+            echo json_encode(array(
+                "status" => 200,
+                "msg" => "Bienvenido",
+                "token"=>$token,
+                "idUsuario"=>$idUsuario
+            ));
+            die();
+            break;
+        default:
+            echo json_encode(array(
+                "status" => 400,
+                "msg" => $message_error
+            ));
+            die();
+            break;
+    }
 }
 
-$token = Token::SignIn(['id'=>'luisca'],KEY,3);
 
 
 ?>
