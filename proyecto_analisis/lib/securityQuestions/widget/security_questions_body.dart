@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:proyecto_analisis/common/textField/input.dart';
+import 'package:proyecto_analisis/routes/landing_routes_constants.dart';
 
 class SecurityQuestionsBody extends StatefulWidget {
   const SecurityQuestionsBody({super.key});
@@ -79,7 +80,10 @@ class _SecurityQuestionsBodyState extends State<SecurityQuestionsBody> {
                                 child: IconButton(
                                     color: Colors.white,
                                     onPressed: () {
-                                      //login();
+                                      Navigator.pushNamed(
+                                        context,
+                                        dashboardRoute,
+                                      );
                                     },
                                     icon: const Icon(
                                       Icons.arrow_forward,

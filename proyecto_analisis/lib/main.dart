@@ -1,5 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:proyecto_analisis/resources/constants.dart';
 import 'package:proyecto_analisis/routes/landing_routes.dart';
 import 'package:proyecto_analisis/routes/landing_routes_constants.dart';
 
@@ -17,7 +19,12 @@ class MyApp extends StatelessWidget {
       scrollBehavior: MyCustomScrollBehavior(),
       title: 'Proyecto final',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(),
+      theme: ThemeData(
+        scaffoldBackgroundColor: bgColor,
+        textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
+            .apply(bodyColor: Colors.black),
+        canvasColor: secondaryColor,
+      ),
       initialRoute: loginRoute,
       onGenerateRoute: LandingRoutes.generateRouteLanding,
       builder: (context, child) => HomePage(key: key, child: child),

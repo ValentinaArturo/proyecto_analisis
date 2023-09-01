@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:proyecto_analisis/accessDenied/acess_denied_screen.dart';
+import 'package:proyecto_analisis/dashboard/dashboard_screen.dart';
 import 'package:proyecto_analisis/forgotPassword/forgot_password_screen.dart';
 import 'package:proyecto_analisis/login/login_screen.dart';
 import 'package:proyecto_analisis/routes/generator_route.dart';
@@ -38,6 +39,11 @@ class LandingRoutes {
       case securityQuestionsRoute:
         return GeneratePageRoute(
           widget: const SecurityQuestionsScreen(),
+          routeName: settings.name!,
+        );
+      case dashboardRoute:
+        return GeneratePageRoute(
+          widget: DashboardScreen(),
           routeName: settings.name!,
         );
       default:
