@@ -125,10 +125,11 @@ class _LoginBodyState extends State<LoginBody> {
                               child: IconButton(
                                   color: Colors.white,
                                   onPressed: () {
-                                    // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context){
-                                    //   return home();
-                                    // },),);
-                                    login();
+                                    Navigator.pushNamed(
+                                      context,
+                                      accessDeniedRoute,
+                                    );
+                                    //login();
                                   },
                                   icon: const Icon(
                                     Icons.arrow_forward,
@@ -150,7 +151,7 @@ class _LoginBodyState extends State<LoginBody> {
                                 );
                               },
                               style: const ButtonStyle(),
-                              child:   const Text(
+                              child: const Text(
                                 'Sign Up',
                                 textAlign: TextAlign.left,
                                 style: TextStyle(

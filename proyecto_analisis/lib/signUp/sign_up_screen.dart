@@ -15,7 +15,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
-            image: AssetImage('assets/register.png'), fit: BoxFit.fill),
+          image: AssetImage('assets/register.png'),
+          fit: BoxFit.fill,
+        ),
       ),
       child: ScreenTypeLayout.builder(
         desktop: (context) => const SignUpBody(),
