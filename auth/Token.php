@@ -32,17 +32,47 @@ class Token{
             return false;
         }
 
+        $payload = json_decode(base64_decode($token_parts[1]), true);
+
+
         $signature = base64_encode(hash_hmac('SHA256',$token_parts[0].$token_parts[1],$key));
-        if($signature != $token_parts[2]){
+
+        $idUsuario = $payload["id"];
+        
+        $options = array(
+            PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
+        );
+        
+        $db = 'mysql:host=' . DB_HOSTNAME . ';dbname=' . DB_NAME;
+        $dbhost = new PDO($db, DB_USERNAME, DB_PASSWORD, $options);
+
+        $query_validation = "SELECT JWT FROM USUARIO WHERE IdUsuario=:IdUsuario";
+        $stmt_validation = $dbhost->prepare($query_validation);
+        $stmt_validation->bindParam(':IdUsuario',$idUsuario);
+        $stmt_validation->execute();
+
+        $row = $stmt_validation->fetch(PDO::FETCH_ASSOC);
+        $TokenUsuarioDB = $row['JWT'];
+
+        if($TokenUsuarioDB == null){
             echo json_encode(array(
                 "status" => 401,
-                "msg" => "Token Invalido"
+                "msg" => "Token Incorrecto"
             ));
-            return false;
+            die();
+        }
+
+        if($token == $TokenUsuarioDB){
+            return true;
+        }else{
+            echo json_encode(array(
+                "status" => 401,
+                "tokenDB" => "Token Incorrecto"
+            ));
+            die();
         }
 
         $headers = json_decode(base64_decode($token_parts[0]), true);
-        $payload = json_decode(base64_decode($token_parts[1]), true);
 
         if(isset($headers['expire']) && $headers['expire'] < time()){
             echo json_encode(array(
