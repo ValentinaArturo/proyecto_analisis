@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:proyecto_analisis/common/textField/input.dart';
+import 'package:proyecto_analisis/common/validation/validate_email.dart';
+import 'package:proyecto_analisis/common/validation/validate_password.dart';
 import 'package:proyecto_analisis/routes/landing_routes_constants.dart';
 
 class LoginBody extends StatefulWidget {
@@ -13,6 +16,7 @@ class _LoginBodyState extends State<LoginBody> {
   bool isChecked = false;
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   late Box box1;
 
@@ -51,7 +55,7 @@ class _LoginBodyState extends State<LoginBody> {
           Container(
             padding: const EdgeInsets.only(left: 35, top: 100),
             child: const Text(
-              'Welcome',
+              'Bienvenido',
               style: TextStyle(color: Colors.white, fontSize: 43),
             ),
           ),
@@ -59,123 +63,124 @@ class _LoginBodyState extends State<LoginBody> {
             child: Container(
               padding: EdgeInsets.only(
                   top: MediaQuery.of(context).size.height * 0.5),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(left: 35, right: 35),
-                    child: Column(
-                      children: [
-                        TextField(
-                          controller: email,
-                          style: const TextStyle(color: Colors.black),
-                          decoration: InputDecoration(
-                              fillColor: Colors.grey.shade100,
-                              filled: true,
-                              hintText: "Email",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              )),
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        TextField(
-                          controller: password,
-                          style: const TextStyle(),
-                          obscureText: true,
-                          decoration: InputDecoration(
-                              fillColor: Colors.grey.shade100,
-                              filled: true,
-                              hintText: "Password",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              )),
-                        ),
-                        const SizedBox(
-                          height: 40,
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Text(
-                              "Remember Me",
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            Checkbox(
-                              value: isChecked,
-                              onChanged: (value) {
-                                isChecked = !isChecked;
-                                setState(() {});
-                              },
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Sign in',
-                              style: TextStyle(
-                                  fontSize: 27, fontWeight: FontWeight.w700),
-                            ),
-                            CircleAvatar(
-                              radius: 30,
-                              backgroundColor: const Color(0xff4c505b),
-                              child: IconButton(
-                                  color: Colors.white,
-                                  onPressed: () {
-                                    Navigator.pushNamed(
-                                      context,
-                                      accessDeniedRoute,
-                                    );
-                                    //login();
-                                  },
-                                  icon: const Icon(
-                                    Icons.arrow_forward,
-                                  )),
-                            )
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 40,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  signUpRoute,
-                                );
-                              },
-                              style: const ButtonStyle(),
-                              child: const Text(
-                                'Sign Up',
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                    decoration: TextDecoration.underline,
-                                    color: Color(0xff4c505b),
-                                    fontSize: 18),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(left: 235, right: 235),
+                      child: Column(
+                        children: [
+                          CustomInput(
+                            controller: email,
+                            validator: (text){
+                              validateEmail(
+                                text!,
+                                context,
+                              );
+                            },
+                            label: "Correo",
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          CustomInput(
+                            validator: (text){
+                              validatePassword(
+                                text!,
+                                context,
+                              );
+                            },
+                            controller: password,
+                            label: "Contraseña",
+                            obscureText: true,
+                          ),
+                          const SizedBox(
+                            height: 40,
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "Recuerdame",
+                                style: TextStyle(color: Colors.black),
                               ),
-                            ),
-                            TextButton(
-                                onPressed: () {},
+                              Checkbox(
+                                value: isChecked,
+                                onChanged: (value) {
+                                  isChecked = !isChecked;
+                                  setState(() {});
+                                },
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Iniciar Sesion',
+                                style: TextStyle(
+                                    fontSize: 27, fontWeight: FontWeight.w700),
+                              ),
+                              CircleAvatar(
+                                radius: 30,
+                                backgroundColor: const Color(0xff4c505b),
+                                child: IconButton(
+                                    color: Colors.white,
+                                    onPressed: () {
+                                      Navigator.pushNamed(
+                                        context,
+                                        accessDeniedRoute,
+                                      );
+                                      //login();
+                                    },
+                                    icon: const Icon(
+                                      Icons.arrow_forward,
+                                    )),
+                              )
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 40,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    signUpRoute,
+                                  );
+                                },
+                                style: const ButtonStyle(),
                                 child: const Text(
-                                  'Forgot Password',
+                                  'Sign Up',
+                                  textAlign: TextAlign.left,
                                   style: TextStyle(
-                                    decoration: TextDecoration.underline,
-                                    color: Color(0xff4c505b),
-                                    fontSize: 18,
-                                  ),
-                                )),
-                          ],
-                        )
-                      ],
-                    ),
-                  )
-                ],
+                                      decoration: TextDecoration.underline,
+                                      color: Color(0xff4c505b),
+                                      fontSize: 18),
+                                ),
+                              ),
+                              TextButton(
+                                  onPressed: () {},
+                                  child: const Text(
+                                    'Forgot Password',
+                                    style: TextStyle(
+                                      decoration: TextDecoration.underline,
+                                      color: Color(0xff4c505b),
+                                      fontSize: 18,
+                                    ),
+                                  )),
+                            ],
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),

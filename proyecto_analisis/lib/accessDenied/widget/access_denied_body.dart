@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_analisis/routes/landing_routes_constants.dart';
 
 class AccessDeniedBody extends StatefulWidget {
   const AccessDeniedBody({super.key});
@@ -82,7 +83,12 @@ class _AccessDeniedBodyState extends State<AccessDeniedBody> {
                               backgroundColor: const Color(0xff4c505b),
                               child: IconButton(
                                   color: Colors.white,
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      forgotPasswordRoute,
+                                    );
+                                  },
                                   icon: const Icon(
                                     Icons.arrow_forward,
                                   )),
