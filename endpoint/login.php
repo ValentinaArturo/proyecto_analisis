@@ -5,7 +5,7 @@ $json = file_get_contents('php://input');
 date_default_timezone_set('America/Guatemala');
 
 
-if ($json === false || trim($json) === "") {
+if ($json == false || trim($json) == "") {
     echo json_encode(array(
         "status" => 400,
         "msg" => "Error en datos recibidos"
@@ -15,7 +15,7 @@ if ($json === false || trim($json) === "") {
 
 $data = json_decode($json);
 
-if (!isset($data->email) || !isset($data->password) || count(get_object_vars($data)) !== 2) {
+if (!isset($data->email) || $data->password == "" || $data->email == "" || !isset($data->password) || count(get_object_vars($data)) !== 2) {
     echo json_encode(array(
         "status" => 400,
         "msg" => "Formato de datos incorrecto"
@@ -73,19 +73,20 @@ if ($stmt_validation->rowCount() == 0 ){
     $stmt_username->bindParam(':email', $email);
     $stmt_username->execute();
 
-    $row = $stmt_username->fetch(PDO::FETCH_ASSOC);
-    $IntentosDeAcceso = (int)$row['IntentosDeAcceso'];
-    $PasswordIntentosAntesDeBloquear = (int)$row['PasswordIntentosAntesDeBloquear'];
-    $IdStatusUsuario = $row['IdStatusUsuario'];
-    $IdUsuario = $row['IdUsuario'];
-    $message_error = $row['Nombre'];
-
     if ($stmt_username->rowCount() == 0 ){
         echo json_encode(array(
             "status" => 401,
             "msg" => "Credenciales Invalidas"
         ));
     }else{
+
+        $row = $stmt_username->fetch(PDO::FETCH_ASSOC);
+        $IntentosDeAcceso = (int)$row['IntentosDeAcceso'];
+        $PasswordIntentosAntesDeBloquear = (int)$row['PasswordIntentosAntesDeBloquear'];
+        $IdStatusUsuario = $row['IdStatusUsuario'];
+        $IdUsuario = $row['IdUsuario'];
+        $message_error = $row['Nombre'];
+
         switch ($IdStatusUsuario) {
             case '1':
 
