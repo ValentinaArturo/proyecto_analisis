@@ -2,6 +2,7 @@
 
 header('Content-Type: application/json');
 $json = file_get_contents('php://input');
+date_default_timezone_set('America/Guatemala');
 
 
 if ($json === false || trim($json) === "") {
@@ -144,12 +145,14 @@ if ($stmt_validation->rowCount() == 0 ){
         case '1':
 
             $token = Token::SignIn(['id'=>$idUsuario],KEY,60*8);
+            $fechaHoraActual = date('Y-m-d H:i:s');
 
-            $query_login = "UPDATE USUARIO SET IntentosDeAcceso = 0, JWT =:token
+            $query_login = "UPDATE USUARIO SET IntentosDeAcceso = 0, JWT =:token, UltimaFechaIngreso=:fecha_ingreso
             WHERE idUsuario =:idUser";
             $stmt_login = $dbhost->prepare($query_login);
             $stmt_login->bindParam(':idUser', $idUsuario);
             $stmt_login->bindParam(':token', $token);
+            $stmt_login->bindParam(':fecha_ingreso', $fechaHoraActual);
             $stmt_login->execute();
 
             if($RequiereCambiarPassword == '1'){
