@@ -50,7 +50,7 @@ T1.Nombre as NombreUsuario,
 T1.RequiereCambiarPassword, 
 T1.UltimaFechaCambioPassword,
 T4.PasswordCantidadCaducidadDias
-FROM Nomina.USUARIO AS T1
+FROM USUARIO AS T1
 LEFT JOIN STATUS_USUARIO AS T2 ON T1.IdStatusUsuario = T2.IdStatusUsuario
 LEFT JOIN SUCURSAL T3 ON T1.IdSucursal = T3.IdSucursal
 LEFT JOIN EMPRESA T4 ON T3.IdEmpresa = T4.IdEmpresa
