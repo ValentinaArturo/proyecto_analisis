@@ -5,6 +5,7 @@ class UserRepository {
   static const String password = 'password';
   static const String name = 'name';
   static const String scheme = 'scheme';
+  static const String token = 'token';
 
   final FlutterSecureStorage storage;
 
@@ -60,5 +61,21 @@ class UserRepository {
       key: scheme,
       value: schemeValue,
     ));
+  }
+
+  Future<String> getToken() async {
+    return (await storage.read(
+          key: token,
+        )) ??
+        emptyString;
+  }
+
+  Future<void> setToken(
+    String tokenValue,
+  ) async {
+    await storage.write(
+      key: token,
+      value: tokenValue,
+    );
   }
 }

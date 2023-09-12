@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:proyecto_analisis/common/bloc/base_state.dart';
+import 'package:proyecto_analisis/common/loader/loader.dart';
 import 'package:proyecto_analisis/common/textField/input.dart';
 import 'package:proyecto_analisis/common/validation/validate_email.dart';
 import 'package:proyecto_analisis/common/validation/validate_password.dart';
+import 'package:proyecto_analisis/login/bloc/login_bloc.dart';
+import 'package:proyecto_analisis/login/bloc/login_event.dart';
+import 'package:proyecto_analisis/login/bloc/login_state.dart';
 import 'package:proyecto_analisis/routes/landing_routes_constants.dart';
 
 class LoginBody extends StatefulWidget {
@@ -19,10 +25,10 @@ class _LoginBodyState extends State<LoginBody> {
   final _formKey = GlobalKey<FormState>();
 
   late Box box1;
+  late LoginBloc bloc;
 
   @override
   void initState() {
-    //
     super.initState();
     createBox();
   }
@@ -46,143 +52,188 @@ class _LoginBodyState extends State<LoginBody> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    bloc = context.read<LoginBloc>();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Stack(
-        children: [
-          Container(),
-          Container(
-            padding: const EdgeInsets.only(left: 35, top: 100),
-            child: const Text(
-              'Bienvenido',
-              style: TextStyle(color: Colors.white, fontSize: 43),
+    return BlocListener<LoginBloc, BaseState>(
+      listener: (context, state) {
+        if (state is LoginSuccess) {
+          login();
+          Navigator.pushNamed(
+            context,
+            accessDeniedRoute,
+          );
+        } else if (state is LoginError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                state.error!,
+              ),
             ),
-          ),
-          SingleChildScrollView(
-            child: Container(
-              padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * 0.5),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 235, right: 235),
+          );
+        }
+      },
+      child: Stack(
+        children: [
+          Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Stack(
+              children: [
+                Container(),
+                Container(
+                  padding: const EdgeInsets.only(left: 35, top: 100),
+                  child: const Text(
+                    'Bienvenido',
+                    style: TextStyle(color: Colors.white, fontSize: 43),
+                  ),
+                ),
+                SingleChildScrollView(
+                  child: Container(
+                    padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.5),
+                    child: Form(
+                      key: _formKey,
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CustomInput(
-                            controller: email,
-                            validator: (text){
-                              validateEmail(
-                                text!,
-                                context,
-                              );
-                            },
-                            label: "Correo",
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          CustomInput(
-                            validator: (text){
-                              validatePassword(
-                                text!,
-                                context,
-                              );
-                            },
-                            controller: password,
-                            label: "Contraseña",
-                            obscureText: true,
-                          ),
-                          const SizedBox(
-                            height: 40,
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const Text(
-                                "Recuerdame",
-                                style: TextStyle(color: Colors.black),
-                              ),
-                              Checkbox(
-                                value: isChecked,
-                                onChanged: (value) {
-                                  isChecked = !isChecked;
-                                  setState(() {});
-                                },
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Iniciar Sesion',
-                                style: TextStyle(
-                                    fontSize: 27, fontWeight: FontWeight.w700),
-                              ),
-                              CircleAvatar(
-                                radius: 30,
-                                backgroundColor: const Color(0xff4c505b),
-                                child: IconButton(
-                                    color: Colors.white,
-                                    onPressed: () {
-                                      Navigator.pushNamed(
-                                        context,
-                                        accessDeniedRoute,
-                                      );
-                                      //login();
-                                    },
-                                    icon: const Icon(
-                                      Icons.arrow_forward,
-                                    )),
-                              )
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 40,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    signUpRoute,
-                                  );
-                                },
-                                style: const ButtonStyle(),
-                                child: const Text(
-                                  'Sign Up',
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      decoration: TextDecoration.underline,
-                                      color: Color(0xff4c505b),
-                                      fontSize: 18),
+                          Container(
+                            margin:
+                                const EdgeInsets.only(left: 235, right: 235),
+                            child: Column(
+                              children: [
+                                CustomInput(
+                                  controller: email,
+                                  validator: (text) {
+                                    validateEmail(
+                                      text,
+                                      context,
+                                    );
+                                  },
+                                  label: "Correo",
                                 ),
-                              ),
-                              TextButton(
-                                  onPressed: () {},
-                                  child: const Text(
-                                    'Forgot Password',
-                                    style: TextStyle(
-                                      decoration: TextDecoration.underline,
-                                      color: Color(0xff4c505b),
-                                      fontSize: 18,
+                                const SizedBox(
+                                  height: 30,
+                                ),
+                                CustomInput(
+                                  validator: (text) {
+                                    validatePassword(
+                                      text,
+                                      context,
+                                    );
+                                  },
+                                  controller: password,
+                                  label: "Contraseña",
+                                  obscureText: true,
+                                ),
+                                const SizedBox(
+                                  height: 40,
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const Text(
+                                      "Recuerdame",
+                                      style: TextStyle(color: Colors.black),
                                     ),
-                                  )),
-                            ],
+                                    Checkbox(
+                                      value: isChecked,
+                                      onChanged: (value) {
+                                        isChecked = !isChecked;
+                                        setState(() {});
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      'Iniciar Sesion',
+                                      style: TextStyle(
+                                          fontSize: 27,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                    CircleAvatar(
+                                      radius: 30,
+                                      backgroundColor: const Color(0xff4c505b),
+                                      child: IconButton(
+                                        color: Colors.white,
+                                        onPressed: () {
+                                          bloc.add(
+                                            LoginWithEmailPassword(
+                                              email: email.text,
+                                              password: password.text,
+                                            ),
+                                          );
+                                        },
+                                        icon: const Icon(
+                                          Icons.arrow_forward,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 40,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          signUpRoute,
+                                        );
+                                      },
+                                      style: const ButtonStyle(),
+                                      child: const Text(
+                                        'Sign Up',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                            decoration:
+                                                TextDecoration.underline,
+                                            color: Color(0xff4c505b),
+                                            fontSize: 18),
+                                      ),
+                                    ),
+                                    TextButton(
+                                        onPressed: () {},
+                                        child: const Text(
+                                          'Forgot Password',
+                                          style: TextStyle(
+                                            decoration:
+                                                TextDecoration.underline,
+                                            color: Color(0xff4c505b),
+                                            fontSize: 18,
+                                          ),
+                                        )),
+                                  ],
+                                )
+                              ],
+                            ),
                           )
                         ],
                       ),
-                    )
-                  ],
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
+          ),
+          BlocBuilder<LoginBloc, BaseState>(
+            builder: (context, state) {
+              if (state is! LoginSuccess) {
+                return const Loader();
+              }
+              return Container();
+            },
           ),
         ],
       ),
