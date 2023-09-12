@@ -12,7 +12,7 @@
 
 define('DB_HOSTNAME','localhost:3306'); // database host name
 define('DB_USERNAME', 'root'); // database user name
-define('DB_PASSWORD', 'Luisca1704.'); // database password
+define('DB_PASSWORD', 'Umg#2023'); // database password
 define('DB_NAME', 'Nomina'); // database name
 
 ?>
