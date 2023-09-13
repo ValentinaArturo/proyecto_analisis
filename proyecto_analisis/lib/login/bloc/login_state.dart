@@ -9,21 +9,11 @@ class LoginInitial extends LoginState {}
 
 class LoginInProgress extends LoginState {}
 
-class DeviceInProgress extends LoginState {}
-
 class LoginSuccess extends LoginState {
   final UserSession userSession;
 
   const LoginSuccess({
     required this.userSession,
-  });
-}
-
-class DeviceIdSuccess extends LoginState {
-  final String deviceId;
-
-  const DeviceIdSuccess({
-    required this.deviceId,
   });
 }
 
@@ -34,9 +24,3 @@ class LoginError extends LoginState {
     this.error,
   );
 }
-
-class BiometricCheckInProgress extends LoginState {}
-
-class FaceIdFound extends LoginState {}
-
-class FingerprintFound extends LoginState {}
