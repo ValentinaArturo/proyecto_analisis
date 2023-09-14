@@ -19,7 +19,7 @@ class LoginBody extends StatefulWidget {
   State<LoginBody> createState() => _LoginBodyState();
 }
 
-class _LoginBodyState extends State<LoginBody> with ErrorHandling{
+class _LoginBodyState extends State<LoginBody> with ErrorHandling {
   bool isChecked = false;
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
@@ -70,13 +70,20 @@ class _LoginBodyState extends State<LoginBody> with ErrorHandling{
             dashboardRoute,
           );
         } else if (state is LoginError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                state.error!,
+          if (state.error == '403') {
+            Navigator.pushNamed(
+              context,
+              accessDeniedRoute,
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  state.error!,
+                ),
               ),
-            ),
-          );
+            );
+          }
         }
       },
       child: Stack(
