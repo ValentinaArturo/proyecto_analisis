@@ -121,6 +121,13 @@ if ($stmt_validation->rowCount() == 0 ){
                 }
                 
                 break;
+
+            case '2':
+                echo json_encode(array(
+                    "status" => 402,
+                    "msg" => $message_error
+                ));
+                die();
             default:
                 echo json_encode(array(
                     "status" => 401,
@@ -164,9 +171,7 @@ if ($stmt_validation->rowCount() == 0 ){
                 if ($diferenciaEnDias >= $PasswordCantidadCaducidadDias) {
                     echo json_encode(array(
                         "status" => 33,
-                        "msg" => "Cambia tu contraseña por favor",
-                        "token"=> $token,
-                        "data"=>$row
+                        "msg" => "Cambia tu contraseña por favor"
                     ));
                     die();
                 } else {
