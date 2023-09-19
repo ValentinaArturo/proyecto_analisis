@@ -54,12 +54,13 @@ if ($token) {
    if (Token::Verify($token, KEY)) {
 
         $query_validation =
-        "SELECT B.IdOpcion, C.Nombre 
+        "SELECT D.Nombre, B.IdOpcion, C.Nombre 
         From usuario_role A
         Inner Join role_opcion B On B.IdRole = A.IdRole
         Inner Join opcion C On C.IdOpcion = B.IdOpcion
+        Inner Join Menu D On D.IdMenu = C.IdMenu
         Where A.IdUsuario = :usr And A.IdRole=:rol
-        Order By OrdenMenu";
+        Order By C.OrdenMenu";
         $stmt_validation = $dbhost->prepare($query_validation);
         $stmt_validation->bindParam(':usr', $usr);
         $stmt_validation->bindParam(':rol', $rol);
