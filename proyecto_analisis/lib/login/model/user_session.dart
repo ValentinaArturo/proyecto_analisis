@@ -1,8 +1,8 @@
 class UserSession {
   final int status;
   final String msg;
-  final String token;
-  final Data data;
+  final String? token;
+  final Data? data;
 
   UserSession({
     required this.status,

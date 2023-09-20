@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
+import 'package:proyecto_analisis/common/bloc/mixin/error_handling.dart';
 import 'package:proyecto_analisis/common/loader/loader.dart';
 import 'package:proyecto_analisis/common/textField/input.dart';
 import 'package:proyecto_analisis/common/validation/validate_email.dart';
@@ -18,7 +19,7 @@ class LoginBody extends StatefulWidget {
   State<LoginBody> createState() => _LoginBodyState();
 }
 
-class _LoginBodyState extends State<LoginBody> {
+class _LoginBodyState extends State<LoginBody> with ErrorHandling {
   bool isChecked = false;
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
@@ -63,20 +64,28 @@ class _LoginBodyState extends State<LoginBody> {
   Widget build(BuildContext context) {
     return BlocListener<LoginBloc, BaseState>(
       listener: (context, state) {
+        verifyServerError(state);
         if (state is LoginSuccess) {
           login();
           Navigator.pushNamed(
             context,
-            accessDeniedRoute,
+            dashboardRoute,
           );
         } else if (state is LoginError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                state.error!,
+          if (state.error == '403') {
+            Navigator.pushNamed(
+              context,
+              accessDeniedRoute,
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  state.error!,
+                ),
               ),
-            ),
-          );
+            );
+          }
         }
       },
       child: Stack(
@@ -244,7 +253,7 @@ class _LoginBodyState extends State<LoginBody> {
           ),
           BlocBuilder<LoginBloc, BaseState>(
             builder: (context, state) {
-              if (state is! LoginSuccess) {
+              if (state is LoginInProgress) {
                 return const Loader();
               }
               return Container();

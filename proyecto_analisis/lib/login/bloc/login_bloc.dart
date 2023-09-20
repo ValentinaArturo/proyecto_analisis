@@ -8,6 +8,7 @@ import 'package:proyecto_analisis/login/bloc/login_state.dart';
 import 'package:proyecto_analisis/login/model/user_session.dart';
 import 'package:proyecto_analisis/login/service/login_service.dart';
 import 'package:proyecto_analisis/repository/user_repository.dart';
+import 'package:proyecto_analisis/resources/constants.dart';
 
 class LoginBloc extends BaseBloc<LoginEvent, BaseState> {
   LoginBloc({
@@ -30,25 +31,40 @@ class LoginBloc extends BaseBloc<LoginEvent, BaseState> {
 
     try {
       final response = await service.loginWithPassword(
-        password: Hash.hash(
-          event.password,
-        ),
+        password: event.password,
+        //TODO: descomentar esto cuando terminen pruebas
+        // Hash.hash(
+        //   event.password,
+        // ),
         email: event.email,
       );
 
-      final userSession = UserSession.fromJson(
-        response.data!,
-      );
+      if (response.data['status'] == 401) {
+        emit(
+          LoginError(
+            response.data['msg'],
+          ),
+        );
+      }else if(response.data['status'] == 403){
+        emit(
+          LoginError(
+            '403',
+          ),
+        );
+      } else {
+        final userSession = UserSession.fromJson(
+          response.data!,
+        );
 
-      await repository.setToken(
-        userSession.token,
-      );
-
-      emit(
-        LoginSuccess(
-          userSession: userSession,
-        ),
-      );
+        await repository.setToken(
+          userSession.token!,
+        );
+        emit(
+          LoginSuccess(
+            userSession: userSession,
+          ),
+        );
+      }
     } on DioError catch (dioError) {
       emit(
         LoginError(

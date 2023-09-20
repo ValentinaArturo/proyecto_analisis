@@ -49,7 +49,7 @@ dependencies:
   hive:
   hive_flutter:
   google_fonts: ^4.0.4
-  flutter_svg: ^2.0.5
+  flutter_svg: ^2.0.0
   fl_chart: ^0.62.0
   provider: ^6.0.5
   conduit_password_hash: ^4.3.7
