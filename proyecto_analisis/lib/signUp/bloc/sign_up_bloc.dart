@@ -39,15 +39,22 @@ class SignUpBloc extends BaseBloc<SignUpEvent, BaseState> {
         phone: event.phone,
       );
 
-      final success = SuccessResponse.fromJson(
-        response.data!,
-      );
-
-      emit(
-        SignUpSuccess(
-          successResponse: success,
-        ),
-      );
+      if (response.data['status'] == 401) {
+        emit(
+          SignUpError(
+            response.data['msg'],
+          ),
+        );
+      } else if (response.data['status'] == 200) {
+        final success = SuccessResponse.fromJson(
+          response.data!,
+        );
+        emit(
+          SignUpSuccess(
+            successResponse: success,
+          ),
+        );
+      }
     } on DioError catch (dioError) {
       emit(
         SignUpError(
