@@ -55,6 +55,21 @@ $options = [
 $db = "mysql:host=" . DB_HOSTNAME . ";dbname=" . DB_NAME;
 $dbhost = new PDO($db, DB_USERNAME, DB_PASSWORD, $options);
 
+
+$query_validate = "SELECT IdUsuario FROM USUARIO WHERE CorreoElectronico=:email";
+$stmt_validate = $dbhost->prepare($query_validate);
+$stmt_validate->bindParam(':email', $email);
+$stmt_validate->execute();
+
+
+if($stmt_validate->rowCount() > 0 ){
+    echo json_encode(array(
+        "status" => 401,
+        "msg" => "Usuario ya registrado"
+    ));
+    die(); 
+}
+
 function generarIdUsuario($nombre, $apellido) {
     $nombre = strtolower(str_replace(' ', '', $nombre));
     $apellido = strtolower(str_replace(' ', '', $apellido));
@@ -105,7 +120,7 @@ $query_insert =
         NULL,
         0,
         NULL,
-        NULL,
+        :fechaActual,
         :email,
         1,
         NULL,
