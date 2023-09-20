@@ -6,3 +6,4 @@ const String accessDeniedRoute = '/accessDenied';
 const String forgotPasswordRoute = '/forgotPassword';
 const String securityQuestionsRoute = '/securityQuestions';
 const String dashboardRoute = '/dashboard';
+const String forgotPasswordExpiredRoute = '/forgotPasswordExpired';

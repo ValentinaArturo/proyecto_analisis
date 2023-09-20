@@ -26,11 +26,13 @@ class _LoginBodyState extends State<LoginBody> {
 
   late Box box1;
   late LoginBloc bloc;
+  late bool _passwordVisible;
 
   @override
   void initState() {
     super.initState();
     createBox();
+    _passwordVisible = false;
   }
 
   void createBox() async {
@@ -128,6 +130,19 @@ class _LoginBodyState extends State<LoginBody> {
                                   controller: password,
                                   label: "Contraseña",
                                   obscureText: true,
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _passwordVisible
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      color: Theme.of(context).primaryColorDark,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _passwordVisible = !_passwordVisible;
+                                      });
+                                    },
+                                  ),
                                 ),
                                 const SizedBox(
                                   height: 40,

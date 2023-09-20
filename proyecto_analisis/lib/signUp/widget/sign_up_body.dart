@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:proyecto_analisis/common/textField/input.dart';
+import 'package:proyecto_analisis/common/validation/validate_email.dart';
 import 'package:proyecto_analisis/routes/landing_routes_constants.dart';
+import 'package:proyecto_analisis/signUp/model/genre_item.dart';
 
 class SignUpBody extends StatefulWidget {
   const SignUpBody({Key? key}) : super(key: key);
@@ -11,8 +15,31 @@ class SignUpBody extends StatefulWidget {
 
 class _SignUpBodyState extends State<SignUpBody> {
   final _formKey = GlobalKey<FormState>();
+  TextEditingController name = TextEditingController();
+  TextEditingController lastName = TextEditingController();
+  TextEditingController birthDate = TextEditingController();
+  TextEditingController phone = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
+  late bool _passwordVisible;
+  int? gender;
+  late GenreItem genreItemFirst;
+  late GenreItem genreItemSecond;
+  List<GenreItem> genres = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _passwordVisible = false;
+    genreItemFirst = GenreItem(
+      name: '',
+      value: 0,
+    );
+    genreItemSecond = GenreItem(
+      name: '',
+      value: 0,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,27 +71,68 @@ class _SignUpBodyState extends State<SignUpBody> {
                       margin: const EdgeInsets.only(left: 235, right: 235),
                       child: Column(
                         children: [
-                          TextFormField(
-                            style: const TextStyle(color: Colors.white),
-                            decoration: InputDecoration(
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: const BorderSide(
-                                  color: Colors.white,
-                                ),
+                          CustomInput(
+                            label: "Nombre",
+                            controller: name,
+                            isSignUp: true,
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          CustomInput(
+                            label: "Apellido",
+                            controller: lastName,
+                            isSignUp: true,
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          CustomInput(
+                            label: "Fecha de nacimiento AAAA-MM-DD",
+                            controller: birthDate,
+                            isSignUp: true,
+                            inputFormatters: [
+                              MaskTextInputFormatter(mask: '####-##-##'),
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          CustomInput(
+                            label: "Telefono",
+                            controller: phone,
+                            isSignUp: true,
+                            inputFormatters: [
+                              MaskTextInputFormatter(
+                                mask: '####-####',
                               ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: const BorderSide(
-                                  color: Colors.black,
-                                ),
-                              ),
-                              hintText: "Nombre",
-                              hintStyle: const TextStyle(color: Colors.white),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                          ),
+                          RadioListTile(
+                            title: Text(
+                              genreItemFirst.name,
                             ),
+                            value: genreItemFirst.value,
+                            groupValue: gender,
+                            onChanged: (value) {
+                              setState(() {
+                                gender = value;
+                              });
+                            },
+                          ),
+                          RadioListTile(
+                            title: Text(
+                              genreItemFirst.name,
+                            ),
+                            value: genreItemFirst.value,
+                            groupValue: gender,
+                            onChanged: (value) {
+                              setState(() {
+                                gender = value;
+                              });
+                            },
                           ),
                           const SizedBox(
                             height: 30,
@@ -73,6 +141,12 @@ class _SignUpBodyState extends State<SignUpBody> {
                             label: "Correo",
                             controller: email,
                             isSignUp: true,
+                            validator: (text) {
+                              validateEmail(
+                                text,
+                                context,
+                              );
+                            },
                           ),
                           const SizedBox(
                             height: 30,
@@ -82,6 +156,19 @@ class _SignUpBodyState extends State<SignUpBody> {
                             label: "Contraseña",
                             controller: password,
                             isSignUp: true,
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _passwordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Theme.of(context).primaryColorDark,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _passwordVisible = !_passwordVisible;
+                                });
+                              },
+                            ),
                           ),
                           const SizedBox(
                             height: 40,
@@ -116,16 +203,20 @@ class _SignUpBodyState extends State<SignUpBody> {
                             children: [
                               TextButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(context, loginRoute);
+                                  Navigator.pushNamed(
+                                    context,
+                                    loginRoute,
+                                  );
                                 },
                                 style: const ButtonStyle(),
                                 child: const Text(
                                   'Iniciar Sesion',
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
-                                      decoration: TextDecoration.underline,
-                                      color: Colors.white,
-                                      fontSize: 18),
+                                    decoration: TextDecoration.underline,
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                  ),
                                 ),
                               ),
                             ],
