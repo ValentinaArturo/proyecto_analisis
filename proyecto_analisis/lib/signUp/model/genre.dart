@@ -1,13 +1,13 @@
-class Genre {
+class GenreItem {
   final String idGenero;
   final String genero;
 
-  Genre({
+  GenreItem({
     required this.idGenero,
     required this.genero,
   });
 
-  factory Genre.fromJson(Map<String, dynamic> json) => Genre(
+  factory GenreItem.fromJson(Map<String, dynamic> json) => GenreItem(
         idGenero: json["IdGenero"],
         genero: json["Genero"],
       );

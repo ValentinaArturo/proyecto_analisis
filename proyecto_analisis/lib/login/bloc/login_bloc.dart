@@ -59,6 +59,9 @@ class LoginBloc extends BaseBloc<LoginEvent, BaseState> {
         await repository.setToken(
           userSession.token!,
         );
+        await repository.setEmail(
+          userSession.data!.nombreUsuario,
+        );
         emit(
           LoginSuccess(
             userSession: userSession,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:proyecto_analisis/accessDenied/acess_denied_screen.dart';
 import 'package:proyecto_analisis/dashboard/dashboard_screen.dart';
 import 'package:proyecto_analisis/forgotPassword/forgot_password_screen.dart';
-import 'package:proyecto_analisis/forgotPasswordExpired/forgot_password_expired_screen.dart';
+import 'package:proyecto_analisis/forgotPasswordUnlock/forgot_password_unlock_screen.dart';
 import 'package:proyecto_analisis/login/login_screen.dart';
 import 'package:proyecto_analisis/routes/generator_route.dart';
 import 'package:proyecto_analisis/routes/landing_routes_constants.dart';
@@ -49,7 +49,7 @@ class LandingRoutes {
         );
       case forgotPasswordExpiredRoute:
         return GeneratePageRoute(
-          widget: const ForgotPasswordExpiredScreen(),
+          widget: const ForgotPasswordUnlockScreen(),
           routeName: settings.name!,
         );
       default:

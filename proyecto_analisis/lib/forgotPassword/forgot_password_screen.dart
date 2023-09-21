@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:proyecto_analisis/forgotPassword/bloc/forgot_password_bloc.dart';
+import 'package:proyecto_analisis/forgotPassword/service/forgot_password_service.dart';
 import 'package:proyecto_analisis/forgotPassword/widget/forgot_password_body.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
@@ -12,16 +15,21 @@ class ForgotPasswordScreen extends StatefulWidget {
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/forgot_password.png'),
-          fit: BoxFit.fill,
-        ),
+    return BlocProvider(
+      create: (context) => ForgotPasswordBloc(
+        service: ForgotPasswordService(),
       ),
-      child: ScreenTypeLayout.builder(
-        desktop: (context) => const ForgotPasswordBody(),
-        mobile: (context) => const ForgotPasswordBody(),
+      child: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/forgot_password.png'),
+            fit: BoxFit.fill,
+          ),
+        ),
+        child: ScreenTypeLayout.builder(
+          desktop: (context) => const ForgotPasswordBody(),
+          mobile: (context) => const ForgotPasswordBody(),
+        ),
       ),
     );
   }

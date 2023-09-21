@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:proyecto_analisis/signUp/model/genre.dart';
 
 class GenreResponse extends Equatable {
-  final List<Genre> genres;
+  final List<GenreItem> genres;
 
   const GenreResponse({
     required this.genres,
@@ -14,7 +14,7 @@ class GenreResponse extends Equatable {
     return GenreResponse(
       genres: List.from(
         (json as List).map(
-          (remittance) => Genre.fromJson(
+          (remittance) => GenreItem.fromJson(
             remittance,
           ),
         ),

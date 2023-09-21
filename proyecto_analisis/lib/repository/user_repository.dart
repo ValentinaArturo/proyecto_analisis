@@ -4,6 +4,7 @@ import 'package:proyecto_analisis/resources/constants.dart';
 class UserRepository {
   static const String password = 'password';
   static const String name = 'name';
+  static const String email = 'email';
   static const String scheme = 'scheme';
   static const String token = 'token';
 
@@ -44,6 +45,22 @@ class UserRepository {
     (await storage.write(
       key: name,
       value: nameValue,
+    ));
+  }
+
+  Future<String> getEmail() async {
+    return (await storage.read(
+      key: email,
+    )) ??
+        emptyString;
+  }
+
+  Future<void> setEmail(
+      final String emailValue,
+      ) async {
+    (await storage.write(
+      key: email,
+      value: emailValue,
     ));
   }
 

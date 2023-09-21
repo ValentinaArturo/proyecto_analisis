@@ -8,8 +8,9 @@ import 'package:proyecto_analisis/common/textField/input.dart';
 import 'package:proyecto_analisis/common/validation/validate_email.dart';
 import 'package:proyecto_analisis/routes/landing_routes_constants.dart';
 import 'package:proyecto_analisis/signUp/bloc/sign_up_bloc.dart';
+import 'package:proyecto_analisis/signUp/bloc/sign_up_event.dart';
 import 'package:proyecto_analisis/signUp/bloc/sign_up_state.dart';
-import 'package:proyecto_analisis/signUp/model/genre_item.dart';
+import 'package:proyecto_analisis/signUp/model/genre.dart';
 
 import '../../common/loader/loader.dart';
 
@@ -28,6 +29,9 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
   TextEditingController phone = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
+  TextEditingController firstQuestion = TextEditingController();
+  TextEditingController secondQuestion = TextEditingController();
+  TextEditingController thirdQuestion = TextEditingController();
   late bool _passwordVisible;
   int? gender;
   late GenreItem genreItemFirst;
@@ -40,13 +44,16 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
     super.initState();
     _passwordVisible = false;
     genreItemFirst = GenreItem(
-      name: '',
-      value: 0,
+      idGenero: '',
+      genero: '',
     );
     genreItemSecond = GenreItem(
-      name: '',
-      value: 0,
+      idGenero: '',
+      genero: '',
     );
+    context.read<SignUpBloc>().add(
+          Genre(),
+        );
   }
 
   @override
@@ -65,6 +72,11 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
             context,
             loginRoute,
           );
+        } else if (state is GenreSuccess) {
+          setState(() {
+            genreItemFirst = state.genreResponse.genres[0];
+            genreItemSecond = state.genreResponse.genres[1];
+          });
         } else if (state is SignUpError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -147,25 +159,25 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
                                 ),
                                 RadioListTile(
                                   title: Text(
-                                    genreItemFirst.name,
+                                    genreItemFirst.genero,
                                   ),
-                                  value: genreItemFirst.value,
+                                  value: genreItemFirst.idGenero,
                                   groupValue: gender,
                                   onChanged: (value) {
                                     setState(() {
-                                      gender = value;
+                                      gender = value as int?;
                                     });
                                   },
                                 ),
                                 RadioListTile(
                                   title: Text(
-                                    genreItemFirst.name,
+                                    genreItemFirst.genero,
                                   ),
-                                  value: genreItemFirst.value,
+                                  value: genreItemFirst.idGenero,
                                   groupValue: gender,
                                   onChanged: (value) {
                                     setState(() {
-                                      gender = value;
+                                      gender = value as int?;
                                     });
                                   },
                                 ),
@@ -204,6 +216,27 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
                                       });
                                     },
                                   ),
+                                ),
+                                const SizedBox(
+                                  height: 40,
+                                ),
+                                CustomInput(
+                                  controller: firstQuestion,
+                                  label: "1. Pregunta de seguridad",
+                                ),
+                                const SizedBox(
+                                  height: 30,
+                                ),
+                                CustomInput(
+                                  controller: secondQuestion,
+                                  label: "2. Pregunta de seguridad",
+                                ),
+                                const SizedBox(
+                                  height: 30,
+                                ),
+                                CustomInput(
+                                  controller: thirdQuestion,
+                                  label: "3. Pregunta de seguridad",
                                 ),
                                 const SizedBox(
                                   height: 40,
