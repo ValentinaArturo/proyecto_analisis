@@ -12,24 +12,26 @@ if ($json == false || trim($json) == "") {
     die();
 }
 
-$data = json_decode($json);
+$data = json_decode($json,true);
 
 if (
-    !isset($data->nombre) ||
-    !isset($data->apellido) ||
-    !isset($data->fechaNacimiento) ||
-    !isset($data->genero) ||
-    !isset($data->email) ||
-    !isset($data->telefono) ||
-    !isset($data->password) ||
-    $data->nombre == "" ||
-    $data->apellido == "" ||
-    $data->fechaNacimiento == "" ||
-    $data->genero == "" ||
-    $data->email == "" ||
-    $data->telefono == "" ||
-    $data->password == "" ||
-    count(get_object_vars($data)) !== 7
+    !isset($data["nombre"]) ||
+    !isset($data["apellido"]) ||
+    !isset($data["fechaNacimiento"]) ||
+    !isset($data["genero"]) ||
+    !isset($data["email"]) ||
+    !isset($data["telefono"]) ||
+    !isset($data["password"]) ||
+    !isset($data["preguntas"]) ||
+    $data["nombre"] == "" ||
+    $data["apellido"] == "" ||
+    $data["fechaNacimiento"] == "" ||
+    $data["genero"] == "" ||
+    $data["email"] == "" ||
+    $data["telefono"] == "" ||
+    $data["password"] == "" ||
+    count($data) !== 8 ||
+    empty($data["preguntas"])
 ) {
     echo json_encode([
         "status" => 400,
@@ -38,13 +40,14 @@ if (
     die();
 }
 
-$nombre = $data->nombre;
-$apellido = $data->apellido;
-$fechaNacimiento = $data->fechaNacimiento;
-$genero = $data->genero;
-$email = $data->email;
-$telefono = $data->telefono;
-$password = $data->password;
+$nombre = $data["nombre"];
+$apellido = $data["apellido"];
+$fechaNacimiento = $data["fechaNacimiento"];
+$genero = $data["genero"];
+$email = $data["email"];
+$telefono = $data["telefono"];
+$password = $data["password"];
+$preguntas = $data["preguntas"];
 
 require "../db/config.php";
 
@@ -146,6 +149,42 @@ $stmt_validation->bindParam(':usuarioCreacion', $usuarioCreacion );
 $stmt_validation->execute();
 
 if($stmt_validation->rowCount() > 0 ){
+
+    $fechaHoraActual = date('Y-m-d H:i:s');
+    $usuarioCreacion = "system";
+
+    for ($i = 0; $i < count($preguntas); $i++) {
+        
+        $orden_pregunta = $i + 1;
+
+        $query_question = "INSERT INTO USUARIO_PREGUNTA(
+            idUsuario,
+            Pregunta,
+            Respuesta,
+            OrdenPregunta,
+            FechaCreacion,
+            UsuarioCreacion,
+            FechaModificacion,
+            UsuarioModificacion)VALUES(
+                :idUsuario,
+                :pregunta,
+                :respuesta,
+                :orden,
+                :fechaActual,
+                :usuarioCreacion,
+                NULL,
+                NULL
+          )";
+        $stmt_question = $dbhost->prepare($query_question);
+        $stmt_question->bindParam(':idUsuario', $idUsuario);
+        $stmt_question->bindParam(':pregunta', $preguntas[$i]["pregunta"]);
+        $stmt_question->bindParam(':respuesta', $preguntas[$i]["respuesta"]);
+        $stmt_question->bindParam(':orden', $orden_pregunta);
+        $stmt_question->bindParam(':fechaActual', $fechaHoraActual);
+        $stmt_question->bindParam(':usuarioCreacion', $usuarioCreacion);
+        $stmt_question->execute();
+
+    }
 
     echo json_encode(array(
         "status" => 200,
