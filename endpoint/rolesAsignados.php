@@ -32,7 +32,7 @@ if ($json == false || trim($json) == "") {
 
 $data = json_decode($json);
 
-if (!isset($data->usr) || $data->rol == "" || $data->usr == "" || !isset($data->rol) || count(get_object_vars($data)) !== 2)  {
+if (!isset($data->usr) || $data->usr == "" || count(get_object_vars($data)) !== 1)  {
     echo json_encode(array(
         "status" => 400,
         "msg" => "Formato de datos incorrecto"
@@ -40,7 +40,6 @@ if (!isset($data->usr) || $data->rol == "" || $data->usr == "" || !isset($data->
     die();
 }
 $usr = $data->usr;
-$rol = $data->rol;
 
 if ($token) {
 
@@ -54,16 +53,12 @@ if ($token) {
    if (Token::Verify($token, KEY)) {
 
         $query_validation =
-        "SELECT D.Nombre, B.IdOpcion, C.Nombre 
+        "SELECT A.IdRole, B.Nombre
         From usuario_role A
-        Inner Join role_opcion B On B.IdRole = A.IdRole
-        Inner Join opcion C On C.IdOpcion = B.IdOpcion
-        Inner Join Menu D On D.IdMenu = C.IdMenu
-        Where A.IdUsuario = :usr And A.IdRole=:rol
-        Order By C.OrdenMenu";
+        Inner Join role B On B.IdRole = A.IdRole
+        Where A.IdUsuario = = :usr";
         $stmt_validation = $dbhost->prepare($query_validation);
         $stmt_validation->bindParam(':usr', $usr);
-        $stmt_validation->bindParam(':rol', $rol);
         $stmt_validation->execute();
         $results = $stmt_validation->fetchAll(PDO::FETCH_ASSOC);
         $json = $results;
@@ -72,7 +67,7 @@ if ($token) {
             echo json_encode(
                 array(
                     "status" => 401,
-                    "msg" => "El rol no tiene opciones parametrizadas"
+                    "msg" => "El usuario no tiene roles asignados"
                 )
             );
         } else {
