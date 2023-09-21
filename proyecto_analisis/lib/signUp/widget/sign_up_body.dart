@@ -241,29 +241,6 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
                                 const SizedBox(
                                   height: 40,
                                 ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      'Sign Up',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 27,
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                                    CircleAvatar(
-                                      radius: 30,
-                                      backgroundColor: const Color(0xff4c505b),
-                                      child: IconButton(
-                                          color: Colors.white,
-                                          onPressed: () {},
-                                          icon: const Icon(
-                                            Icons.arrow_forward,
-                                          )),
-                                    )
-                                  ],
-                                ),
                                 const SizedBox(
                                   height: 40,
                                 ),
@@ -273,14 +250,16 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
                                   children: [
                                     TextButton(
                                       onPressed: () {
-                                        Navigator.pushNamed(
-                                          context,
-                                          loginRoute,
-                                        );
+                                        if (_formKey.currentState!.validate()) {
+                                          Navigator.pushNamed(
+                                            context,
+                                            loginRoute,
+                                          );
+                                        }
                                       },
                                       style: const ButtonStyle(),
                                       child: const Text(
-                                        'Iniciar Sesion',
+                                        'Registrar',
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                           decoration: TextDecoration.underline,

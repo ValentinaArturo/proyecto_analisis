@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyecto_analisis/forgotPassword/bloc/forgot_password_bloc.dart';
 import 'package:proyecto_analisis/forgotPassword/service/forgot_password_service.dart';
 import 'package:proyecto_analisis/forgotPassword/widget/forgot_password_body.dart';
+import 'package:proyecto_analisis/repository/user_repository.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -18,6 +19,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return BlocProvider(
       create: (context) => ForgotPasswordBloc(
         service: ForgotPasswordService(),
+        userRepository: UserRepository(),
       ),
       child: Container(
         decoration: const BoxDecoration(

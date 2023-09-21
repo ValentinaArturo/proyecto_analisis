@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:proyecto_analisis/common/bloc/mixin/error_handling.dart';
+import 'package:proyecto_analisis/common/security/hash.dart';
 import 'package:proyecto_analisis/common/textField/input.dart';
 import 'package:proyecto_analisis/common/validation/validate_email.dart';
 import 'package:proyecto_analisis/common/validation/validate_password.dart';
+import 'package:proyecto_analisis/repository/user_repository.dart';
 import 'package:proyecto_analisis/routes/landing_routes_constants.dart';
 
 class ForgotPasswordUnlockBody extends StatefulWidget {
@@ -107,10 +109,17 @@ class _ForgotPasswordUnlockBodyState extends State<ForgotPasswordUnlockBody>
                                     child: IconButton(
                                       color: Colors.white,
                                       onPressed: () {
-                                        Navigator.pushNamed(
-                                          context,
-                                          securityQuestionsRoute,
-                                        );
+                                        if (_formKey.currentState!.validate()) {
+                                          UserRepository userRepository =
+                                              UserRepository();
+                                          userRepository.setPassword(
+                                            Hash.hash(confirmPassword.text),
+                                          );
+                                          Navigator.pushNamed(
+                                            context,
+                                            securityQuestionsRoute,
+                                          );
+                                        }
                                       },
                                       icon: const Icon(
                                         Icons.arrow_forward,

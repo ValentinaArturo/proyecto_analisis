@@ -5,6 +5,7 @@ import 'package:proyecto_analisis/common/bloc/mixin/error_handling.dart';
 import 'package:proyecto_analisis/common/loader/loader.dart';
 import 'package:proyecto_analisis/common/textField/input.dart';
 import 'package:proyecto_analisis/forgotPasswordUnlock/bloc/forgot_password_unlock_bloc.dart';
+import 'package:proyecto_analisis/forgotPasswordUnlock/bloc/forgot_password_unlock_event.dart';
 import 'package:proyecto_analisis/forgotPasswordUnlock/bloc/forgot_password_unlock_state.dart';
 import 'package:proyecto_analisis/routes/landing_routes_constants.dart';
 
@@ -117,12 +118,18 @@ class _SecurityQuestionsBodyState extends State<SecurityQuestionsBody>
                                       child: IconButton(
                                         color: Colors.white,
                                         onPressed: () {
-                                          // bloc.add(
-                                          //   ForgotPasswordUnlock(
-                                          //     newPassword: newPassword.text,
-                                          //     email: email.text,
-                                          //   ),
-                                          // );
+                                          if (_formKey.currentState!
+                                              .validate()) {}
+                                          bloc.add(
+                                            ForgotPasswordUnlock(
+                                              id1: '',
+                                              id2: '',
+                                              id3: '',
+                                              q1: '',
+                                              q2: '',
+                                              q3: '',
+                                            ),
+                                          );
                                         },
                                         icon: const Icon(
                                           Icons.arrow_forward,

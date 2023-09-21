@@ -4,7 +4,6 @@ import 'package:proyecto_analisis/common/bloc/base_state.dart';
 import 'package:proyecto_analisis/common/bloc/mixin/error_handling.dart';
 import 'package:proyecto_analisis/common/loader/loader.dart';
 import 'package:proyecto_analisis/common/textField/input.dart';
-import 'package:proyecto_analisis/common/validation/validate_email.dart';
 import 'package:proyecto_analisis/common/validation/validate_password.dart';
 import 'package:proyecto_analisis/forgotPassword/bloc/forgot_password_bloc.dart';
 import 'package:proyecto_analisis/forgotPassword/bloc/forgot_password_event.dart';
@@ -83,16 +82,6 @@ class _ForgotPasswordBodyState extends State<ForgotPasswordBody>
                                 const EdgeInsets.only(left: 235, right: 235),
                             child: Column(
                               children: [
-                                CustomInput(
-                                  controller: email,
-                                  validator: (text) {
-                                    validateEmail(
-                                      text,
-                                      context,
-                                    );
-                                  },
-                                  label: "Correo",
-                                ),
                                 const SizedBox(
                                   height: 30,
                                 ),
@@ -156,7 +145,6 @@ class _ForgotPasswordBodyState extends State<ForgotPasswordBody>
                                             ForgotPassword(
                                               newPassword: newPassword.text,
                                               oldPassword: password.text,
-                                              email: email.text,
                                             ),
                                           );
                                         },

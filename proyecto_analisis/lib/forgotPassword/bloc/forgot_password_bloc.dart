@@ -7,15 +7,18 @@ import 'package:proyecto_analisis/common/security/hash.dart';
 import 'package:proyecto_analisis/forgotPassword/bloc/forgot_password_event.dart';
 import 'package:proyecto_analisis/forgotPassword/bloc/forgot_password_state.dart';
 import 'package:proyecto_analisis/forgotPassword/service/forgot_password_service.dart';
+import 'package:proyecto_analisis/repository/user_repository.dart';
 
 class ForgotPasswordBloc extends BaseBloc<ForgotPasswordEvent, BaseState> {
   ForgotPasswordBloc({
     required this.service,
+    required this.userRepository
   }) : super(ForgotPasswordInitial()) {
     on<ForgotPassword>(forgotPassword);
   }
 
   final ForgotPasswordService service;
+  final UserRepository userRepository;
 
   Future<void> forgotPassword(
     ForgotPassword event,
@@ -30,7 +33,7 @@ class ForgotPasswordBloc extends BaseBloc<ForgotPasswordEvent, BaseState> {
         newPassword: Hash.hash(
           event.newPassword,
         ),
-        email: event.email,
+        email: await userRepository.getEmail(),
         oldPassword: Hash.hash(
           event.oldPassword,
         ),

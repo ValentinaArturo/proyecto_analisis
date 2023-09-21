@@ -5,6 +5,8 @@ import 'package:proyecto_analisis/forgotPasswordUnlock/service/forgot_password_u
 import 'package:proyecto_analisis/securityQuestions/widget/security_questions_body.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
+import '../repository/user_repository.dart';
+
 class SecurityQuestionsScreen extends StatefulWidget {
   const SecurityQuestionsScreen({Key? key}) : super(key: key);
 
@@ -19,6 +21,7 @@ class _SecurityQuestionsScreenState extends State<SecurityQuestionsScreen> {
     return BlocProvider(
       create: (context) => ForgotPasswordUnlockBloc(
         service: ForgotPasswordUnlockService(),
+        repository: UserRepository(),
       ),
       child: Container(
         decoration: const BoxDecoration(

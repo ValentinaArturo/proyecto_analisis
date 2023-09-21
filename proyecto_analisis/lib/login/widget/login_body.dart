@@ -10,6 +10,7 @@ import 'package:proyecto_analisis/common/validation/validate_password.dart';
 import 'package:proyecto_analisis/login/bloc/login_bloc.dart';
 import 'package:proyecto_analisis/login/bloc/login_event.dart';
 import 'package:proyecto_analisis/login/bloc/login_state.dart';
+import 'package:proyecto_analisis/repository/user_repository.dart';
 import 'package:proyecto_analisis/routes/landing_routes_constants.dart';
 
 class LoginBody extends StatefulWidget {
@@ -188,12 +189,18 @@ class _LoginBodyState extends State<LoginBody> with ErrorHandling {
                                       child: IconButton(
                                         color: Colors.white,
                                         onPressed: () {
-                                          bloc.add(
-                                            LoginWithEmailPassword(
-                                              email: email.text,
-                                              password: password.text,
-                                            ),
-                                          );
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            UserRepository repository =
+                                                UserRepository();
+                                            repository.setEmail(email.text);
+                                            bloc.add(
+                                              LoginWithEmailPassword(
+                                                email: email.text,
+                                                password: password.text,
+                                              ),
+                                            );
+                                          }
                                         },
                                         icon: const Icon(
                                           Icons.arrow_forward,

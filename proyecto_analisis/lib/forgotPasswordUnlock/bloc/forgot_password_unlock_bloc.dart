@@ -3,20 +3,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyecto_analisis/common/bloc/base_bloc.dart';
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
 import 'package:proyecto_analisis/common/models/success_response.dart';
-import 'package:proyecto_analisis/common/security/hash.dart';
 import 'package:proyecto_analisis/forgotPasswordUnlock/bloc/forgot_password_unlock_event.dart';
 import 'package:proyecto_analisis/forgotPasswordUnlock/bloc/forgot_password_unlock_state.dart';
 import 'package:proyecto_analisis/forgotPasswordUnlock/service/forgot_password_unlock_service.dart';
+import 'package:proyecto_analisis/repository/user_repository.dart';
 
 class ForgotPasswordUnlockBloc
     extends BaseBloc<ForgotPasswordUnlockEvent, BaseState> {
   ForgotPasswordUnlockBloc({
     required this.service,
+    required this.repository,
   }) : super(ForgotPasswordUnlockInitial()) {
     on<ForgotPasswordUnlock>(forgotPasswordUnlock);
   }
 
   final ForgotPasswordUnlockService service;
+  final UserRepository repository;
 
   Future<void> forgotPasswordUnlock(
     ForgotPasswordUnlock event,
@@ -28,10 +30,8 @@ class ForgotPasswordUnlockBloc
 
     try {
       final response = await service.forgotPasswordUnlock(
-        newPassword: Hash.hash(
-          event.newPassword,
-        ),
-        email: event.email,
+        newPassword: await repository.getPassword(),
+        email: await repository.getEmail(),
         id1: event.id1,
         id2: event.id2,
         id3: event.id3,

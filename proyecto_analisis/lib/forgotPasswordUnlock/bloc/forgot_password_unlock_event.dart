@@ -3,8 +3,6 @@ abstract class ForgotPasswordUnlockEvent {
 }
 
 class ForgotPasswordUnlock extends ForgotPasswordUnlockEvent {
-  final String newPassword;
-  final String email;
   final String id1;
   final String id2;
   final String id3;
@@ -13,8 +11,6 @@ class ForgotPasswordUnlock extends ForgotPasswordUnlockEvent {
   final String q3;
 
   const ForgotPasswordUnlock({
-    required this.email,
-    required this.newPassword,
     required this.id1,
     required this.id2,
     required this.id3,
