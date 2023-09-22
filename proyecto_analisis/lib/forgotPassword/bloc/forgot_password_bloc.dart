@@ -33,7 +33,7 @@ class ForgotPasswordBloc extends BaseBloc<ForgotPasswordEvent, BaseState> {
         newPassword: Hash.hash(
           event.newPassword,
         ),
-        email: await userRepository.getEmail(),
+        email: event.email,
         oldPassword: Hash.hash(
           event.oldPassword,
         ),

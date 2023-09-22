@@ -18,11 +18,19 @@ class ForgotPasswordUnlockBody extends StatefulWidget {
 class _ForgotPasswordUnlockBodyState extends State<ForgotPasswordUnlockBody>
     with ErrorHandling {
   TextEditingController confirmPassword = TextEditingController();
-  TextEditingController password = TextEditingController();
   TextEditingController newPassword = TextEditingController();
   TextEditingController email = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+  late bool _passwordVisible1;
+  late bool _passwordVisible2;
+
+  @override
+  void initState() {
+    super.initState();
+    _passwordVisible1 = false;
+    _passwordVisible2 = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,29 +61,42 @@ class _ForgotPasswordUnlockBodyState extends State<ForgotPasswordUnlockBody>
                           margin: const EdgeInsets.only(left: 235, right: 235),
                           child: Column(
                             children: [
-                              CustomInput(
-                                controller: email,
-                                validator: (text) {
-                                  validateEmail(
-                                    text,
-                                    context,
-                                  );
-                                },
-                                label: "Correo",
-                              ),
-                              const SizedBox(
-                                height: 30,
-                              ),
+                              // CustomInput(
+                              //   controller: email,
+                              //   validator: (text) {
+                              //     return validateEmail(
+                              //       text,
+                              //       context,
+                              //     );
+                              //   },
+                              //   label: "Correo",
+                              // ),
+                              // const SizedBox(
+                              //   height: 30,
+                              // ),
                               CustomInput(
                                 controller: newPassword,
                                 validator: (text) {
-                                  validatePassword(
+                                  return validatePassword(
                                     text,
                                     context,
                                   );
                                 },
-                                obscureText: true,
+                                obscureText: !_passwordVisible1,
                                 label: "Nueva contraseña",
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _passwordVisible1
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                    color: Colors.blue,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _passwordVisible1 = !_passwordVisible1;
+                                    });
+                                  },
+                                ),
                               ),
                               const SizedBox(
                                 height: 30,
@@ -83,11 +104,25 @@ class _ForgotPasswordUnlockBodyState extends State<ForgotPasswordUnlockBody>
                               CustomInput(
                                 controller: confirmPassword,
                                 validator: (text) {
-                                  if (confirmPassword.text != password.text) {
+                                  if (confirmPassword.text !=
+                                      newPassword.text) {
                                     return "Las contraseñas no coinciden";
                                   }
                                 },
-                                obscureText: true,
+                                obscureText: !_passwordVisible2,
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _passwordVisible1
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                    color: Colors.blue,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _passwordVisible1 = !_passwordVisible1;
+                                    });
+                                  },
+                                ),
                                 label: "Confirmar contraseña",
                               ),
                               const SizedBox(

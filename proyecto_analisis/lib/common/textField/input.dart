@@ -10,6 +10,7 @@ class CustomInput extends StatelessWidget {
   final bool isSignUp;
   final List<TextInputFormatter>? inputFormatters;
   final Widget? suffixIcon;
+  final bool isRequired;
 
   const CustomInput({
     super.key,
@@ -21,6 +22,7 @@ class CustomInput extends StatelessWidget {
     this.isSignUp = false,
     this.inputFormatters,
     this.suffixIcon,
+    this.isRequired = true,
   });
 
   @override
@@ -30,19 +32,19 @@ class CustomInput extends StatelessWidget {
             controller: controller,
             obscureText: obscureText,
             validator: (text) {
-              if (text == null || text.isEmpty) {
+              if ((text == null || text.isEmpty)&& isRequired) {
                 return 'El campo es requerido';
               }
 
               if (validator != null) {
-                return validator!(text);
+                return validator!(text!);
               }
               return null;
             },
             style: const TextStyle(color: Colors.black),
             inputFormatters: inputFormatters,
             decoration: InputDecoration(
-              suffixIcon: suffixIcon,
+                suffixIcon: suffixIcon,
                 filled: true,
                 label: Text(label),
                 border: OutlineInputBorder(
@@ -53,18 +55,24 @@ class CustomInput extends StatelessWidget {
             controller: controller,
             obscureText: obscureText,
             validator: (text) {
-              if (text == null || text.isEmpty) {
+              if ((text == null || text.isEmpty)&& isRequired) {
                 return 'El campo es requerido';
               }
 
               if (validator != null) {
-                return validator!(text);
+                return validator!(text!);
               }
               return null;
             },
-            style: const TextStyle(color: Colors.white),
+            inputFormatters: inputFormatters,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
             decoration: InputDecoration(
                 suffixIcon: suffixIcon,
+                fillColor: Colors.deepOrange.withOpacity(0.2),
+                filled: true,
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: const BorderSide(
@@ -77,8 +85,11 @@ class CustomInput extends StatelessWidget {
                     color: Colors.black,
                   ),
                 ),
-                hintText: label,
-                hintStyle: const TextStyle(color: Colors.white),
+                label: Text(label,style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),),
+                labelStyle: const TextStyle(color: Colors.white),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                 )),

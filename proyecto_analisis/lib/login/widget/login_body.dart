@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_pw_validator/Resource/Strings.dart';
+import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
 import 'package:proyecto_analisis/common/bloc/mixin/error_handling.dart';
 import 'package:proyecto_analisis/common/loader/loader.dart';
 import 'package:proyecto_analisis/common/textField/input.dart';
 import 'package:proyecto_analisis/common/validation/validate_email.dart';
-import 'package:proyecto_analisis/common/validation/validate_password.dart';
 import 'package:proyecto_analisis/login/bloc/login_bloc.dart';
 import 'package:proyecto_analisis/login/bloc/login_event.dart';
 import 'package:proyecto_analisis/login/bloc/login_state.dart';
+import 'package:proyecto_analisis/login/model/password.dart';
+import 'package:proyecto_analisis/login/model/translate_password.dart';
 import 'package:proyecto_analisis/repository/user_repository.dart';
 import 'package:proyecto_analisis/routes/landing_routes_constants.dart';
+import 'package:supercharged/supercharged.dart';
 
 class LoginBody extends StatefulWidget {
   const LoginBody({Key? key}) : super(key: key);
@@ -29,12 +33,25 @@ class _LoginBodyState extends State<LoginBody> with ErrorHandling {
   late Box box1;
   late LoginBloc bloc;
   late bool _passwordVisible;
+  late Password _password;
+  final GlobalKey<FlutterPwValidatorState> validatorKey =
+      GlobalKey<FlutterPwValidatorState>();
+  late bool passwordValid;
 
   @override
   void initState() {
     super.initState();
     createBox();
     _passwordVisible = false;
+    context.read<LoginBloc>().add(PolicyEm());
+    passwordValid = false;
+    _password = Password(
+      mayus: 0,
+      min: 0,
+      especial: 0,
+      numbers: 0,
+      lenght: 0,
+    );
   }
 
   void createBox() async {
@@ -70,13 +87,18 @@ class _LoginBodyState extends State<LoginBody> with ErrorHandling {
           login();
           Navigator.pushNamed(
             context,
-            dashboardRoute,
+            rolRoute,
           );
         } else if (state is LoginError) {
-          if (state.error == '403') {
+          if (state.error == '402') {
             Navigator.pushNamed(
               context,
               accessDeniedRoute,
+            );
+          } else if (state.error == '403') {
+            Navigator.pushNamed(
+              context,
+              forgotPasswordRoute,
             );
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -87,6 +109,18 @@ class _LoginBodyState extends State<LoginBody> with ErrorHandling {
               ),
             );
           }
+        } else if (state is PolicySuccess) {
+          setState(() {
+            _password = Password(
+              mayus:
+                  state.policyResponse.policies[0].passwordCantidadMayusculas.toInt()!,
+              min: state.policyResponse.policies[0].passwordCantidadMinusculas.toInt()!,
+              especial: state.policyResponse.policies[0]
+                  .passwordCantidadCaracteresEspeciales.toInt()!,
+              numbers: state.policyResponse.policies[0].passwordCantidadNumeros.toInt()!,
+              lenght: state.policyResponse.policies[0].passwordLargo.toInt()!,
+            );
+          });
         }
       },
       child: Stack(
@@ -120,7 +154,7 @@ class _LoginBodyState extends State<LoginBody> with ErrorHandling {
                                 CustomInput(
                                   controller: email,
                                   validator: (text) {
-                                    validateEmail(
+                                    return validateEmail(
                                       text,
                                       context,
                                     );
@@ -131,15 +165,9 @@ class _LoginBodyState extends State<LoginBody> with ErrorHandling {
                                   height: 30,
                                 ),
                                 CustomInput(
-                                  validator: (text) {
-                                    validatePassword(
-                                      text,
-                                      context,
-                                    );
-                                  },
                                   controller: password,
                                   label: "Contraseña",
-                                  obscureText: true,
+                                  obscureText: !_passwordVisible,
                                   suffixIcon: IconButton(
                                     icon: Icon(
                                       _passwordVisible
@@ -150,6 +178,34 @@ class _LoginBodyState extends State<LoginBody> with ErrorHandling {
                                     onPressed: () {
                                       setState(() {
                                         _passwordVisible = !_passwordVisible;
+                                      });
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 40,
+                                ),
+                                Container(
+                                  alignment: Alignment.topLeft,
+                                  child: FlutterPwValidator(
+                                    strings: TranslatePassword(),
+                                    controller: password,
+                                    key: validatorKey,
+                                    minLength: _password.lenght,
+                                    uppercaseCharCount: _password.mayus,
+                                    lowercaseCharCount: _password.min,
+                                    numericCharCount:_password.numbers,
+                                    specialCharCount: _password.especial,
+                                    width: 300,
+                                    height: 150,
+                                    onSuccess: () {
+                                      setState(() {
+                                        passwordValid = true;
+                                      });
+                                    },
+                                    onFail: () {
+                                      setState(() {
+                                        passwordValid = false;
                                       });
                                     },
                                   ),
@@ -190,7 +246,8 @@ class _LoginBodyState extends State<LoginBody> with ErrorHandling {
                                         color: Colors.white,
                                         onPressed: () {
                                           if (_formKey.currentState!
-                                              .validate()) {
+                                                  .validate() &&
+                                              passwordValid) {
                                             UserRepository repository =
                                                 UserRepository();
                                             repository.setEmail(email.text);
@@ -225,7 +282,7 @@ class _LoginBodyState extends State<LoginBody> with ErrorHandling {
                                       },
                                       style: const ButtonStyle(),
                                       child: const Text(
-                                        'Sign Up',
+                                        'Registro',
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                             decoration:
@@ -235,9 +292,14 @@ class _LoginBodyState extends State<LoginBody> with ErrorHandling {
                                       ),
                                     ),
                                     TextButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          Navigator.pushNamed(
+                                            context,
+                                            forgotPasswordExpiredRoute,
+                                          );
+                                        },
                                         child: const Text(
-                                          'Forgot Password',
+                                          'Recuperar contraseña',
                                           style: TextStyle(
                                             decoration:
                                                 TextDecoration.underline,
@@ -246,7 +308,10 @@ class _LoginBodyState extends State<LoginBody> with ErrorHandling {
                                           ),
                                         )),
                                   ],
-                                )
+                                ),
+                                const SizedBox(
+                                  height: 40,
+                                ),
                               ],
                             ),
                           )

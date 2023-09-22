@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
@@ -38,6 +37,9 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
   late GenreItem genreItemSecond;
   List<GenreItem> genres = [];
   late SignUpBloc bloc;
+  late final String firstQuestionSentence;
+  late final String secondQuestionSentence;
+  late final String thirdQuestionSentence;
 
   @override
   void initState() {
@@ -51,6 +53,10 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
       idGenero: '',
       genero: '',
     );
+    gender = 0;
+    firstQuestionSentence = '¿En qué ciudad naciste?';
+    secondQuestionSentence = '¿Cuál es el segundo nombre de tu madre?';
+    thirdQuestionSentence = '¿Cuál fue tu primer trabajo?';
     context.read<SignUpBloc>().add(
           Genre(),
         );
@@ -68,10 +74,22 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
       listener: (context, state) {
         verifyServerError(state);
         if (state is SignUpSuccess) {
-          Navigator.pushNamed(
-            context,
-            loginRoute,
-          );
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text(state.successResponse.msg),
+                  content: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(
+                        context,
+                        loginRoute,
+                      );
+                    },
+                    child: Text('Aceptar'),
+                  ),
+                );
+              });
         } else if (state is GenreSuccess) {
           setState(() {
             genreItemFirst = state.genreResponse.genres[0];
@@ -101,7 +119,11 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
                   padding: const EdgeInsets.only(left: 35, top: 30),
                   child: const Text(
                     'Crear\nCuenta',
-                    style: TextStyle(color: Colors.white, fontSize: 33),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 33,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 SingleChildScrollView(
@@ -135,12 +157,11 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
                                   height: 30,
                                 ),
                                 CustomInput(
-                                  label: "Fecha de nacimiento AAAA-MM-DD",
+                                  label: "Fecha de nacimiento     AAAA-MM-DD",
                                   controller: birthDate,
                                   isSignUp: true,
                                   inputFormatters: [
                                     MaskTextInputFormatter(mask: '####-##-##'),
-                                    FilteringTextInputFormatter.digitsOnly,
                                   ],
                                 ),
                                 const SizedBox(
@@ -154,30 +175,39 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
                                     MaskTextInputFormatter(
                                       mask: '####-####',
                                     ),
-                                    FilteringTextInputFormatter.digitsOnly,
                                   ],
                                 ),
                                 RadioListTile(
                                   title: Text(
                                     genreItemFirst.genero,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                  value: genreItemFirst.idGenero,
+                                  activeColor: Colors.white,
+                                  value: 1,
                                   groupValue: gender,
                                   onChanged: (value) {
                                     setState(() {
-                                      gender = value as int?;
+                                      gender = value;
                                     });
                                   },
+                                  selected: true,
                                 ),
                                 RadioListTile(
                                   title: Text(
-                                    genreItemFirst.genero,
+                                    genreItemSecond.genero,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                  value: genreItemFirst.idGenero,
+                                  selected: false,
+                                  activeColor: Colors.white,
+                                  value: 2,
                                   groupValue: gender,
                                   onChanged: (value) {
                                     setState(() {
-                                      gender = value as int?;
+                                      gender = value;
                                     });
                                   },
                                 ),
@@ -189,7 +219,7 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
                                   controller: email,
                                   isSignUp: true,
                                   validator: (text) {
-                                    validateEmail(
+                                    return validateEmail(
                                       text,
                                       context,
                                     );
@@ -199,7 +229,7 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
                                   height: 30,
                                 ),
                                 CustomInput(
-                                  obscureText: true,
+                                  obscureText: !_passwordVisible,
                                   label: "Contraseña",
                                   controller: password,
                                   isSignUp: true,
@@ -208,7 +238,7 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
                                       _passwordVisible
                                           ? Icons.visibility
                                           : Icons.visibility_off,
-                                      color: Theme.of(context).primaryColorDark,
+                                      color: Colors.white,
                                     ),
                                     onPressed: () {
                                       setState(() {
@@ -222,21 +252,24 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
                                 ),
                                 CustomInput(
                                   controller: firstQuestion,
-                                  label: "1. Pregunta de seguridad",
+                                  label: "1. $firstQuestionSentence",
+                                  isSignUp: true,
                                 ),
                                 const SizedBox(
                                   height: 30,
                                 ),
                                 CustomInput(
                                   controller: secondQuestion,
-                                  label: "2. Pregunta de seguridad",
+                                  label: "2. $secondQuestionSentence",
+                                  isSignUp: true,
                                 ),
                                 const SizedBox(
                                   height: 30,
                                 ),
                                 CustomInput(
                                   controller: thirdQuestion,
-                                  label: "3. Pregunta de seguridad",
+                                  label: "3. $thirdQuestionSentence",
+                                  isSignUp: true,
                                 ),
                                 const SizedBox(
                                   height: 40,
@@ -251,9 +284,28 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
                                     TextButton(
                                       onPressed: () {
                                         if (_formKey.currentState!.validate()) {
-                                          Navigator.pushNamed(
-                                            context,
-                                            loginRoute,
+                                          bloc.add(
+                                            SignUp(
+                                              email: email.text,
+                                              password: password.text,
+                                              name: name.text,
+                                              lastName: lastName.text,
+                                              genre: gender!,
+                                              birthDate: birthDate.text,
+                                              phone: phone.text,
+                                              id1: firstQuestionSentence,
+                                              id2: secondQuestionSentence,
+                                              id3: thirdQuestionSentence,
+                                              q1: firstQuestion.text
+                                                  .toLowerCase()
+                                                  .replaceAll(' ', ''),
+                                              q2: secondQuestion.text
+                                                  .toLowerCase()
+                                                  .replaceAll(' ', ''),
+                                              q3: thirdQuestion.text
+                                                  .toLowerCase()
+                                                  .replaceAll(' ', ''),
+                                            ),
                                           );
                                         }
                                       },
@@ -264,12 +316,15 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
                                         style: TextStyle(
                                           decoration: TextDecoration.underline,
                                           color: Colors.white,
-                                          fontSize: 18,
+                                          fontSize: 24,
                                         ),
                                       ),
                                     ),
                                   ],
-                                )
+                                ),
+                                const SizedBox(
+                                  height: 40,
+                                ),
                               ],
                             ),
                           )

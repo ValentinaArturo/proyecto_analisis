@@ -8,7 +8,7 @@ import 'package:proyecto_analisis/login/bloc/login_state.dart';
 import 'package:proyecto_analisis/login/model/user_session.dart';
 import 'package:proyecto_analisis/login/service/login_service.dart';
 import 'package:proyecto_analisis/repository/user_repository.dart';
-import 'package:proyecto_analisis/resources/constants.dart';
+import 'package:proyecto_analisis/signUp/model/policy_response.dart';
 
 class LoginBloc extends BaseBloc<LoginEvent, BaseState> {
   LoginBloc({
@@ -16,6 +16,7 @@ class LoginBloc extends BaseBloc<LoginEvent, BaseState> {
     required this.repository,
   }) : super(LoginInitial()) {
     on<LoginWithEmailPassword>(loginWithPassword);
+    on<PolicyEm>(policy);
   }
 
   final LoginService service;
@@ -31,11 +32,9 @@ class LoginBloc extends BaseBloc<LoginEvent, BaseState> {
 
     try {
       final response = await service.loginWithPassword(
-        password: event.password,
-        //TODO: descomentar esto cuando terminen pruebas
-        // Hash.hash(
-        //   event.password,
-        // ),
+        password: Hash.hash(
+          event.password,
+        ),
         email: event.email,
       );
 
@@ -45,13 +44,19 @@ class LoginBloc extends BaseBloc<LoginEvent, BaseState> {
             response.data['msg'],
           ),
         );
-      }else if(response.data['status'] == 403){
+      } else if (response.data['status'] == 402) {
+        emit(
+          LoginError(
+            '402',
+          ),
+        );
+      }else if (response.data['status'] == 403) {
         emit(
           LoginError(
             '403',
           ),
         );
-      } else {
+      } else if (response.data['status'] == 200) {
         final userSession = UserSession.fromJson(
           response.data!,
         );
@@ -64,7 +69,42 @@ class LoginBloc extends BaseBloc<LoginEvent, BaseState> {
             userSession: userSession,
           ),
         );
+      }else{
+        emit(
+          LoginError(
+            response.data['msg'],
+          ),
+        );
       }
+    } on DioError catch (dioError) {
+      emit(
+        LoginError(
+          dioError.response!.data['msg'],
+        ),
+      );
+    }
+  }
+
+  Future<void> policy(
+    PolicyEm event,
+    Emitter<BaseState> emit,
+  ) async {
+    emit(
+      LoginInProgress(),
+    );
+
+    try {
+      final response = await service.policy();
+
+      final policyResponse = PolicyResponse.fromJson(
+        response.data!,
+      );
+
+      emit(
+        PolicySuccess(
+          policyResponse,
+        ),
+      );
     } on DioError catch (dioError) {
       emit(
         LoginError(

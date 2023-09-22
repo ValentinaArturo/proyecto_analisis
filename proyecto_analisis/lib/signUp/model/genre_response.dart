@@ -9,13 +9,13 @@ class GenreResponse extends Equatable {
   });
 
   factory GenreResponse.fromJson(
-    Map<String, dynamic> json,
+    List<dynamic> json,
   ) {
     return GenreResponse(
       genres: List.from(
-        (json as List).map(
-          (remittance) => GenreItem.fromJson(
-            remittance,
+        (json).map(
+          (gen) => GenreItem.fromJson(
+            gen,
           ),
         ),
       ),

@@ -23,6 +23,17 @@ class _SecurityQuestionsBodyState extends State<SecurityQuestionsBody>
   TextEditingController thirdQuestion = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   late ForgotPasswordUnlockBloc bloc;
+  late final String firstQuestionSentence;
+  late final String secondQuestionSentence;
+  late final String thirdQuestionSentence;
+
+  @override
+  void initState() {
+    firstQuestionSentence = '¿En qué ciudad naciste?';
+    secondQuestionSentence = '¿Cuál es el segundo nombre de tu madre?';
+    thirdQuestionSentence = '¿Cuál fue tu primer trabajo?';
+    super.initState();
+  }
 
   @override
   void didChangeDependencies() {
@@ -36,11 +47,29 @@ class _SecurityQuestionsBodyState extends State<SecurityQuestionsBody>
       listener: (context, state) {
         verifyServerError(state);
         if (state is ForgotPasswordUnlockSuccess) {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            loginRoute,
-            (route) => false,
-          );
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text(state.successResponse.msg),
+                  content: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        loginRoute,
+                            (route) => false,
+                      );
+                    },
+                    child: Text('Aceptar'),
+                  ),
+                );
+              });
+        } else if (state is QuestionsSuccess) {
+          setState(() {
+            firstQuestionSentence = state.question.data[0].pregunta;
+            secondQuestionSentence = state.question.data[1].pregunta;
+            thirdQuestionSentence = state.question.data[2].pregunta;
+          });
         } else if (state is ForgotPasswordUnlockError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -81,21 +110,21 @@ class _SecurityQuestionsBodyState extends State<SecurityQuestionsBody>
                               children: [
                                 CustomInput(
                                   controller: firstQuestion,
-                                  label: "1. Pregunta de seguridad",
+                                  label: "1. $firstQuestionSentence",
                                 ),
                                 const SizedBox(
                                   height: 30,
                                 ),
                                 CustomInput(
                                   controller: secondQuestion,
-                                  label: "2. Pregunta de seguridad",
+                                  label: "2. $secondQuestionSentence",
                                 ),
                                 const SizedBox(
                                   height: 30,
                                 ),
                                 CustomInput(
                                   controller: thirdQuestion,
-                                  label: "3. Pregunta de seguridad",
+                                  label: "3. $thirdQuestionSentence",
                                 ),
                                 const SizedBox(
                                   height: 40,
@@ -122,12 +151,12 @@ class _SecurityQuestionsBodyState extends State<SecurityQuestionsBody>
                                               .validate()) {}
                                           bloc.add(
                                             ForgotPasswordUnlock(
-                                              id1: '',
-                                              id2: '',
-                                              id3: '',
-                                              q1: '',
-                                              q2: '',
-                                              q3: '',
+                                              id1: '1',
+                                              id2: '2',
+                                              id3: '3',
+                                              q1: firstQuestion.text.toLowerCase().replaceAll(' ', ''),
+                                              q2: secondQuestion.text.toLowerCase().replaceAll(' ', ''),
+                                              q3: thirdQuestion.text.toLowerCase().replaceAll(' ', ''),
                                             ),
                                           );
                                         },

@@ -12,3 +12,5 @@ class LoginWithEmailPassword extends LoginEvent {
     required this.password,
   });
 }
+
+class PolicyEm extends LoginEvent{}

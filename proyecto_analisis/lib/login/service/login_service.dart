@@ -26,4 +26,10 @@ class LoginService {
       },
     );
   }
+
+  Future<Response<dynamic>> policy() async {
+    return client.get(policyPath, queryParameters: {
+      'empresa': 1,
+    });
+  }
 }

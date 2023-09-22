@@ -46,4 +46,15 @@ class ForgotPasswordUnlockService {
       },
     );
   }
+
+  Future<Response<dynamic>> question({
+    required final String email,
+  }) async {
+    return client.post(
+      questionsPath,
+      data: {
+        'email': email,
+      },
+    );
+  }
 }

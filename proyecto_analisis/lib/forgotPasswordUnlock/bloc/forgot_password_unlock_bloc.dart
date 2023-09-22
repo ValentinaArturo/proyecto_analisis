@@ -7,6 +7,7 @@ import 'package:proyecto_analisis/forgotPasswordUnlock/bloc/forgot_password_unlo
 import 'package:proyecto_analisis/forgotPasswordUnlock/bloc/forgot_password_unlock_state.dart';
 import 'package:proyecto_analisis/forgotPasswordUnlock/service/forgot_password_unlock_service.dart';
 import 'package:proyecto_analisis/repository/user_repository.dart';
+import 'package:proyecto_analisis/signUp/model/question.dart';
 
 class ForgotPasswordUnlockBloc
     extends BaseBloc<ForgotPasswordUnlockEvent, BaseState> {
@@ -15,6 +16,7 @@ class ForgotPasswordUnlockBloc
     required this.repository,
   }) : super(ForgotPasswordUnlockInitial()) {
     on<ForgotPasswordUnlock>(forgotPasswordUnlock);
+    on<Question>(question);
   }
 
   final ForgotPasswordUnlockService service;
@@ -56,6 +58,37 @@ class ForgotPasswordUnlockBloc
           ),
         );
       }
+    } on DioError catch (dioError) {
+      emit(
+        ForgotPasswordUnlockError(
+          dioError.response!.data['msg'],
+        ),
+      );
+    }
+  }
+
+  Future<void> question(
+    Question event,
+    Emitter<BaseState> emit,
+  ) async {
+    emit(
+      ForgotPasswordUnlockInProgress(),
+    );
+
+    try {
+      final response = await service.question(
+        email: await repository.getEmail(),
+      );
+
+      final question = QuestionRepsonse.fromJson(
+        response.data!,
+      );
+
+      emit(
+        QuestionsSuccess(
+          question,
+        ),
+      );
     } on DioError catch (dioError) {
       emit(
         ForgotPasswordUnlockError(

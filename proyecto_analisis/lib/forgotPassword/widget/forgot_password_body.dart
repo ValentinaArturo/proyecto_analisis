@@ -4,6 +4,7 @@ import 'package:proyecto_analisis/common/bloc/base_state.dart';
 import 'package:proyecto_analisis/common/bloc/mixin/error_handling.dart';
 import 'package:proyecto_analisis/common/loader/loader.dart';
 import 'package:proyecto_analisis/common/textField/input.dart';
+import 'package:proyecto_analisis/common/validation/validate_email.dart';
 import 'package:proyecto_analisis/common/validation/validate_password.dart';
 import 'package:proyecto_analisis/forgotPassword/bloc/forgot_password_bloc.dart';
 import 'package:proyecto_analisis/forgotPassword/bloc/forgot_password_event.dart';
@@ -26,6 +27,17 @@ class _ForgotPasswordBodyState extends State<ForgotPasswordBody>
 
   late ForgotPasswordBloc bloc;
   final _formKey = GlobalKey<FormState>();
+  late bool _passwordVisible1;
+  late bool _passwordVisible2;
+  late bool _passwordVisible3;
+
+  @override
+  void initState() {
+    super.initState();
+    _passwordVisible1 = false;
+    _passwordVisible2 = false;
+    _passwordVisible3 = false;
+  }
 
   @override
   void didChangeDependencies() {
@@ -39,11 +51,23 @@ class _ForgotPasswordBodyState extends State<ForgotPasswordBody>
       listener: (context, state) {
         verifyServerError(state);
         if (state is ForgotPasswordSuccess) {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            loginRoute,
-            (route) => false,
-          );
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text(state.successResponse.msg),
+                  content: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        loginRoute,
+                        (route) => false,
+                      );
+                    },
+                    child: Text('Aceptar'),
+                  ),
+                );
+              });
         } else if (state is ForgotPasswordError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -86,14 +110,41 @@ class _ForgotPasswordBodyState extends State<ForgotPasswordBody>
                                   height: 30,
                                 ),
                                 CustomInput(
+                                  controller: email,
+                                  validator: (text) {
+                                    return validateEmail(
+                                      text,
+                                      context,
+                                    );
+                                  },
+                                  label: "Correo",
+                                ),
+                                const SizedBox(
+                                  height: 30,
+                                ),
+                                CustomInput(
+                                  obscureText: !_passwordVisible1,
                                   controller: password,
                                   validator: (text) {
-                                    validatePassword(
+                                    return validatePassword(
                                       text,
                                       context,
                                     );
                                   },
                                   label: "Contraseña Actual",
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _passwordVisible1
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      color: Colors.blue,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _passwordVisible1 = !_passwordVisible1;
+                                      });
+                                    },
+                                  ),
                                 ),
                                 const SizedBox(
                                   height: 30,
@@ -101,12 +152,25 @@ class _ForgotPasswordBodyState extends State<ForgotPasswordBody>
                                 CustomInput(
                                   controller: newPassword,
                                   validator: (text) {
-                                    validatePassword(
+                                    return validatePassword(
                                       text,
                                       context,
                                     );
                                   },
-                                  obscureText: true,
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _passwordVisible2
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      color: Colors.blue,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _passwordVisible2 = !_passwordVisible2;
+                                      });
+                                    },
+                                  ),
+                                  obscureText: !_passwordVisible2,
                                   label: "Nueva contraseña",
                                 ),
                                 const SizedBox(
@@ -115,12 +179,26 @@ class _ForgotPasswordBodyState extends State<ForgotPasswordBody>
                                 CustomInput(
                                   controller: confirmPassword,
                                   validator: (text) {
-                                    if (confirmPassword.text != password.text) {
+                                    if (confirmPassword.text !=
+                                        newPassword.text) {
                                       return "Las contraseñas no coinciden";
                                     }
                                   },
-                                  obscureText: true,
+                                  obscureText: !_passwordVisible3,
                                   label: "Confirmar contraseña",
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _passwordVisible3
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      color: Colors.blue,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _passwordVisible3 = !_passwordVisible3;
+                                      });
+                                    },
+                                  ),
                                 ),
                                 const SizedBox(
                                   height: 40,
@@ -141,12 +219,16 @@ class _ForgotPasswordBodyState extends State<ForgotPasswordBody>
                                       child: IconButton(
                                         color: Colors.white,
                                         onPressed: () {
-                                          bloc.add(
-                                            ForgotPassword(
-                                              newPassword: newPassword.text,
-                                              oldPassword: password.text,
-                                            ),
-                                          );
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            bloc.add(
+                                              ForgotPassword(
+                                                newPassword: newPassword.text,
+                                                oldPassword: password.text,
+                                                email: email.text,
+                                              ),
+                                            );
+                                          }
                                         },
                                         icon: const Icon(
                                           Icons.arrow_forward,
@@ -154,6 +236,9 @@ class _ForgotPasswordBodyState extends State<ForgotPasswordBody>
                                       ),
                                     )
                                   ],
+                                ),
+                                const SizedBox(
+                                  height: 30,
                                 ),
                               ],
                             ),

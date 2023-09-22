@@ -19,3 +19,5 @@ class ForgotPasswordUnlock extends ForgotPasswordUnlockEvent {
     required this.q3,
   });
 }
+
+class Question extends ForgotPasswordUnlockEvent {}

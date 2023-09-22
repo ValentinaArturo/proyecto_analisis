@@ -4,6 +4,7 @@ import 'package:proyecto_analisis/dashboard/dashboard_screen.dart';
 import 'package:proyecto_analisis/forgotPassword/forgot_password_screen.dart';
 import 'package:proyecto_analisis/forgotPasswordUnlock/forgot_password_unlock_screen.dart';
 import 'package:proyecto_analisis/login/login_screen.dart';
+import 'package:proyecto_analisis/rol/rol_screen.dart';
 import 'package:proyecto_analisis/routes/generator_route.dart';
 import 'package:proyecto_analisis/routes/landing_routes_constants.dart';
 import 'package:proyecto_analisis/securityQuestions/security_questions_screen.dart';
@@ -50,6 +51,11 @@ class LandingRoutes {
       case forgotPasswordExpiredRoute:
         return GeneratePageRoute(
           widget: const ForgotPasswordUnlockScreen(),
+          routeName: settings.name!,
+        );
+      case rolRoute:
+        return GeneratePageRoute(
+          widget: const RolScreen(),
           routeName: settings.name!,
         );
       default:

@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyecto_analisis/repository/user_repository.dart';
+import 'package:proyecto_analisis/rol/widget/rol_body.dart';
 import 'package:proyecto_analisis/signUp/bloc/sign_up_bloc.dart';
 import 'package:proyecto_analisis/signUp/service/sign_up_service.dart';
-import 'package:proyecto_analisis/signUp/widget/sign_up_body.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+class RolScreen extends StatefulWidget {
+  const RolScreen({Key? key}) : super(key: key);
 
   @override
-  _SignUpScreenState createState() => _SignUpScreenState();
+  _RolScreenState createState() => _RolScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _RolScreenState extends State<RolScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -29,8 +29,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         ),
         child: ScreenTypeLayout.builder(
-          desktop: (context) => const SignUpBody(),
-          mobile: (context) => const SignUpBody(),
+          desktop: (context) => const RolBody(),
+          mobile: (context) => const RolBody(),
         ),
       ),
     );

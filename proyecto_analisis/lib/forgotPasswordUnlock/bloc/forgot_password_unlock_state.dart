@@ -1,5 +1,6 @@
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
 import 'package:proyecto_analisis/common/models/success_response.dart';
+import 'package:proyecto_analisis/signUp/model/question.dart';
 
 abstract class ForgotPasswordUnlockState extends BaseState {
   const ForgotPasswordUnlockState();
@@ -22,5 +23,13 @@ class ForgotPasswordUnlockError extends ForgotPasswordUnlockState {
 
   const ForgotPasswordUnlockError(
     this.error,
+  );
+}
+
+class QuestionsSuccess extends ForgotPasswordUnlockState {
+  final QuestionRepsonse question;
+
+  QuestionsSuccess(
+    this.question,
   );
 }
