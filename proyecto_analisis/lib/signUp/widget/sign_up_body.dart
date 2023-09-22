@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
 import 'package:proyecto_analisis/common/bloc/mixin/error_handling.dart';
 import 'package:proyecto_analisis/common/textField/input.dart';
 import 'package:proyecto_analisis/common/validation/validate_email.dart';
+import 'package:proyecto_analisis/login/model/password.dart';
+import 'package:proyecto_analisis/login/model/translate_password.dart';
+import 'package:proyecto_analisis/repository/user_repository.dart';
 import 'package:proyecto_analisis/routes/landing_routes_constants.dart';
 import 'package:proyecto_analisis/signUp/bloc/sign_up_bloc.dart';
 import 'package:proyecto_analisis/signUp/bloc/sign_up_event.dart';
@@ -40,6 +44,11 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
   late final String firstQuestionSentence;
   late final String secondQuestionSentence;
   late final String thirdQuestionSentence;
+  late Password _password;
+  final GlobalKey<FlutterPwValidatorState> validatorKey =
+      GlobalKey<FlutterPwValidatorState>();
+  late bool passwordValid;
+  late bool passwordPolicy;
 
   @override
   void initState() {
@@ -60,6 +69,16 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
     context.read<SignUpBloc>().add(
           Genre(),
         );
+    passwordValid = false;
+    passwordPolicy = false;
+    _password = Password(
+      mayus: 0,
+      min: 0,
+      especial: 0,
+      numbers: 0,
+      lenght: 0,
+    );
+    _getPasswordPolicy();
   }
 
   @override
@@ -231,6 +250,11 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
                                 CustomInput(
                                   obscureText: !_passwordVisible,
                                   label: "Contraseña",
+                                  onChanged: (text) {
+                                    setState(() {
+                                      passwordPolicy = true;
+                                    });
+                                  },
                                   controller: password,
                                   isSignUp: true,
                                   suffixIcon: IconButton(
@@ -247,6 +271,36 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
                                     },
                                   ),
                                 ),
+                                const SizedBox(
+                                  height: 30,
+                                ),
+                                !passwordPolicy
+                                    ? Container()
+                                    : Container(
+                                        alignment: Alignment.topLeft,
+                                        child: FlutterPwValidator(
+                                          strings: TranslatePassword(),
+                                          controller: password,
+                                          key: validatorKey,
+                                          minLength: _password.lenght,
+                                          uppercaseCharCount: _password.mayus,
+                                          lowercaseCharCount: _password.min,
+                                          numericCharCount: _password.numbers,
+                                          specialCharCount: _password.especial,
+                                          width: 300,
+                                          height: 150,
+                                          onSuccess: () {
+                                            setState(() {
+                                              passwordValid = true;
+                                            });
+                                          },
+                                          onFail: () {
+                                            setState(() {
+                                              passwordValid = false;
+                                            });
+                                          },
+                                        ),
+                                      ),
                                 const SizedBox(
                                   height: 40,
                                 ),
@@ -283,7 +337,8 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
                                   children: [
                                     TextButton(
                                       onPressed: () {
-                                        if (_formKey.currentState!.validate()) {
+                                        if (_formKey.currentState!.validate() &&
+                                            passwordValid) {
                                           bloc.add(
                                             SignUp(
                                               email: email.text,
@@ -347,5 +402,18 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
         ],
       ),
     );
+  }
+
+  _getPasswordPolicy() async {
+    final UserRepository userRepository = UserRepository();
+    final password = await userRepository.getPasswordPolicy();
+    _password = Password(
+      mayus: int.parse(password[0]),
+      min: int.parse(password[1]),
+      especial: int.parse(password[2]),
+      numbers: int.parse(password[3]),
+      lenght: int.parse(password[4]),
+    );
+    setState(() {});
   }
 }

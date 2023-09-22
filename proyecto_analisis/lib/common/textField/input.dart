@@ -11,6 +11,7 @@ class CustomInput extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final Widget? suffixIcon;
   final bool isRequired;
+  final Function(String)? onChanged;
 
   const CustomInput({
     super.key,
@@ -23,6 +24,7 @@ class CustomInput extends StatelessWidget {
     this.inputFormatters,
     this.suffixIcon,
     this.isRequired = true,
+    this.onChanged,
   });
 
   @override
@@ -31,8 +33,9 @@ class CustomInput extends StatelessWidget {
         ? TextFormField(
             controller: controller,
             obscureText: obscureText,
+            onChanged: onChanged,
             validator: (text) {
-              if ((text == null || text.isEmpty)&& isRequired) {
+              if ((text == null || text.isEmpty) && isRequired) {
                 return 'El campo es requerido';
               }
 
@@ -54,8 +57,9 @@ class CustomInput extends StatelessWidget {
         : TextFormField(
             controller: controller,
             obscureText: obscureText,
+            onChanged: onChanged,
             validator: (text) {
-              if ((text == null || text.isEmpty)&& isRequired) {
+              if ((text == null || text.isEmpty) && isRequired) {
                 return 'El campo es requerido';
               }
 
@@ -85,10 +89,13 @@ class CustomInput extends StatelessWidget {
                     color: Colors.black,
                   ),
                 ),
-                label: Text(label,style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),),
+                label: Text(
+                  label,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 labelStyle: const TextStyle(color: Colors.white),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),

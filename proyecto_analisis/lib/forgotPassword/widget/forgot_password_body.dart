@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
 import 'package:proyecto_analisis/common/bloc/mixin/error_handling.dart';
 import 'package:proyecto_analisis/common/loader/loader.dart';
@@ -9,6 +10,9 @@ import 'package:proyecto_analisis/common/validation/validate_password.dart';
 import 'package:proyecto_analisis/forgotPassword/bloc/forgot_password_bloc.dart';
 import 'package:proyecto_analisis/forgotPassword/bloc/forgot_password_event.dart';
 import 'package:proyecto_analisis/forgotPassword/bloc/forgot_password_state.dart';
+import 'package:proyecto_analisis/login/model/password.dart';
+import 'package:proyecto_analisis/login/model/translate_password.dart';
+import 'package:proyecto_analisis/repository/user_repository.dart';
 import 'package:proyecto_analisis/routes/landing_routes_constants.dart';
 
 class ForgotPasswordBody extends StatefulWidget {
@@ -30,6 +34,11 @@ class _ForgotPasswordBodyState extends State<ForgotPasswordBody>
   late bool _passwordVisible1;
   late bool _passwordVisible2;
   late bool _passwordVisible3;
+  late Password _password;
+  final GlobalKey<FlutterPwValidatorState> validatorKey =
+      GlobalKey<FlutterPwValidatorState>();
+  late bool passwordValid;
+  late bool passwordPolicy;
 
   @override
   void initState() {
@@ -37,6 +46,16 @@ class _ForgotPasswordBodyState extends State<ForgotPasswordBody>
     _passwordVisible1 = false;
     _passwordVisible2 = false;
     _passwordVisible3 = false;
+    passwordValid = false;
+    passwordPolicy = false;
+    _password = Password(
+      mayus: 0,
+      min: 0,
+      especial: 0,
+      numbers: 0,
+      lenght: 0,
+    );
+    _getPasswordPolicy();
   }
 
   @override
@@ -157,6 +176,11 @@ class _ForgotPasswordBodyState extends State<ForgotPasswordBody>
                                       context,
                                     );
                                   },
+                                  onChanged: (text) {
+                                    setState(() {
+                                      passwordPolicy = true;
+                                    });
+                                  },
                                   suffixIcon: IconButton(
                                     icon: Icon(
                                       _passwordVisible2
@@ -173,6 +197,36 @@ class _ForgotPasswordBodyState extends State<ForgotPasswordBody>
                                   obscureText: !_passwordVisible2,
                                   label: "Nueva contraseña",
                                 ),
+                                const SizedBox(
+                                  height: 30,
+                                ),
+                                !passwordPolicy
+                                    ? Container()
+                                    : Container(
+                                        alignment: Alignment.topLeft,
+                                        child: FlutterPwValidator(
+                                          strings: TranslatePassword(),
+                                          controller: newPassword,
+                                          key: validatorKey,
+                                          minLength: _password.lenght,
+                                          uppercaseCharCount: _password.mayus,
+                                          lowercaseCharCount: _password.min,
+                                          numericCharCount: _password.numbers,
+                                          specialCharCount: _password.especial,
+                                          width: 300,
+                                          height: 150,
+                                          onSuccess: () {
+                                            setState(() {
+                                              passwordValid = true;
+                                            });
+                                          },
+                                          onFail: () {
+                                            setState(() {
+                                              passwordValid = false;
+                                            });
+                                          },
+                                        ),
+                                      ),
                                 const SizedBox(
                                   height: 30,
                                 ),
@@ -220,7 +274,8 @@ class _ForgotPasswordBodyState extends State<ForgotPasswordBody>
                                         color: Colors.white,
                                         onPressed: () {
                                           if (_formKey.currentState!
-                                              .validate()) {
+                                                  .validate() &&
+                                              passwordValid) {
                                             bloc.add(
                                               ForgotPassword(
                                                 newPassword: newPassword.text,
@@ -262,5 +317,18 @@ class _ForgotPasswordBodyState extends State<ForgotPasswordBody>
         ],
       ),
     );
+  }
+
+  _getPasswordPolicy() async {
+    final UserRepository userRepository = UserRepository();
+    final password = await userRepository.getPasswordPolicy();
+    _password = Password(
+      mayus: int.parse(password[0]),
+      min: int.parse(password[1]),
+      especial: int.parse(password[2]),
+      numbers: int.parse(password[3]),
+      lenght: int.parse(password[4]),
+    );
+    setState(() {});
   }
 }

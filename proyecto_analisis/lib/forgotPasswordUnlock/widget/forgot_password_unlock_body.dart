@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:proyecto_analisis/common/bloc/mixin/error_handling.dart';
 import 'package:proyecto_analisis/common/security/hash.dart';
 import 'package:proyecto_analisis/common/textField/input.dart';
-import 'package:proyecto_analisis/common/validation/validate_email.dart';
 import 'package:proyecto_analisis/common/validation/validate_password.dart';
+import 'package:proyecto_analisis/login/model/password.dart';
+import 'package:proyecto_analisis/login/model/translate_password.dart';
 import 'package:proyecto_analisis/repository/user_repository.dart';
 import 'package:proyecto_analisis/routes/landing_routes_constants.dart';
 
@@ -24,12 +26,27 @@ class _ForgotPasswordUnlockBodyState extends State<ForgotPasswordUnlockBody>
   final _formKey = GlobalKey<FormState>();
   late bool _passwordVisible1;
   late bool _passwordVisible2;
+  late Password _password;
+  final GlobalKey<FlutterPwValidatorState> validatorKey =
+      GlobalKey<FlutterPwValidatorState>();
+  late bool passwordValid;
+  late bool passwordPolicy;
 
   @override
   void initState() {
     super.initState();
     _passwordVisible1 = false;
     _passwordVisible2 = false;
+    passwordValid = false;
+    passwordPolicy = false;
+    _password = Password(
+      mayus: 0,
+      min: 0,
+      especial: 0,
+      numbers: 0,
+      lenght: 0,
+    );
+    _getPasswordPolicy();
   }
 
   @override
@@ -82,6 +99,11 @@ class _ForgotPasswordUnlockBodyState extends State<ForgotPasswordUnlockBody>
                                     context,
                                   );
                                 },
+                                onChanged: (text) {
+                                  setState(() {
+                                    passwordPolicy = true;
+                                  });
+                                },
                                 obscureText: !_passwordVisible1,
                                 label: "Nueva contraseña",
                                 suffixIcon: IconButton(
@@ -98,6 +120,36 @@ class _ForgotPasswordUnlockBodyState extends State<ForgotPasswordUnlockBody>
                                   },
                                 ),
                               ),
+                              const SizedBox(
+                                height: 30,
+                              ),
+                              !passwordPolicy
+                                  ? Container()
+                                  : Container(
+                                      alignment: Alignment.topLeft,
+                                      child: FlutterPwValidator(
+                                        strings: TranslatePassword(),
+                                        controller: newPassword,
+                                        key: validatorKey,
+                                        minLength: _password.lenght,
+                                        uppercaseCharCount: _password.mayus,
+                                        lowercaseCharCount: _password.min,
+                                        numericCharCount: _password.numbers,
+                                        specialCharCount: _password.especial,
+                                        width: 300,
+                                        height: 150,
+                                        onSuccess: () {
+                                          setState(() {
+                                            passwordValid = true;
+                                          });
+                                        },
+                                        onFail: () {
+                                          setState(() {
+                                            passwordValid = false;
+                                          });
+                                        },
+                                      ),
+                                    ),
                               const SizedBox(
                                 height: 30,
                               ),
@@ -144,8 +196,9 @@ class _ForgotPasswordUnlockBodyState extends State<ForgotPasswordUnlockBody>
                                     child: IconButton(
                                       color: Colors.white,
                                       onPressed: () {
-                                        if (_formKey.currentState!.validate()) {
-                                          UserRepository userRepository =
+                                        if (_formKey.currentState!.validate() &&
+                                            passwordValid) {
+                                          final UserRepository userRepository =
                                               UserRepository();
                                           userRepository.setPassword(
                                             Hash.hash(confirmPassword.text),
@@ -176,5 +229,18 @@ class _ForgotPasswordUnlockBodyState extends State<ForgotPasswordUnlockBody>
         ),
       ],
     );
+  }
+
+  _getPasswordPolicy() async {
+    final UserRepository userRepository = UserRepository();
+    final password = await userRepository.getPasswordPolicy();
+    _password = Password(
+      mayus: int.parse(password[0]),
+      min: int.parse(password[1]),
+      especial: int.parse(password[2]),
+      numbers: int.parse(password[3]),
+      lenght: int.parse(password[4]),
+    );
+    setState(() {});
   }
 }

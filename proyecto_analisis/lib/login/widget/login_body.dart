@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_pw_validator/Resource/Strings.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
@@ -37,6 +36,7 @@ class _LoginBodyState extends State<LoginBody> with ErrorHandling {
   final GlobalKey<FlutterPwValidatorState> validatorKey =
       GlobalKey<FlutterPwValidatorState>();
   late bool passwordValid;
+  late bool passwordPolicy;
 
   @override
   void initState() {
@@ -45,6 +45,7 @@ class _LoginBodyState extends State<LoginBody> with ErrorHandling {
     _passwordVisible = false;
     context.read<LoginBloc>().add(PolicyEm());
     passwordValid = false;
+    passwordPolicy = false;
     _password = Password(
       mayus: 0,
       min: 0,
@@ -81,7 +82,7 @@ class _LoginBodyState extends State<LoginBody> with ErrorHandling {
   @override
   Widget build(BuildContext context) {
     return BlocListener<LoginBloc, BaseState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         verifyServerError(state);
         if (state is LoginSuccess) {
           login();
@@ -112,15 +113,26 @@ class _LoginBodyState extends State<LoginBody> with ErrorHandling {
         } else if (state is PolicySuccess) {
           setState(() {
             _password = Password(
-              mayus:
-                  state.policyResponse.policies[0].passwordCantidadMayusculas.toInt()!,
-              min: state.policyResponse.policies[0].passwordCantidadMinusculas.toInt()!,
+              mayus: state.policyResponse.policies[0].passwordCantidadMayusculas
+                  .toInt()!,
+              min: state.policyResponse.policies[0].passwordCantidadMinusculas
+                  .toInt()!,
               especial: state.policyResponse.policies[0]
-                  .passwordCantidadCaracteresEspeciales.toInt()!,
-              numbers: state.policyResponse.policies[0].passwordCantidadNumeros.toInt()!,
+                  .passwordCantidadCaracteresEspeciales
+                  .toInt()!,
+              numbers: state.policyResponse.policies[0].passwordCantidadNumeros
+                  .toInt()!,
               lenght: state.policyResponse.policies[0].passwordLargo.toInt()!,
             );
           });
+          final UserRepository userRepository = UserRepository();
+          await userRepository.setPasswordPolicy(
+              state.policyResponse.policies[0].passwordCantidadMayusculas +
+                  state.policyResponse.policies[0].passwordCantidadMinusculas +
+                  state.policyResponse.policies[0]
+                      .passwordCantidadCaracteresEspeciales +
+                  state.policyResponse.policies[0].passwordCantidadNumeros +
+                  state.policyResponse.policies[0].passwordLargo);
         }
       },
       child: Stack(
@@ -166,6 +178,11 @@ class _LoginBodyState extends State<LoginBody> with ErrorHandling {
                                 ),
                                 CustomInput(
                                   controller: password,
+                                  onChanged: (text) {
+                                    setState(() {
+                                      passwordPolicy = true;
+                                    });
+                                  },
                                   label: "Contraseña",
                                   obscureText: !_passwordVisible,
                                   suffixIcon: IconButton(
@@ -185,31 +202,33 @@ class _LoginBodyState extends State<LoginBody> with ErrorHandling {
                                 const SizedBox(
                                   height: 40,
                                 ),
-                                Container(
-                                  alignment: Alignment.topLeft,
-                                  child: FlutterPwValidator(
-                                    strings: TranslatePassword(),
-                                    controller: password,
-                                    key: validatorKey,
-                                    minLength: _password.lenght,
-                                    uppercaseCharCount: _password.mayus,
-                                    lowercaseCharCount: _password.min,
-                                    numericCharCount:_password.numbers,
-                                    specialCharCount: _password.especial,
-                                    width: 300,
-                                    height: 150,
-                                    onSuccess: () {
-                                      setState(() {
-                                        passwordValid = true;
-                                      });
-                                    },
-                                    onFail: () {
-                                      setState(() {
-                                        passwordValid = false;
-                                      });
-                                    },
-                                  ),
-                                ),
+                                !passwordPolicy
+                                    ? Container()
+                                    : Container(
+                                        alignment: Alignment.topLeft,
+                                        child: FlutterPwValidator(
+                                          strings: TranslatePassword(),
+                                          controller: password,
+                                          key: validatorKey,
+                                          minLength: _password.lenght,
+                                          uppercaseCharCount: _password.mayus,
+                                          lowercaseCharCount: _password.min,
+                                          numericCharCount: _password.numbers,
+                                          specialCharCount: _password.especial,
+                                          width: 300,
+                                          height: 150,
+                                          onSuccess: () {
+                                            setState(() {
+                                              passwordValid = true;
+                                            });
+                                          },
+                                          onFail: () {
+                                            setState(() {
+                                              passwordValid = false;
+                                            });
+                                          },
+                                        ),
+                                      ),
                                 const SizedBox(
                                   height: 40,
                                 ),
