@@ -56,7 +56,7 @@ if ($token) {
         "SELECT A.IdRole, B.Nombre
         From usuario_role A
         Inner Join role B On B.IdRole = A.IdRole
-        Where A.IdUsuario = = :usr";
+        Where A.IdUsuario = :usr";
         $stmt_validation = $dbhost->prepare($query_validation);
         $stmt_validation->bindParam(':usr', $usr);
         $stmt_validation->execute();

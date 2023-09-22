@@ -32,7 +32,7 @@ if ($json == false || trim($json) == "") {
 
 $data = json_decode($json);
 
-if (!isset($data->usr) || $data->rol == "" || $data->usr == "" || !isset($data->rol) || count(get_object_vars($data)) !== 2)  {
+if (!isset($data->usr) ||  $data->usr == "" || $data->rol == "" ||!isset($data->rol) || count(get_object_vars($data)) !== 2)  {
     echo json_encode(array(
         "status" => 400,
         "msg" => "Formato de datos incorrecto"
@@ -72,7 +72,7 @@ if ($token) {
             echo json_encode(
                 array(
                     "status" => 401,
-                    "msg" => "El rol no tiene opciones parametrizadas"
+                    "msg" => "El usuario tiene un rol que no tiene opciones parametrizadas"
                 )
             );
         } else {
