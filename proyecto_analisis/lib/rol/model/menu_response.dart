@@ -1,30 +1,29 @@
-class QuestionRepsonse {
+class MenuResponse {
   final int status;
   final List<Datum> data;
 
-  QuestionRepsonse({
+  MenuResponse({
     required this.status,
     required this.data,
   });
 
-  factory QuestionRepsonse.fromJson(Map<String, dynamic> json) =>
-      QuestionRepsonse(
+  factory MenuResponse.fromJson(Map<String, dynamic> json) => MenuResponse(
         status: json["status"],
         data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
       );
 }
 
 class Datum {
-  final String pregunta;
-  final String IdPregunta;
+  final String nombre;
+  final String idOpcion;
 
   Datum({
-    required this.pregunta,
-    required this.IdPregunta,
+    required this.nombre,
+    required this.idOpcion,
   });
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-        pregunta: json["Pregunta"],
-        IdPregunta: json['IdPregunta'],
+        nombre: json["Nombre"],
+        idOpcion: json["IdOpcion"],
       );
 }

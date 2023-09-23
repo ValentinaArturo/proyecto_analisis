@@ -1,30 +1,29 @@
-class QuestionRepsonse {
+class RolResponse {
   final int status;
   final List<Datum> data;
 
-  QuestionRepsonse({
+  RolResponse({
     required this.status,
     required this.data,
   });
 
-  factory QuestionRepsonse.fromJson(Map<String, dynamic> json) =>
-      QuestionRepsonse(
+  factory RolResponse.fromJson(Map<String, dynamic> json) => RolResponse(
         status: json["status"],
         data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
       );
 }
 
 class Datum {
-  final String pregunta;
-  final String IdPregunta;
+  final String idRole;
+  final String nombre;
 
   Datum({
-    required this.pregunta,
-    required this.IdPregunta,
+    required this.idRole,
+    required this.nombre,
   });
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-        pregunta: json["Pregunta"],
-        IdPregunta: json['IdPregunta'],
+        idRole: json["IdRole"],
+        nombre: json["Nombre"],
       );
 }

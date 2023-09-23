@@ -129,19 +129,6 @@ class _ForgotPasswordBodyState extends State<ForgotPasswordBody>
                                   height: 30,
                                 ),
                                 CustomInput(
-                                  controller: email,
-                                  validator: (text) {
-                                    return validateEmail(
-                                      text,
-                                      context,
-                                    );
-                                  },
-                                  label: "Correo",
-                                ),
-                                const SizedBox(
-                                  height: 30,
-                                ),
-                                CustomInput(
                                   obscureText: !_passwordVisible1,
                                   controller: password,
                                   validator: (text) {
@@ -280,7 +267,6 @@ class _ForgotPasswordBodyState extends State<ForgotPasswordBody>
                                               ForgotPassword(
                                                 newPassword: newPassword.text,
                                                 oldPassword: password.text,
-                                                email: email.text,
                                               ),
                                             );
                                           }

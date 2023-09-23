@@ -86,7 +86,7 @@ class _AccessDeniedBodyState extends State<AccessDeniedBody> {
                                   onPressed: () {
                                     Navigator.pushNamed(
                                       context,
-                                      forgotPasswordExpiredRoute,
+                                      forgotPasswordRoute,
                                     );
                                   },
                                   icon: const Icon(

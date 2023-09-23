@@ -164,14 +164,14 @@ class _ForgotPasswordUnlockBodyState extends State<ForgotPasswordUnlockBody>
                                 obscureText: !_passwordVisible2,
                                 suffixIcon: IconButton(
                                   icon: Icon(
-                                    _passwordVisible1
+                                    _passwordVisible2
                                         ? Icons.visibility
                                         : Icons.visibility_off,
                                     color: Colors.blue,
                                   ),
                                   onPressed: () {
                                     setState(() {
-                                      _passwordVisible1 = !_passwordVisible1;
+                                      _passwordVisible2 = !_passwordVisible2;
                                     });
                                   },
                                 ),

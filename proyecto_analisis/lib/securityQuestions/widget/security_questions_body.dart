@@ -23,15 +23,24 @@ class _SecurityQuestionsBodyState extends State<SecurityQuestionsBody>
   TextEditingController thirdQuestion = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   late ForgotPasswordUnlockBloc bloc;
-  late final String firstQuestionSentence;
-  late final String secondQuestionSentence;
-  late final String thirdQuestionSentence;
+  late  String firstQuestionSentence;
+  late  String secondQuestionSentence;
+  late  String thirdQuestionSentence;
+  late String id1;
+  late String id2;
+  late String id3;
 
   @override
   void initState() {
-    firstQuestionSentence = '¿En qué ciudad naciste?';
-    secondQuestionSentence = '¿Cuál es el segundo nombre de tu madre?';
-    thirdQuestionSentence = '¿Cuál fue tu primer trabajo?';
+    firstQuestionSentence = '';
+    secondQuestionSentence = '';
+    thirdQuestionSentence = '';
+    id1 = '';
+    id2 = '';
+    id3 = '';
+    context.read<ForgotPasswordUnlockBloc>().add(
+          Question(),
+        );
     super.initState();
   }
 
@@ -57,7 +66,7 @@ class _SecurityQuestionsBodyState extends State<SecurityQuestionsBody>
                       Navigator.pushNamedAndRemoveUntil(
                         context,
                         loginRoute,
-                            (route) => false,
+                        (route) => false,
                       );
                     },
                     child: Text('Aceptar'),
@@ -69,6 +78,9 @@ class _SecurityQuestionsBodyState extends State<SecurityQuestionsBody>
             firstQuestionSentence = state.question.data[0].pregunta;
             secondQuestionSentence = state.question.data[1].pregunta;
             thirdQuestionSentence = state.question.data[2].pregunta;
+            id1 = state.question.data[0].IdPregunta;
+            id2 = state.question.data[1].IdPregunta;
+            id3 = state.question.data[2].IdPregunta;
           });
         } else if (state is ForgotPasswordUnlockError) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -151,12 +163,18 @@ class _SecurityQuestionsBodyState extends State<SecurityQuestionsBody>
                                               .validate()) {}
                                           bloc.add(
                                             ForgotPasswordUnlock(
-                                              id1: '1',
-                                              id2: '2',
-                                              id3: '3',
-                                              q1: firstQuestion.text.toLowerCase().replaceAll(' ', ''),
-                                              q2: secondQuestion.text.toLowerCase().replaceAll(' ', ''),
-                                              q3: thirdQuestion.text.toLowerCase().replaceAll(' ', ''),
+                                              id1: id1,
+                                              id2: id2,
+                                              id3: id3,
+                                              q1: firstQuestion.text
+                                                  .toLowerCase()
+                                                  .replaceAll(' ', ''),
+                                              q2: secondQuestion.text
+                                                  .toLowerCase()
+                                                  .replaceAll(' ', ''),
+                                              q3: thirdQuestion.text
+                                                  .toLowerCase()
+                                                  .replaceAll(' ', ''),
                                             ),
                                           );
                                         },

@@ -3,12 +3,17 @@ import 'package:flutter/material.dart';
 class GeneratePageRoute extends PageRouteBuilder {
   final Widget widget;
   final String routeName;
+  final Object? arguments;
 
   GeneratePageRoute({
     required this.widget,
     required this.routeName,
+    this.arguments,
   }) : super(
-            settings: RouteSettings(name: routeName),
+            settings: RouteSettings(
+              name: routeName,
+              arguments: arguments,
+            ),
             pageBuilder: (BuildContext context, Animation<double> animation,
                 Animation<double> secondaryAnimation) {
               return widget;

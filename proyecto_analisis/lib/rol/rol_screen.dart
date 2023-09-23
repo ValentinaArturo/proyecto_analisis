@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyecto_analisis/repository/user_repository.dart';
+import 'package:proyecto_analisis/rol/bloc/rol_bloc.dart';
+import 'package:proyecto_analisis/rol/service/rol_service.dart';
 import 'package:proyecto_analisis/rol/widget/rol_body.dart';
-import 'package:proyecto_analisis/signUp/bloc/sign_up_bloc.dart';
-import 'package:proyecto_analisis/signUp/service/sign_up_service.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 class RolScreen extends StatefulWidget {
@@ -17,9 +17,9 @@ class _RolScreenState extends State<RolScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SignUpBloc(
-        service: SignUpService(),
-        repository: UserRepository(),
+      create: (context) => RolBloc(
+        service: RolService(),
+        userRepository: UserRepository(),
       ),
       child: Container(
         decoration: const BoxDecoration(

@@ -4,8 +4,16 @@ import 'package:proyecto_analisis/common/components/side_menu.dart';
 import 'package:proyecto_analisis/common/responsive.dart';
 import 'package:proyecto_analisis/dashboard/widget/dashboard_body.dart';
 import 'package:proyecto_analisis/resources/constants.dart';
+import 'package:proyecto_analisis/rol/model/menu.dart';
 
 class DashboardScreen extends StatelessWidget {
+  final Menu menu;
+
+  const DashboardScreen({
+    super.key,
+    required this.menu,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -15,25 +23,8 @@ class DashboardScreen extends StatelessWidget {
             .apply(bodyColor: Colors.white),
         canvasColor: secondaryColor,
       ),
-      child: Scaffold(
-        drawer: SideMenu(),
-        body: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // We want this side menu only for large screen
-            if (Responsive.isDesktop(context))
-              Expanded(
-                // default flex = 1
-                // and it takes 1/6 part of the screen
-                child: SideMenu(),
-              ),
-            Expanded(
-              // It takes 5/6 part of the screen
-              flex: 5,
-              child: DashboardBody(),
-            ),
-          ],
-        ),
+      child: DashboardBody(
+        menu: menu,
       ),
     );
   }

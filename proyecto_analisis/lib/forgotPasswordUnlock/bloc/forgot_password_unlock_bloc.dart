@@ -42,7 +42,7 @@ class ForgotPasswordUnlockBloc
         q3: event.q3,
       );
 
-      if (response.data['status'] == 401) {
+      if (response.data['status'] == 400) {
         emit(
           ForgotPasswordUnlockError(
             response.data['msg'],

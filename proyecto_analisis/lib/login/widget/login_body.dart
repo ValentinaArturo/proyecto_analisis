@@ -44,7 +44,7 @@ class _LoginBodyState extends State<LoginBody> with ErrorHandling {
     createBox();
     _passwordVisible = false;
     context.read<LoginBloc>().add(PolicyEm());
-    passwordValid = false;
+      passwordValid = false;
     passwordPolicy = false;
     _password = Password(
       mayus: 0,
@@ -69,6 +69,7 @@ class _LoginBodyState extends State<LoginBody> with ErrorHandling {
     if (box1.get('password') != null) {
       password.text = box1.get('password');
       isChecked = true;
+      passwordValid = true;
       setState(() {});
     }
   }
@@ -91,12 +92,17 @@ class _LoginBodyState extends State<LoginBody> with ErrorHandling {
             rolRoute,
           );
         } else if (state is LoginError) {
-          if (state.error == '402') {
+          if (state.error == '401') {
             Navigator.pushNamed(
               context,
               accessDeniedRoute,
             );
-          } else if (state.error == '403') {
+          } else if (state.error == '402') {
+            Navigator.pushNamed(
+              context,
+              accessDeniedRoute,
+            );
+          } else if (state.error == '33') {
             Navigator.pushNamed(
               context,
               forgotPasswordRoute,

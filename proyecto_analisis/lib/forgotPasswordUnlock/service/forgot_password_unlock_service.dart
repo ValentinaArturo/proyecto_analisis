@@ -25,7 +25,7 @@ class ForgotPasswordUnlockService {
     required String q3,
   }) async {
     return client.post(
-      recoveryPassword,
+      unlockUserPath,
       data: {
         'email': email,
         'newPassword': newPassword,

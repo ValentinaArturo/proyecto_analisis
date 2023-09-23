@@ -7,5 +7,5 @@ const recoveryPassword = 'recovery.php?service=changePassword';
 const optionPath = 'opciones.php';
 const questionsPath = 'preguntas.php';
 const policyPath = 'getPoliticaEmpresa.php';
-
+const rolPath = 'rolesAsignados.php';
 

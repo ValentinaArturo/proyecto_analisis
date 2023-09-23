@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
 import 'package:proyecto_analisis/common/bloc/mixin/error_handling.dart';
+import 'package:proyecto_analisis/rol/bloc/rol_bloc.dart';
+import 'package:proyecto_analisis/rol/bloc/rol_event.dart';
+import 'package:proyecto_analisis/rol/bloc/rol_state.dart';
+import 'package:proyecto_analisis/rol/model/menu.dart';
+import 'package:proyecto_analisis/rol/model/rol_response.dart';
 import 'package:proyecto_analisis/routes/landing_routes_constants.dart';
-import 'package:proyecto_analisis/signUp/bloc/sign_up_bloc.dart';
-import 'package:proyecto_analisis/signUp/bloc/sign_up_state.dart';
-import 'package:proyecto_analisis/signUp/model/genre.dart';
+import 'package:supercharged/supercharged.dart';
 
 import '../../common/loader/loader.dart';
 
@@ -19,56 +22,66 @@ class RolBody extends StatefulWidget {
 class _RolBodyState extends State<RolBody> with ErrorHandling {
   final _formKey = GlobalKey<FormState>();
 
-  int? gender;
-  late GenreItem genreItemFirst;
-  late GenreItem genreItemSecond;
-  late SignUpBloc bloc;
+  List<Datum> rols = [];
+  late Datum dropdownValue;
+  late RolBloc bloc;
 
   @override
   void initState() {
     super.initState();
-    genreItemFirst = GenreItem(
-      idGenero: '',
-      genero: '',
+    dropdownValue = Datum(
+      idRole: '',
+      nombre: '',
+
     );
-    genreItemSecond = GenreItem(
-      idGenero: '',
-      genero: '',
-    );
-    // context.read<SignUpBloc>().add(
-    //       Genre(),
-    //     );
+    context.read<RolBloc>().add(
+          Rol(),
+        );
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    bloc = context.read<SignUpBloc>();
+    bloc = context.read<RolBloc>();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SignUpBloc, BaseState>(
+    return BlocListener<RolBloc, BaseState>(
       listener: (context, state) {
         verifyServerError(state);
-        if (state is SignUpSuccess) {
+        if (state is RolSuccess) {
+          setState(() {
+            rols = state.rolResponse.data;
+            dropdownValue = state.rolResponse.data[0];
+          });
+        } else if (state is OptionSuccess) {
           Navigator.pushNamed(
             context,
-            loginRoute,
-          );
-        } else if (state is GenreSuccess) {
-          setState(() {
-            genreItemFirst = state.genreResponse.genres[0];
-            genreItemSecond = state.genreResponse.genres[1];
-          });
-        } else if (state is SignUpError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                state.error!,
-              ),
+            dashboardRoute,
+            arguments: Menu(
+              state.menuResponse.data,
             ),
           );
+        } else if (state is RolError) {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text(
+                    'No tienes Roles asignados, comunicate con el administrador',
+                  ),
+                  content: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(
+                        context,
+                        loginRoute,
+                      );
+                    },
+                    child: Text('Aceptar'),
+                  ),
+                );
+              });
         }
       },
       child: Stack(
@@ -111,29 +124,31 @@ class _RolBodyState extends State<RolBody> with ErrorHandling {
                             ),
                             child: Column(
                               children: [
-                                RadioListTile(
-                                  title: Text(
-                                    genreItemFirst.genero,
+                                DropdownButton<Datum>(
+                                  value: dropdownValue,
+                                  icon: const Icon(Icons.arrow_downward),
+                                  elevation: 16,
+                                  style:
+                                      const TextStyle(color: Colors.blue),
+                                  underline: Container(
+                                    height: 2,
+                                    color: Colors.white,
                                   ),
-                                  value: genreItemFirst.idGenero,
-                                  groupValue: gender,
-                                  onChanged: (value) {
+                                  onChanged: (Datum? value) {
+                                    // This is called when the user selects an item.
                                     setState(() {
-                                      gender = value as int?;
+                                      dropdownValue = value!;
                                     });
                                   },
-                                ),
-                                RadioListTile(
-                                  title: Text(
-                                    genreItemFirst.genero,
-                                  ),
-                                  value: genreItemFirst.idGenero,
-                                  groupValue: gender,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      gender = value as int?;
-                                    });
-                                  },
+                                  items: rols.map<DropdownMenuItem<Datum>>(
+                                      (Datum value) {
+                                    return DropdownMenuItem<Datum>(
+                                      value: value,
+                                      child: Text(
+                                        value.nombre,
+                                      ),
+                                    );
+                                  }).toList(),
                                 ),
                                 const SizedBox(
                                   height: 40,
@@ -144,12 +159,12 @@ class _RolBodyState extends State<RolBody> with ErrorHandling {
                                   children: [
                                     TextButton(
                                       onPressed: () {
-                                        if (_formKey.currentState!.validate()) {
-                                          Navigator.pushNamed(
-                                            context,
-                                            dashboardRoute,
+                                          bloc.add(
+                                            MenuOptions(
+                                              int.parse(dropdownValue.idRole),
+                                            ),
                                           );
-                                        }
+
                                       },
                                       style: const ButtonStyle(),
                                       child: const Text(
@@ -175,9 +190,9 @@ class _RolBodyState extends State<RolBody> with ErrorHandling {
               ],
             ),
           ),
-          BlocBuilder<SignUpBloc, BaseState>(
+          BlocBuilder<RolBloc, BaseState>(
             builder: (context, state) {
-              if (state is SignUpInProgress) {
+              if (state is RolInProgress) {
                 return const Loader();
               }
               return Container();
