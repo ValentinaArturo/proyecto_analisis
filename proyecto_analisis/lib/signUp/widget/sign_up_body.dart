@@ -1,3 +1,4 @@
+import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
@@ -37,8 +38,6 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
   TextEditingController thirdQuestion = TextEditingController();
   late bool _passwordVisible;
   int? gender;
-  late GenreItem genreItemFirst;
-  late GenreItem genreItemSecond;
   List<GenreItem> genres = [];
   late SignUpBloc bloc;
   late final String firstQuestionSentence;
@@ -54,14 +53,6 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
   void initState() {
     super.initState();
     _passwordVisible = false;
-    genreItemFirst = GenreItem(
-      idGenero: '',
-      genero: '',
-    );
-    genreItemSecond = GenreItem(
-      idGenero: '',
-      genero: '',
-    );
     gender = 0;
     firstQuestionSentence = '¿En qué ciudad naciste?';
     secondQuestionSentence = '¿Cuál es el segundo nombre de tu madre?';
@@ -111,8 +102,7 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
               });
         } else if (state is GenreSuccess) {
           setState(() {
-            genreItemFirst = state.genreResponse.genres[0];
-            genreItemSecond = state.genreResponse.genres[1];
+            genres = state.genreResponse.genres;
           });
         } else if (state is SignUpError) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -196,39 +186,30 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
                                     ),
                                   ],
                                 ),
-                                RadioListTile(
-                                  title: Text(
-                                    genreItemFirst.genero,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  activeColor: Colors.white,
-                                  value: 1,
-                                  groupValue: gender,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      gender = value;
-                                    });
-                                  },
-                                  selected: true,
+                                const SizedBox(
+                                  height: 30,
                                 ),
-                                RadioListTile(
-                                  title: Text(
-                                    genreItemSecond.genero,
-                                    style: const TextStyle(
-                                      color: Colors.white,
+                                CustomRadioButton(
+                                  elevation: 0,
+                                  width: 200,
+                                  absoluteZeroSpacing: false,
+                                  unSelectedColor:
+                                      Colors.deepOrange.withOpacity(0.4),
+                                  buttonLables:
+                                      genres.map((g) => g.genero).toList(),
+                                  buttonValues:
+                                      genres.map((g) => g.idGenero).toList(),
+                                  buttonTextStyle: const ButtonTextStyle(
+                                    selectedColor: Colors.orange,
+                                    unSelectedColor: Colors.white,
+                                    textStyle: TextStyle(
+                                      fontSize: 16,
                                     ),
                                   ),
-                                  selected: false,
-                                  activeColor: Colors.white,
-                                  value: 2,
-                                  groupValue: gender,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      gender = value;
-                                    });
+                                  radioButtonValue: (value) {
+                                    print(value);
                                   },
+                                  selectedColor: Colors.white,
                                 ),
                                 const SizedBox(
                                   height: 30,

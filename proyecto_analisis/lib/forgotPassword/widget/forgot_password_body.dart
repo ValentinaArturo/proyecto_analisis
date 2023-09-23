@@ -107,7 +107,7 @@ class _ForgotPasswordBodyState extends State<ForgotPasswordBody>
                 Container(
                   padding: const EdgeInsets.only(left: 35, top: 100),
                   child: const Text(
-                    'Cambiar contraseña',
+                    'Tu contraseña ha expirado',
                     style: TextStyle(color: Colors.white, fontSize: 43),
                   ),
                 ),

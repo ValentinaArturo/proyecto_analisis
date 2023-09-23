@@ -93,16 +93,21 @@ class _LoginBodyState extends State<LoginBody> with ErrorHandling {
           );
         } else if (state is LoginError) {
           if (state.error == '401') {
-            Navigator.pushNamed(
-              context,
-              accessDeniedRoute,
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  state.error!,
+                ),
+              ),
             );
           } else if (state.error == '402') {
+            //Bloqueado por credenciales invalidas
             Navigator.pushNamed(
               context,
               accessDeniedRoute,
             );
           } else if (state.error == '33') {
+            //Expirado
             Navigator.pushNamed(
               context,
               forgotPasswordRoute,

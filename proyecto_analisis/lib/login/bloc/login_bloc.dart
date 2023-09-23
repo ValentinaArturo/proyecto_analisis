@@ -41,7 +41,7 @@ class LoginBloc extends BaseBloc<LoginEvent, BaseState> {
       if (response.data['status'] == 401) {
         emit(
           LoginError(
-            '401',
+            response.data['msg'],
           ),
         );
       } else if (response.data['status'] == 402) {
@@ -66,6 +66,9 @@ class LoginBloc extends BaseBloc<LoginEvent, BaseState> {
         );
         await repository.setId(
           userSession.data!.idUsuario,
+        );
+        await repository.setName(
+          '${userSession.data!.nombreUsuario} ${userSession.data!.apellido}',
         );
         emit(
           LoginSuccess(

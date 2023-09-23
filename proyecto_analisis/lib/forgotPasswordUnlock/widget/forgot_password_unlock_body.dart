@@ -3,6 +3,7 @@ import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:proyecto_analisis/common/bloc/mixin/error_handling.dart';
 import 'package:proyecto_analisis/common/security/hash.dart';
 import 'package:proyecto_analisis/common/textField/input.dart';
+import 'package:proyecto_analisis/common/validation/validate_email.dart';
 import 'package:proyecto_analisis/common/validation/validate_password.dart';
 import 'package:proyecto_analisis/login/model/password.dart';
 import 'package:proyecto_analisis/login/model/translate_password.dart';
@@ -78,19 +79,19 @@ class _ForgotPasswordUnlockBodyState extends State<ForgotPasswordUnlockBody>
                           margin: const EdgeInsets.only(left: 235, right: 235),
                           child: Column(
                             children: [
-                              // CustomInput(
-                              //   controller: email,
-                              //   validator: (text) {
-                              //     return validateEmail(
-                              //       text,
-                              //       context,
-                              //     );
-                              //   },
-                              //   label: "Correo",
-                              // ),
-                              // const SizedBox(
-                              //   height: 30,
-                              // ),
+                              CustomInput(
+                                controller: email,
+                                validator: (text) {
+                                  return validateEmail(
+                                    text,
+                                    context,
+                                  );
+                                },
+                                label: "Correo",
+                              ),
+                              const SizedBox(
+                                height: 30,
+                              ),
                               CustomInput(
                                 controller: newPassword,
                                 validator: (text) {
@@ -203,6 +204,7 @@ class _ForgotPasswordUnlockBodyState extends State<ForgotPasswordUnlockBody>
                                           userRepository.setPassword(
                                             Hash.hash(confirmPassword.text),
                                           );
+                                          userRepository.setEmail(email.text);
                                           Navigator.pushNamed(
                                             context,
                                             securityQuestionsRoute,

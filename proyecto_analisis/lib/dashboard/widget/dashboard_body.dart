@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:proyecto_analisis/common/components/side_menu.dart';
+import 'package:proyecto_analisis/repository/user_repository.dart';
 import 'package:proyecto_analisis/rol/model/menu.dart';
 
 import '../../common/components/header.dart';
@@ -19,6 +20,15 @@ class DashboardBody extends StatefulWidget {
 }
 
 class _DashboardBodyState extends State<DashboardBody> {
+  late String name;
+
+  @override
+  void initState() {
+    super.initState();
+    name = '';
+    _getName();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +56,9 @@ class _DashboardBodyState extends State<DashboardBody> {
                 padding: EdgeInsets.all(defaultPadding),
                 child: Column(
                   children: [
-                    Header(),
+                    Header(
+                      name: name,
+                    ),
                     SizedBox(height: defaultPadding),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,5 +95,13 @@ class _DashboardBodyState extends State<DashboardBody> {
         ],
       ),
     );
+  }
+
+  _getName() async {
+    final UserRepository userRepository = UserRepository();
+    final name = await userRepository.getName();
+    setState(() {
+      this.name = name;
+    });
   }
 }

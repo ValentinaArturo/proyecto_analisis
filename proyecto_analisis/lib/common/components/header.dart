@@ -1,16 +1,18 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:proyecto_analisis/repository/user_repository.dart';
 
 import '../../resources/constants.dart';
 import '../controllers/MenuAppController.dart';
 import '../responsive.dart';
 
-
 class Header extends StatelessWidget {
+  final String name;
+
   const Header({
     Key? key,
+    required this.name,
   }) : super(key: key);
 
   @override
@@ -30,15 +32,20 @@ class Header extends StatelessWidget {
         if (!Responsive.isMobile(context))
           Spacer(flex: Responsive.isDesktop(context) ? 2 : 1),
         Expanded(child: SearchField()),
-        ProfileCard()
+        ProfileCard(
+          name: name,
+        )
       ],
     );
   }
 }
 
 class ProfileCard extends StatelessWidget {
+  final String name;
+
   const ProfileCard({
     Key? key,
+    required this.name,
   }) : super(key: key);
 
   @override
@@ -64,7 +71,7 @@ class ProfileCard extends StatelessWidget {
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: defaultPadding / 2),
-              child: Text("Angelina Jolie"),
+              child: Text(name),
             ),
           Icon(Icons.keyboard_arrow_down),
         ],
