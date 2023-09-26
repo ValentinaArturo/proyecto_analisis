@@ -4,8 +4,3 @@ abstract class RolsEvent {
 
 class Rols extends RolsEvent {}
 
-class MenuOptions extends RolsEvent {
-  final int rols;
-
-  MenuOptions(this.rols);
-}

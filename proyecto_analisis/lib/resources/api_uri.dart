@@ -8,4 +8,5 @@ const optionPath = 'opciones.php';
 const questionsPath = 'preguntas.php';
 const policyPath = 'getPoliticaEmpresa.php';
 const rolPath = 'rolesAsignados.php';
+const userPath = 'usuario.php';
 

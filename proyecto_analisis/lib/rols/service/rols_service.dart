@@ -14,27 +14,9 @@ class RolsService {
     this.client,
   );
 
-  Future<Response<dynamic>> rols({
-    required String email,
-  }) async {
-    return client.post(
-      rolPath,
-      data: {
-        'usr': email,
-      },
-    );
-  }
-
-  Future<Response<dynamic>> options({
-    required String name,
-    required int rol,
-  }) async {
-    return client.post(
-      optionPath,
-      data: {
-        'usr': name,
-        'rol': rol,
-      },
+  Future<Response<dynamic>> users() async {
+    return client.get(
+      userPath,
     );
   }
 }

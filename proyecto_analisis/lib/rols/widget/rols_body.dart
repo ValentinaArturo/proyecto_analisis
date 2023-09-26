@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
 import 'package:proyecto_analisis/common/bloc/mixin/error_handling.dart';
-import 'package:proyecto_analisis/rol/model/menu.dart';
-import 'package:proyecto_analisis/rol/model/rol_response.dart';
 import 'package:proyecto_analisis/rols/bloc/rols_bloc.dart';
 import 'package:proyecto_analisis/rols/bloc/rols_event.dart';
 import 'package:proyecto_analisis/rols/bloc/rols_state.dart';
-import 'package:proyecto_analisis/rols/model/user.dart';
+import 'package:proyecto_analisis/rols/model/user_response.dart';
 import 'package:proyecto_analisis/routes/landing_routes_constants.dart';
 
 import '../../common/loader/loader.dart';
@@ -20,22 +18,12 @@ class RolsBody extends StatefulWidget {
 }
 
 class _RolsBodyState extends State<RolsBody> with ErrorHandling {
-  List<Datum> rols = [];
-  late Datum dropdownValue;
   late RolsBloc bloc;
-  final List<User> users = [
-    User('Juan', 'juan@example.com'),
-    User('María', 'maria@example.com'),
-    User('Pedro', 'pedro@example.com'),
-  ];
+  List<User> users = [];
 
   @override
   void initState() {
     super.initState();
-    dropdownValue = Datum(
-      idRole: '',
-      nombre: '',
-    );
     context.read<RolsBloc>().add(
           Rols(),
         );
@@ -54,36 +42,15 @@ class _RolsBodyState extends State<RolsBody> with ErrorHandling {
         verifyServerError(state);
         if (state is RolsSuccess) {
           setState(() {
-            rols = state.rolResponse.data;
-            dropdownValue = state.rolResponse.data[0];
+            users = state.userResponse.users;
           });
-        } else if (state is OptionSuccess) {
-          Navigator.pushNamed(
-            context,
-            dashboardRoute,
-            arguments: Menu(
-              state.menuResponse.data,
-            ),
-          );
         } else if (state is RolsError) {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: Text(
-                  'No tienes Roles asignados, comunicate con el administrador',
-                ),
-                content: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      loginRoute,
-                    );
-                  },
-                  child: Text('Aceptar'),
-                ),
-              );
-            },
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                state.error!,
+              ),
+            ),
           );
         }
       },
@@ -118,8 +85,8 @@ class _RolsBodyState extends State<RolsBody> with ErrorHandling {
                     itemCount: users.length,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        title: Text(users[index].name),
-                        subtitle: Text(users[index].email),
+                        title: Text(users[index].nombre),
+                        subtitle: Text(users[index].correoElectronico),
                         onTap: () {
                           Navigator.pushNamed(
                             context,
