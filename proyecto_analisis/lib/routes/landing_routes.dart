@@ -6,10 +6,12 @@ import 'package:proyecto_analisis/forgotPasswordUnlock/forgot_password_unlock_sc
 import 'package:proyecto_analisis/login/login_screen.dart';
 import 'package:proyecto_analisis/rol/model/menu.dart';
 import 'package:proyecto_analisis/rol/rol_screen.dart';
+import 'package:proyecto_analisis/rols/rols_screen.dart';
 import 'package:proyecto_analisis/routes/generator_route.dart';
 import 'package:proyecto_analisis/routes/landing_routes_constants.dart';
 import 'package:proyecto_analisis/securityQuestions/security_questions_screen.dart';
 import 'package:proyecto_analisis/signUp/sign_up_screen.dart';
+import 'package:proyecto_analisis/userDetail/user_detail_screen.dart';
 
 class LandingRoutes {
   static Route<dynamic> generateRouteLanding(final RouteSettings settings) {
@@ -47,7 +49,7 @@ class LandingRoutes {
       case dashboardRoute:
         return GeneratePageRoute(
           widget: DashboardScreen(
-            menu:  settings.arguments as Menu,
+            menu: settings.arguments as Menu,
           ),
           routeName: settings.name!,
         );
@@ -59,6 +61,16 @@ class LandingRoutes {
       case rolRoute:
         return GeneratePageRoute(
           widget: const RolScreen(),
+          routeName: settings.name!,
+        );
+      case rolsRoute:
+        return GeneratePageRoute(
+          widget: const RolsScreen(),
+          routeName: settings.name!,
+        );
+      case userDetailRoute:
+        return GeneratePageRoute(
+          widget: const UserDetailScreen(),
           routeName: settings.name!,
         );
       default:

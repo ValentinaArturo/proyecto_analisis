@@ -11,22 +11,21 @@ import 'package:proyecto_analisis/login/model/password.dart';
 import 'package:proyecto_analisis/login/model/translate_password.dart';
 import 'package:proyecto_analisis/repository/user_repository.dart';
 import 'package:proyecto_analisis/routes/landing_routes_constants.dart';
-import 'package:proyecto_analisis/signUp/bloc/sign_up_bloc.dart';
-import 'package:proyecto_analisis/signUp/bloc/sign_up_event.dart';
-import 'package:proyecto_analisis/signUp/bloc/sign_up_state.dart';
 import 'package:proyecto_analisis/signUp/model/genre.dart';
-import 'package:supercharged/supercharged.dart';
+import 'package:proyecto_analisis/userDetail/bloc/user_detail_bloc.dart';
+import 'package:proyecto_analisis/userDetail/bloc/user_detail_event.dart';
+import 'package:proyecto_analisis/userDetail/bloc/user_detail_state.dart';
 
 import '../../common/loader/loader.dart';
 
-class SignUpBody extends StatefulWidget {
-  const SignUpBody({Key? key}) : super(key: key);
+class UserDetailBody extends StatefulWidget {
+  const UserDetailBody({Key? key}) : super(key: key);
 
   @override
-  State<SignUpBody> createState() => _SignUpBodyState();
+  State<UserDetailBody> createState() => _UserDetailBodyState();
 }
 
-class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
+class _UserDetailBodyState extends State<UserDetailBody> with ErrorHandling {
   final _formKey = GlobalKey<FormState>();
   TextEditingController name = TextEditingController();
   TextEditingController lastName = TextEditingController();
@@ -40,7 +39,7 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
   late bool _passwordVisible;
   int? gender;
   List<GenreItem> genres = [];
-  late SignUpBloc bloc;
+  late UserDetailBloc bloc;
   late final String firstQuestionSentence;
   late final String secondQuestionSentence;
   late final String thirdQuestionSentence;
@@ -58,7 +57,7 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
     firstQuestionSentence = '¿En qué ciudad naciste?';
     secondQuestionSentence = '¿Cuál es el segundo nombre de tu madre?';
     thirdQuestionSentence = '¿Cuál fue tu primer trabajo?';
-    context.read<SignUpBloc>().add(
+    context.read<UserDetailBloc>().add(
           Genre(),
         );
     passwordValid = false;
@@ -76,15 +75,15 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    bloc = context.read<SignUpBloc>();
+    bloc = context.read<UserDetailBloc>();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SignUpBloc, BaseState>(
+    return BlocListener<UserDetailBloc, BaseState>(
       listener: (context, state) {
         verifyServerError(state);
-        if (state is SignUpSuccess) {
+        if (state is UserDetailSuccess) {
           showDialog(
               context: context,
               builder: (context) {
@@ -105,7 +104,7 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
           setState(() {
             genres = state.genreResponse.genres;
           });
-        } else if (state is SignUpError) {
+        } else if (state is UserDetailError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
@@ -118,7 +117,7 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
       child: Stack(
         children: [
           Scaffold(
-            backgroundColor: Colors.transparent,
+            backgroundColor: Colors.black,
             appBar: AppBar(
               backgroundColor: Colors.transparent,
               elevation: 0,
@@ -128,7 +127,7 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
                 Container(
                   padding: const EdgeInsets.only(left: 35, top: 30),
                   child: const Text(
-                    'Crear\nCuenta',
+                    'Editar\nUsuario',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 33,
@@ -208,9 +207,7 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
                                     ),
                                   ),
                                   radioButtonValue: (value) {
-                                    setState(() {
-                                      gender = value.toInt();
-                                    });
+                                    print(value);
                                   },
                                   selectedColor: Colors.white,
                                 ),
@@ -324,7 +321,7 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
                                         if (_formKey.currentState!.validate() &&
                                             passwordValid) {
                                           bloc.add(
-                                            SignUp(
+                                            UserDetail(
                                               email: email.text,
                                               password: password.text,
                                               name: name.text,
@@ -375,9 +372,9 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
               ],
             ),
           ),
-          BlocBuilder<SignUpBloc, BaseState>(
+          BlocBuilder<UserDetailBloc, BaseState>(
             builder: (context, state) {
-              if (state is SignUpInProgress) {
+              if (state is UserDetailInProgress) {
                 return const Loader();
               }
               return Container();

@@ -19,7 +19,12 @@ class SideMenu extends StatelessWidget {
           return DrawerListTile(
             title: menu.options[index].nombre,
             svgSrc: "assets/icons/menu_dashboard.svg",
-            press: () {},
+            press: () {
+              Navigator.pushNamed(
+                context,
+                '/${menu.options[index].nombre.toLowerCase()}',
+              );
+            },
           );
         },
       ),

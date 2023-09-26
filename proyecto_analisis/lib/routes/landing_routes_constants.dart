@@ -8,3 +8,5 @@ const String securityQuestionsRoute = '/securityQuestions';
 const String dashboardRoute = '/dashboard';
 const String forgotPasswordExpiredRoute = '/forgotPasswordExpired';
 const String rolRoute = '/rol';
+const String rolsRoute = '/rols';
+const String userDetailRoute = '/userDetail';
