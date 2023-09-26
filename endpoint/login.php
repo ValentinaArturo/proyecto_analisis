@@ -130,7 +130,7 @@ if ($stmt_validation->rowCount() == 0 ){
                 die();
             default:
                 echo json_encode(array(
-                    "status" => 401,
+                    "status" => 403,
                     "msg" => $message_error
                 ));
                 die();
