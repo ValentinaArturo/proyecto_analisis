@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyecto_analisis/common/bloc/base_bloc.dart';
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
 import 'package:proyecto_analisis/common/models/success_response.dart';
-import 'package:proyecto_analisis/common/security/hash.dart';
+import 'package:proyecto_analisis/common/security/encrypt.dart';
 import 'package:proyecto_analisis/repository/user_repository.dart';
 import 'package:proyecto_analisis/signUp/model/genre_response.dart';
 import 'package:proyecto_analisis/userDetail/bloc/user_detail_event.dart';
@@ -32,7 +32,7 @@ class UserDetailBloc extends BaseBloc<UserDetailEvent, BaseState> {
 
     try {
       final response = await service.userDetail(
-        password: Hash.hash(
+        password: Encrypt.encryptPassword(
           event.password,
         ),
         email: event.email,

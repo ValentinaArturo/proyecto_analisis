@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:proyecto_analisis/common/bloc/mixin/error_handling.dart';
-import 'package:proyecto_analisis/common/security/hash.dart';
+import 'package:proyecto_analisis/common/security/encrypt.dart';
 import 'package:proyecto_analisis/common/textField/input.dart';
 import 'package:proyecto_analisis/common/validation/validate_email.dart';
 import 'package:proyecto_analisis/common/validation/validate_password.dart';
@@ -202,7 +202,7 @@ class _ForgotPasswordUnlockBodyState extends State<ForgotPasswordUnlockBody>
                                           final UserRepository userRepository =
                                               UserRepository();
                                           userRepository.setPassword(
-                                            Hash.hash(confirmPassword.text),
+                                            Encrypt.encryptPassword(confirmPassword.text),
                                           );
                                           userRepository.setEmail(email.text);
                                           Navigator.pushNamed(

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyecto_analisis/common/bloc/base_bloc.dart';
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
 import 'package:proyecto_analisis/common/models/success_response.dart';
-import 'package:proyecto_analisis/common/security/hash.dart';
+import 'package:proyecto_analisis/common/security/encrypt.dart';
 import 'package:proyecto_analisis/forgotPassword/bloc/forgot_password_event.dart';
 import 'package:proyecto_analisis/forgotPassword/bloc/forgot_password_state.dart';
 import 'package:proyecto_analisis/forgotPassword/service/forgot_password_service.dart';
@@ -28,11 +28,11 @@ class ForgotPasswordBloc extends BaseBloc<ForgotPasswordEvent, BaseState> {
 
     try {
       final response = await service.forgotPassword(
-        newPassword: Hash.hash(
+        newPassword: Encrypt.encryptPassword(
           event.newPassword,
         ),
         email: await userRepository.getEmail(),
-        oldPassword: Hash.hash(
+        oldPassword: Encrypt.encryptPassword(
           event.oldPassword,
         ),
       );

@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyecto_analisis/common/bloc/base_bloc.dart';
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
-import 'package:proyecto_analisis/common/security/hash.dart';
+import 'package:proyecto_analisis/common/security/encrypt.dart';
 import 'package:proyecto_analisis/login/bloc/login_event.dart';
 import 'package:proyecto_analisis/login/bloc/login_state.dart';
 import 'package:proyecto_analisis/login/model/user_session.dart';
@@ -32,7 +32,7 @@ class LoginBloc extends BaseBloc<LoginEvent, BaseState> {
 
     try {
       final response = await service.loginWithPassword(
-        password: Hash.hash(
+        password: Encrypt.encryptPassword(
           event.password,
         ),
         email: event.email,
