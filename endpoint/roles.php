@@ -44,7 +44,7 @@ if ($token) {
         switch ($method) {
             case 'GET':
 
-                $query_validation = "SELECT * FROM USUARIO";
+                $query_validation = "SELECT * FROM ROLES";
                 $stmt_validation = $dbhost->prepare($query_validation);
                 $stmt_validation->execute();
         
@@ -63,50 +63,7 @@ if ($token) {
                 ));
                 break;
             case 'PUT':
-                // $json = file_get_contents("php://input");
-
-                // if ($json == false || trim($json) == "") {
-                //     echo json_encode([
-                //         "status" => 400,
-                //         "msg" => "Error en datos recibidos",
-                //     ]);
-                //     die();
-                // }
-
-                // $data = json_decode($json,true);
-
-                // if (
-                //     !isset($data["nombre"]) ||
-                //     !isset($data["apellido"]) ||
-                //     !isset($data["fechaNacimiento"]) ||
-                //     !isset($data["genero"]) ||
-                //     !isset($data["email"]) ||
-                //     !isset($data["telefono"]) ||
-                //     !isset($data["password"]) ||
-                //     !isset($data["IdSucursal"]) ||
-                //     $data["nombre"] == "" ||
-                //     $data["apellido"] == "" ||
-                //     $data["fechaNacimiento"] == "" ||
-                //     $data["genero"] == "" ||
-                //     $data["email"] == "" ||
-                //     $data["telefono"] == "" ||
-                //     $data["password"] == "" ||
-                //     $data["IdSucursal"] == "" ||
-                //     count($data) !== 8
-                // ) {
-                //     echo json_encode([
-                //         "status" => 400,
-                //         "msg" => "Formato de datos incorrecto",
-                //     ]);
-                //     die();
-                // }
-
-                echo json_encode(array(
-                    "status" => 404,
-                    "msg" => "Método no disponible"
-                ));
-                break;
-                
+                echo 'Solicitud PUT recibida';
                 break;
             case 'DELETE':
                 echo json_encode(array(
