@@ -44,7 +44,9 @@ class CustomInput extends StatelessWidget {
               }
               return null;
             },
-            style: const TextStyle(color: Colors.black),
+            style: const TextStyle(
+              color: Colors.black,
+            ),
             inputFormatters: inputFormatters,
             decoration: InputDecoration(
                 suffixIcon: suffixIcon,
@@ -75,7 +77,6 @@ class CustomInput extends StatelessWidget {
             ),
             decoration: InputDecoration(
                 suffixIcon: suffixIcon,
-                fillColor: Colors.deepOrange.withOpacity(0.2),
                 filled: true,
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -86,7 +87,7 @@ class CustomInput extends StatelessWidget {
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: const BorderSide(
-                    color: Colors.black,
+                    color: Colors.white,
                   ),
                 ),
                 label: Text(

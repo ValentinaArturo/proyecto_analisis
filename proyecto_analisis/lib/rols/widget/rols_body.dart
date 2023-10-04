@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
 import 'package:proyecto_analisis/common/bloc/mixin/error_handling.dart';
+import 'package:proyecto_analisis/resources/constants.dart';
 import 'package:proyecto_analisis/rols/bloc/rols_bloc.dart';
 import 'package:proyecto_analisis/rols/bloc/rols_event.dart';
 import 'package:proyecto_analisis/rols/bloc/rols_state.dart';
@@ -57,11 +58,7 @@ class _RolsBodyState extends State<RolsBody> with ErrorHandling {
       child: Stack(
         children: [
           Scaffold(
-            backgroundColor: Colors.black,
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-            ),
+            backgroundColor: secondaryColor,
             body: Stack(
               children: [
                 Container(
@@ -72,29 +69,65 @@ class _RolsBodyState extends State<RolsBody> with ErrorHandling {
                   child: const Text(
                     'Usuarios',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.lightBlue,
                       fontSize: 33,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-                Container(
-                  padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.28,
-                  ),
-                  child: ListView.builder(
-                    itemCount: users.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(users[index].nombre),
-                        subtitle: Text(users[index].correoElectronico),
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            userDetailRoute,
-                          );
-                        },
-                      );
-                    },
+                Card(
+                  color: bgColor,
+                  child: Container(
+                    padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.1,
+                    ),
+                    child: ListView.builder(
+                      itemCount: users.length,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.symmetric(
+                                horizontal:
+                                    MediaQuery.of(context).size.height * 0.05,
+                              ),
+                              child: ListTile(
+                                leading: const Icon(
+                                  Icons.emoji_people,
+                                  color: Colors.purpleAccent,
+                                ),
+                                title: Text(
+                                  'Nombre:   ${users[index].nombre}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  'Correo:   ${users[index].correoElectronico}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                trailing: InkWell(
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      userDetailRoute,
+                                    );
+                                  },
+                                  child: const Icon(
+                                    Icons.edit,
+                                    color: Colors.lightBlue,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const Divider(),
+                          ],
+                        );
+                      },
+                    ),
                   ),
                 ),
               ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyecto_analisis/repository/user_repository.dart';
+import 'package:proyecto_analisis/resources/constants.dart';
 import 'package:proyecto_analisis/rols/bloc/rols_bloc.dart';
 import 'package:proyecto_analisis/rols/service/rols_service.dart';
 import 'package:proyecto_analisis/rols/widget/rols_body.dart';
@@ -26,7 +27,10 @@ class _RolsScreenState extends State<RolsScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.blue, Colors.purple],
+            colors: [
+              Colors.black12,
+              Colors.black26,
+            ],
           ),
         ),
         child: ScreenTypeLayout.builder(

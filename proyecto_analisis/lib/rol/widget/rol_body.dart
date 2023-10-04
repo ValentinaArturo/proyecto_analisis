@@ -32,7 +32,6 @@ class _RolBodyState extends State<RolBody> with ErrorHandling {
     dropdownValue = Datum(
       idRole: '',
       nombre: '',
-
     );
     context.read<RolBloc>().add(
           Rol(),
@@ -128,8 +127,10 @@ class _RolBodyState extends State<RolBody> with ErrorHandling {
                                   value: dropdownValue,
                                   icon: const Icon(Icons.arrow_downward),
                                   elevation: 16,
-                                  style:
-                                      const TextStyle(color: Colors.blue),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20
+                                  ),
                                   underline: Container(
                                     height: 2,
                                     color: Colors.white,
@@ -159,12 +160,11 @@ class _RolBodyState extends State<RolBody> with ErrorHandling {
                                   children: [
                                     TextButton(
                                       onPressed: () {
-                                          bloc.add(
-                                            MenuOptions(
-                                              int.parse(dropdownValue.idRole),
-                                            ),
-                                          );
-
+                                        bloc.add(
+                                          MenuOptions(
+                                            int.parse(dropdownValue.idRole),
+                                          ),
+                                        );
                                       },
                                       style: const ButtonStyle(),
                                       child: const Text(
@@ -173,7 +173,7 @@ class _RolBodyState extends State<RolBody> with ErrorHandling {
                                         style: TextStyle(
                                           decoration: TextDecoration.underline,
                                           color: Colors.white,
-                                          fontSize: 18,
+                                          fontSize: 22,
                                         ),
                                       ),
                                     ),

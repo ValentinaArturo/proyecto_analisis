@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:proyecto_analisis/repository/user_repository.dart';
 
 import '../../resources/constants.dart';
 import '../controllers/MenuAppController.dart';
@@ -63,9 +62,9 @@ class ProfileCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Image.asset(
-            "assets/images/profile_pic.png",
-            height: 38,
+          Icon(
+            Icons.person,
+            size: 38,
           ),
           if (!Responsive.isMobile(context))
             Padding(

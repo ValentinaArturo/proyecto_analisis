@@ -28,13 +28,13 @@ class RolsBloc extends BaseBloc<RolsEvent, BaseState> {
     try {
       final response = await service.users();
 
-      if (response.data['status'] == 401) {
+      if (response.statusCode == 401) {
         emit(
           RolsError(
             response.data['msg'],
           ),
         );
-      } else if (response.data['status'] == 200) {
+      } else if (response.statusCode == 200) {
         final success = UserResponse.fromJson(
           response.data!,
         );
