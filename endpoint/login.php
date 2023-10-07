@@ -98,8 +98,8 @@ if ($stmt_validation->rowCount() == 0 ){
                    $stmt_block->execute();
 
                    echo json_encode(array(
-                        "status" => 401,
-                        "msg" => "Credenciales Invalidas"
+                        "status" => 402,
+                        "msg" => "Usuario bloqueado"
                     ));
                     die();
 

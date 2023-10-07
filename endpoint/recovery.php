@@ -1,5 +1,10 @@
 <?php
 
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, GET, PUT, OPTIONS, PATCH, DELETE');
+header('Access-Control-Allow-Credentials: true');
+header("Access-Control-Allow-Headers: Authorization, Content-Type");
+
 header('Content-Type: application/json');
 $json = file_get_contents('php://input');
 date_default_timezone_set('America/Guatemala');
