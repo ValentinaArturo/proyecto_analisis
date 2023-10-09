@@ -44,7 +44,12 @@ if ($token) {
         switch ($method) {
             case 'GET':
 
-                $query_validation = "SELECT * FROM USUARIO_ROLE";
+                $query_validation ='SELECT 
+                CONCAT(T2.Nombre," ",T2.Apellido) AS "NombreUsuario",
+                T3.Nombre AS "NombreRol" 
+                FROM USUARIO_ROLE T1
+                LEFT JOIN USUARIO T2 ON T1.IdUsuario = T2.IdUsuario
+                LEFT JOIN ROLE T3 ON T1.IdRole = T3.IdRole';
                 $stmt_validation = $dbhost->prepare($query_validation);
                 $stmt_validation->execute();
         
