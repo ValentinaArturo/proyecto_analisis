@@ -192,10 +192,67 @@ if ($token) {
 
                 break;
             case 'DELETE':
-                echo json_encode(array(
-                    "status" => 404,
-                    "msg" => "Método no disponible"
-                ));
+                $json = file_get_contents("php://input");
+
+                if ($json == false || trim($json) == "") {
+                    echo json_encode([
+                        "status" => 400,
+                        "msg" => "Error en datos recibidos",
+                    ]);
+                    die();
+                }
+
+                $data = json_decode($json,true);
+                $fechaHoraActual = date('Y-m-d H:i:s');
+
+                if ($json == false || trim($json) == "") {
+                    echo json_encode([
+                        "status" => 400,
+                        "msg" => "Error en datos recibidos",
+                    ]);
+                    die();
+                }
+
+                $data = json_decode($json,true);
+
+                if (
+                    !isset($data["IdUsuario"]) ||
+                    !isset($data["IdRole"]) ||
+                    $data["IdUsuario"] == "" ||
+                    $data["IdRole"] == "" ||
+                    count($data) !== 2
+                ) {
+                    echo json_encode([
+                        "status" => 400,
+                        "msg" => "Formato de datos incorrecto",
+                    ]);
+                    die();
+                }
+
+                $IdUsuario = $data["IdUsuario"];
+                $IdRole = (int)$data["IdRole"];
+
+                $query_post = "DELETE FROM USUARIO_ROLE WHERE IdUsuario=:IdUsuario AND IdRole=:IdRole";
+                $stmt_post = $dbhost->prepare($query_post);
+                $stmt_post->bindParam(':IdUsuario', $IdUsuario);
+                $stmt_post->bindParam(':IdRole', $IdRole,PDO::PARAM_INT);
+                $stmt_post->execute();
+
+
+                if($stmt_post->rowCount() > 0 ){
+
+                    echo json_encode(array(
+                        "status" => 200,
+                        "msg" => "Rol elimando exitosamente"
+                    ));
+                    
+                }else{
+                    
+                    echo json_encode(array(
+                        "status" => 401,
+                        "msg" => "Ocurrio un error, intenta nuevamente"
+                    ));
+                }
                 break;
             default:
                 echo json_encode(array(
