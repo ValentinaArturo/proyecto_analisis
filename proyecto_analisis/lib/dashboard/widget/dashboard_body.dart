@@ -4,10 +4,12 @@ import 'package:proyecto_analisis/common/components/header.dart';
 import 'package:proyecto_analisis/common/components/my_files.dart';
 import 'package:proyecto_analisis/common/components/recent_files.dart';
 import 'package:proyecto_analisis/common/components/storage_details.dart';
+import 'package:proyecto_analisis/genres/genres_screen.dart';
 import 'package:proyecto_analisis/modules/modules_screen.dart';
 import 'package:proyecto_analisis/repository/user_repository.dart';
 import 'package:proyecto_analisis/resources/constants.dart';
 import 'package:proyecto_analisis/rol/model/menu.dart';
+import 'package:proyecto_analisis/rolrol/rolrol_screen.dart';
 import 'package:proyecto_analisis/rols/rols_screen.dart';
 import 'package:proyecto_analisis/rolsUser/rols_user_screen.dart';
 
@@ -189,17 +191,13 @@ class _DashboardBodyState extends State<DashboardBody> {
           child: const Text('Sucursales'),
         );
       } else if (obj.nombre == 'Generos') {
-        return Container(
-          child: const Text('Generos'),
-        );
+        return GenresScreen();
       } else if (obj.nombre == 'Estatus Usuario') {
         return Container(
           child: const Text('Estatus Usuario'),
         );
       } else if (obj.nombre == 'Roles') {
-        return Container(
-          child: const Text('Roles'),
-        );
+        return RolRolScreen();
       } else if (obj.nombre == 'Modulos') {
         return ModulesScreen();
       } else if (obj.nombre == 'Menus') {
