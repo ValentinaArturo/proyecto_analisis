@@ -61,74 +61,97 @@ class _RolsBodyState extends State<RolsBody> with ErrorHandling {
             backgroundColor: secondaryColor,
             body: Stack(
               children: [
-                Container(
-                  padding: const EdgeInsets.only(
-                    left: 35,
-                    top: 30,
-                  ),
-                  child: const Text(
-                    'Usuarios',
-                    style: TextStyle(
-                      color: Colors.lightBlue,
-                      fontSize: 33,
-                      fontWeight: FontWeight.bold,
+                Column(
+                  children: [
+                    Container(
+                      alignment: Alignment.topRight,
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(
+                            context,
+                            signUpRoute,
+                            arguments: false,
+                          );
+                        },
+                        child: const Text(
+                          'Agregar usuario',
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                Card(
-                  color: bgColor,
-                  child: Container(
-                    padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.1,
+                    Container(
+                      padding: const EdgeInsets.only(
+                        left: 35,
+                        top: 30,
+                      ),
+                      child: const Text(
+                        'Usuarios',
+                        style: TextStyle(
+                          color: Colors.lightBlue,
+                          fontSize: 33,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                    child: ListView.builder(
-                      itemCount: users.length,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.symmetric(
-                                horizontal:
-                                    MediaQuery.of(context).size.height * 0.05,
-                              ),
-                              child: ListTile(
-                                leading: const Icon(
-                                  Icons.emoji_people,
-                                  color: Colors.purpleAccent,
-                                ),
-                                title: Text(
-                                  'Nombre:   ${users[index].nombre}',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
+                    Expanded(
+                      child: Card(
+                        color: bgColor,
+                        child: Container(
+                          padding: EdgeInsets.only(
+                            top: MediaQuery.of(context).size.height * 0.05,
+                          ),
+                          child: ListView.builder(
+                            itemCount: users.length,
+                            itemBuilder: (context, index) {
+                              return Column(
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.symmetric(
+                                      horizontal:
+                                          MediaQuery.of(context).size.height *
+                                              0.05,
+                                    ),
+                                    child: ListTile(
+                                      leading: const Icon(
+                                        Icons.emoji_people,
+                                        color: Colors.purpleAccent,
+                                      ),
+                                      title: Text(
+                                        'Nombre:   ${users[index].nombre}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        'Correo:   ${users[index].correoElectronico}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      trailing: InkWell(
+                                        onTap: () {
+                                          Navigator.pushNamed(
+                                            context,
+                                            userDetailRoute,
+                                            arguments: users[index],
+                                          );
+                                        },
+                                        child: const Icon(
+                                          Icons.edit,
+                                          color: Colors.lightBlue,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                                subtitle: Text(
-                                  'Correo:   ${users[index].correoElectronico}',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                trailing: InkWell(
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                      context,
-                                      userDetailRoute,
-                                    );
-                                  },
-                                  child: const Icon(
-                                    Icons.edit,
-                                    color: Colors.lightBlue,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const Divider(),
-                          ],
-                        );
-                      },
+                                  const Divider(),
+                                ],
+                              );
+                            },
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ],
             ),

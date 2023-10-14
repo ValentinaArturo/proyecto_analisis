@@ -2,6 +2,7 @@ import 'package:proyecto_analisis/common/bloc/base_state.dart';
 import 'package:proyecto_analisis/common/models/success_response.dart';
 import 'package:proyecto_analisis/signUp/model/genre_response.dart';
 import 'package:proyecto_analisis/signUp/model/question.dart';
+import 'package:proyecto_analisis/signUp/model/question_response.dart';
 
 abstract class SignUpState extends BaseState {
   const SignUpState();
@@ -36,7 +37,7 @@ class GenreSuccess extends SignUpState {
 }
 
 class QuestionsSuccess extends SignUpState {
-  final QuestionRepsonse question;
+  final Questions question;
 
   QuestionsSuccess(
     this.question,

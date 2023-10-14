@@ -308,6 +308,7 @@ class _LoginBodyState extends State<LoginBody> with ErrorHandling {
                                         Navigator.pushNamed(
                                           context,
                                           signUpRoute,
+                                          arguments: true,
                                         );
                                       },
                                       style: const ButtonStyle(),

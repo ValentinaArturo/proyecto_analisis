@@ -20,7 +20,12 @@ import 'package:supercharged/supercharged.dart';
 import '../../common/loader/loader.dart';
 
 class SignUpBody extends StatefulWidget {
-  const SignUpBody({Key? key}) : super(key: key);
+  final bool isSignUp;
+
+  const SignUpBody({
+    Key? key,
+    required this.isSignUp,
+  }) : super(key: key);
 
   @override
   State<SignUpBody> createState() => _SignUpBodyState();
@@ -91,12 +96,16 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
                 return AlertDialog(
                   title: Text(state.successResponse.msg),
                   content: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(
-                        context,
-                        loginRoute,
-                      );
-                    },
+                    onPressed: widget.isSignUp
+                        ? () {
+                            Navigator.pushNamed(
+                              context,
+                              loginRoute,
+                            );
+                          }
+                        : () {
+                            Navigator.pop(context);
+                          },
                     child: Text('Aceptar'),
                   ),
                 );
@@ -104,6 +113,12 @@ class _SignUpBodyState extends State<SignUpBody> with ErrorHandling {
         } else if (state is GenreSuccess) {
           setState(() {
             genres = state.genreResponse.genres;
+          });
+        } else if (state is QuestionsSuccess) {
+          setState(() {
+            firstQuestionSentence = state.question.data[0].pregunta;
+            secondQuestionSentence = state.question.data[1].pregunta;
+            thirdQuestionSentence = state.question.data[2].pregunta;
           });
         } else if (state is SignUpError) {
           ScaffoldMessenger.of(context).showSnackBar(

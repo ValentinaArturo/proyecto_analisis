@@ -62,7 +62,6 @@ class SignUpService {
       genrePath,
     );
   }
-
   Future<Response<dynamic>> question({
     required final String email,
   }) async {

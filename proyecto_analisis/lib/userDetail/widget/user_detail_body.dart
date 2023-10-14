@@ -1,15 +1,13 @@
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
 import 'package:proyecto_analisis/common/bloc/mixin/error_handling.dart';
 import 'package:proyecto_analisis/common/textField/input.dart';
 import 'package:proyecto_analisis/common/validation/validate_email.dart';
-import 'package:proyecto_analisis/login/model/password.dart';
-import 'package:proyecto_analisis/login/model/translate_password.dart';
-import 'package:proyecto_analisis/repository/user_repository.dart';
+import 'package:proyecto_analisis/resources/constants.dart';
+import 'package:proyecto_analisis/rols/model/user_response.dart';
 import 'package:proyecto_analisis/routes/landing_routes_constants.dart';
 import 'package:proyecto_analisis/signUp/model/genre.dart';
 import 'package:proyecto_analisis/userDetail/bloc/user_detail_bloc.dart';
@@ -19,7 +17,12 @@ import 'package:proyecto_analisis/userDetail/bloc/user_detail_state.dart';
 import '../../common/loader/loader.dart';
 
 class UserDetailBody extends StatefulWidget {
-  const UserDetailBody({Key? key}) : super(key: key);
+  final User user;
+
+  const UserDetailBody({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
 
   @override
   State<UserDetailBody> createState() => _UserDetailBodyState();
@@ -32,44 +35,23 @@ class _UserDetailBodyState extends State<UserDetailBody> with ErrorHandling {
   TextEditingController birthDate = TextEditingController();
   TextEditingController phone = TextEditingController();
   TextEditingController email = TextEditingController();
-  TextEditingController password = TextEditingController();
-  TextEditingController firstQuestion = TextEditingController();
-  TextEditingController secondQuestion = TextEditingController();
-  TextEditingController thirdQuestion = TextEditingController();
-  late bool _passwordVisible;
+
   int? gender;
   List<GenreItem> genres = [];
   late UserDetailBloc bloc;
-  late final String firstQuestionSentence;
-  late final String secondQuestionSentence;
-  late final String thirdQuestionSentence;
-  late Password _password;
-  final GlobalKey<FlutterPwValidatorState> validatorKey =
-      GlobalKey<FlutterPwValidatorState>();
-  late bool passwordValid;
-  late bool passwordPolicy;
 
   @override
   void initState() {
     super.initState();
-    _passwordVisible = false;
-    gender = 0;
-    firstQuestionSentence = '¿En qué ciudad naciste?';
-    secondQuestionSentence = '¿Cuál es el segundo nombre de tu madre?';
-    thirdQuestionSentence = '¿Cuál fue tu primer trabajo?';
+    gender = int.parse(widget.user.idGenero);
+    name.text = widget.user.nombre;
+    lastName.text = widget.user.apellido;
+    birthDate.text = widget.user.fechaNacimiento.toString();
+    phone.text = widget.user.telefonoMovil;
+    email.text = widget.user.correoElectronico;
     context.read<UserDetailBloc>().add(
           Genre(),
         );
-    passwordValid = false;
-    passwordPolicy = false;
-    _password = Password(
-      mayus: 0,
-      min: 0,
-      especial: 0,
-      numbers: 0,
-      lenght: 0,
-    );
-    _getPasswordPolicy();
   }
 
   @override
@@ -117,7 +99,7 @@ class _UserDetailBodyState extends State<UserDetailBody> with ErrorHandling {
       child: Stack(
         children: [
           Scaffold(
-            backgroundColor: Colors.black,
+            backgroundColor: secondaryColor,
             appBar: AppBar(
               backgroundColor: Colors.transparent,
               elevation: 0,
@@ -226,90 +208,6 @@ class _UserDetailBodyState extends State<UserDetailBody> with ErrorHandling {
                                   },
                                 ),
                                 const SizedBox(
-                                  height: 30,
-                                ),
-                                CustomInput(
-                                  obscureText: !_passwordVisible,
-                                  label: "Contraseña",
-                                  onChanged: (text) {
-                                    setState(() {
-                                      passwordPolicy = true;
-                                    });
-                                  },
-                                  controller: password,
-                                  isSignUp: true,
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                      _passwordVisible
-                                          ? Icons.visibility
-                                          : Icons.visibility_off,
-                                      color: Colors.white,
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        _passwordVisible = !_passwordVisible;
-                                      });
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 30,
-                                ),
-                                !passwordPolicy
-                                    ? Container()
-                                    : Container(
-                                        alignment: Alignment.topLeft,
-                                        child: FlutterPwValidator(
-                                          strings: TranslatePassword(),
-                                          controller: password,
-                                          key: validatorKey,
-                                          minLength: _password.lenght,
-                                          uppercaseCharCount: _password.mayus,
-                                          lowercaseCharCount: _password.min,
-                                          numericCharCount: _password.numbers,
-                                          specialCharCount: _password.especial,
-                                          width: 300,
-                                          height: 150,
-                                          onSuccess: () {
-                                            setState(() {
-                                              passwordValid = true;
-                                            });
-                                          },
-                                          onFail: () {
-                                            setState(() {
-                                              passwordValid = false;
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                const SizedBox(
-                                  height: 40,
-                                ),
-                                CustomInput(
-                                  controller: firstQuestion,
-                                  label: "1. $firstQuestionSentence",
-                                  isSignUp: true,
-                                ),
-                                const SizedBox(
-                                  height: 30,
-                                ),
-                                CustomInput(
-                                  controller: secondQuestion,
-                                  label: "2. $secondQuestionSentence",
-                                  isSignUp: true,
-                                ),
-                                const SizedBox(
-                                  height: 30,
-                                ),
-                                CustomInput(
-                                  controller: thirdQuestion,
-                                  label: "3. $thirdQuestionSentence",
-                                  isSignUp: true,
-                                ),
-                                const SizedBox(
-                                  height: 40,
-                                ),
-                                const SizedBox(
                                   height: 40,
                                 ),
                                 Row(
@@ -318,29 +216,15 @@ class _UserDetailBodyState extends State<UserDetailBody> with ErrorHandling {
                                   children: [
                                     TextButton(
                                       onPressed: () {
-                                        if (_formKey.currentState!.validate() &&
-                                            passwordValid) {
+                                        if (_formKey.currentState!.validate()) {
                                           bloc.add(
                                             UserDetail(
                                               email: email.text,
-                                              password: password.text,
                                               name: name.text,
                                               lastName: lastName.text,
                                               genre: gender!,
                                               birthDate: birthDate.text,
                                               phone: phone.text,
-                                              id1: firstQuestionSentence,
-                                              id2: secondQuestionSentence,
-                                              id3: thirdQuestionSentence,
-                                              q1: firstQuestion.text
-                                                  .toLowerCase()
-                                                  .replaceAll(' ', ''),
-                                              q2: secondQuestion.text
-                                                  .toLowerCase()
-                                                  .replaceAll(' ', ''),
-                                              q3: thirdQuestion.text
-                                                  .toLowerCase()
-                                                  .replaceAll(' ', ''),
                                             ),
                                           );
                                         }
@@ -383,18 +267,5 @@ class _UserDetailBodyState extends State<UserDetailBody> with ErrorHandling {
         ],
       ),
     );
-  }
-
-  _getPasswordPolicy() async {
-    final UserRepository userRepository = UserRepository();
-    final password = await userRepository.getPasswordPolicy();
-    _password = Password(
-      mayus: int.parse(password[0]),
-      min: int.parse(password[1]),
-      especial: int.parse(password[2]),
-      numbers: int.parse(password[3]),
-      lenght: int.parse(password[4]),
-    );
-    setState(() {});
   }
 }

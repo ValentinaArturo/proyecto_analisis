@@ -51,7 +51,7 @@ class _DashboardBodyState extends State<DashboardBody> {
         controller: sideMenu,
         style: SideMenuStyle(
             displayMode: SideMenuDisplayMode.auto,
-            decoration: BoxDecoration(),
+            decoration: const BoxDecoration(),
             openSideMenuWidth: 200,
             compactSideMenuWidth: 40,
             hoverColor: Colors.blue[100],
@@ -59,8 +59,8 @@ class _DashboardBodyState extends State<DashboardBody> {
             selectedIconColor: Colors.white,
             unselectedIconColor: Colors.black54,
             backgroundColor: Colors.grey,
-            selectedTitleTextStyle: TextStyle(color: Colors.white),
-            unselectedTitleTextStyle: TextStyle(color: Colors.black54),
+            selectedTitleTextStyle: const TextStyle(color: Colors.white),
+            unselectedTitleTextStyle: const TextStyle(color: Colors.black54),
             iconSize: 20,
             itemBorderRadius: const BorderRadius.all(
               Radius.circular(5.0),
@@ -84,7 +84,7 @@ class _DashboardBodyState extends State<DashboardBody> {
                 controller: sideMenu,
                 style: SideMenuStyle(
                   displayMode: SideMenuDisplayMode.auto,
-                  decoration: BoxDecoration(),
+                  decoration: const BoxDecoration(),
                   openSideMenuWidth: 200,
                   compactSideMenuWidth: 40,
                   hoverColor: Colors.blue[100],
@@ -92,8 +92,9 @@ class _DashboardBodyState extends State<DashboardBody> {
                   selectedIconColor: Colors.white,
                   unselectedIconColor: Colors.black54,
                   backgroundColor: bgColor,
-                  selectedTitleTextStyle: TextStyle(color: Colors.white),
-                  unselectedTitleTextStyle: TextStyle(color: Colors.black54),
+                  selectedTitleTextStyle: const TextStyle(color: Colors.white),
+                  unselectedTitleTextStyle:
+                      const TextStyle(color: Colors.black54),
                   iconSize: 20,
                   itemBorderRadius: const BorderRadius.all(
                     Radius.circular(5.0),
@@ -117,12 +118,8 @@ class _DashboardBodyState extends State<DashboardBody> {
             flex: 5,
             child: PageView(
               controller: pageController,
-              physics: NeverScrollableScrollPhysics(),
-              children: [
-                _dashBoard(),
-                RolsScreen(),
-                RolsScreen(),
-              ],
+              physics: const NeverScrollableScrollPhysics(),
+              children: _getMenuWidgets(),
             ),
           ),
         ],
@@ -142,13 +139,13 @@ class _DashboardBodyState extends State<DashboardBody> {
     return SafeArea(
       child: SingleChildScrollView(
         primary: false,
-        padding: EdgeInsets.all(defaultPadding),
+        padding: const EdgeInsets.all(defaultPadding),
         child: Column(
           children: [
             Header(
               name: name,
             ),
-            SizedBox(height: defaultPadding),
+            const SizedBox(height: defaultPadding),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -156,20 +153,20 @@ class _DashboardBodyState extends State<DashboardBody> {
                   flex: 5,
                   child: Column(
                     children: [
-                      MyFiles(),
-                      SizedBox(height: defaultPadding),
-                      RecentFiles(),
+                      const MyFiles(),
+                      const SizedBox(height: defaultPadding),
+                      const RecentFiles(),
                       if (Responsive.isMobile(context))
-                        SizedBox(height: defaultPadding),
-                      if (Responsive.isMobile(context)) StorageDetails(),
+                        const SizedBox(height: defaultPadding),
+                      if (Responsive.isMobile(context)) const StorageDetails(),
                     ],
                   ),
                 ),
                 if (!Responsive.isMobile(context))
-                  SizedBox(width: defaultPadding),
+                  const SizedBox(width: defaultPadding),
                 // On Mobile means if the screen is less than 850 we don't want to show it
                 if (!Responsive.isMobile(context))
-                  Expanded(
+                  const Expanded(
                     flex: 2,
                     child: StorageDetails(),
                   ),
@@ -179,5 +176,94 @@ class _DashboardBodyState extends State<DashboardBody> {
         ),
       ),
     );
+  }
+
+  List<Widget> _getMenuWidgets() {
+    List<Widget> myWidgets = widget.menu.options.map((obj) {
+      if (obj.nombre == 'Empresas') {
+        return _dashBoard();
+      } else if (obj.nombre == 'Sucursales') {
+        return Container(
+          child: const Text('Sucursales'),
+        );
+      } else if (obj.nombre == 'Generos') {
+        return Container(
+          child: const Text('Generos'),
+        );
+      } else if (obj.nombre == 'Estatus Usuario') {
+        return Container(
+          child: const Text('Estatus Usuario'),
+        );
+      } else if (obj.nombre == 'Roles') {
+        return Container(
+          child: const Text('Roles'),
+        );
+      } else if (obj.nombre == 'Modulos') {
+        return Container(
+          child: const Text('Modulos'),
+        );
+      } else if (obj.nombre == 'Menus') {
+        return Container(
+          child: const Text('Menus'),
+        );
+      } else if (obj.nombre == 'Opciones') {
+        return Container(
+          child: const Text('Opciones'),
+        );
+      } else if (obj.nombre == 'Usuarios') {
+        return const RolsScreen();
+      } else if (obj.nombre == 'Asignar Roles a un Usuario') {
+        return Container(
+          child: const Text('Asignar Roles a un Usuario'),
+        );
+      } else if (obj.nombre == 'Asignar Opciones a un Role') {
+        return Container(
+          child: const Text('Asignar Opciones a un Role'),
+        );
+      } else if (obj.nombre == 'Estados Civiles') {
+        return Container(
+          child: const Text('Estados Civiles'),
+        );
+      } else if (obj.nombre == 'Status Empleado') {
+        return Container(
+          child: const Text('Status Empleado'),
+        );
+      } else if (obj.nombre == 'Flujos Status Empleado') {
+        return Container(
+          child: const Text('Flujos Status Empleado'),
+        );
+      } else if (obj.nombre == 'Tipos de Documento') {
+        return Container(
+          child: const Text('Tipos de Documento'),
+        );
+      } else if (obj.nombre == 'Departamentos') {
+        return Container(
+          child: const Text('Departamentos'),
+        );
+      } else if (obj.nombre == 'Puestos') {
+        return Container(
+          child: const Text('Puestos'),
+        );
+      } else if (obj.nombre == 'Personas') {
+        return Container(
+          child: const Text('Personas'),
+        );
+      } else if (obj.nombre == 'Documentos de Personas') {
+        return Container(
+          child: const Text('Documentos de Personas'),
+        );
+      } else if (obj.nombre == 'Bancos') {
+        return Container(
+          child: const Text('Bancos'),
+        );
+      } else if (obj.nombre == 'Empleados') {
+        return Container(
+          child: const Text('Empleados'),
+        );
+      }
+      return Text(obj.nombre);
+    }).toList();
+
+    return myWidgets;
   }
 }

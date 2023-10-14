@@ -6,6 +6,7 @@ import 'package:proyecto_analisis/forgotPasswordUnlock/forgot_password_unlock_sc
 import 'package:proyecto_analisis/login/login_screen.dart';
 import 'package:proyecto_analisis/rol/model/menu.dart';
 import 'package:proyecto_analisis/rol/rol_screen.dart';
+import 'package:proyecto_analisis/rols/model/user_response.dart';
 import 'package:proyecto_analisis/rols/rols_screen.dart';
 import 'package:proyecto_analisis/routes/generator_route.dart';
 import 'package:proyecto_analisis/routes/landing_routes_constants.dart';
@@ -28,7 +29,9 @@ class LandingRoutes {
         );
       case signUpRoute:
         return GeneratePageRoute(
-          widget: const SignUpScreen(),
+          widget: SignUpScreen(
+            isSignUp: settings.arguments as bool,
+          ),
           routeName: settings.name!,
         );
       case accessDeniedRoute:
@@ -70,7 +73,9 @@ class LandingRoutes {
         );
       case userDetailRoute:
         return GeneratePageRoute(
-          widget: const UserDetailScreen(),
+          widget: UserDetailScreen(
+            user: settings.arguments as User,
+          ),
           routeName: settings.name!,
         );
       default:

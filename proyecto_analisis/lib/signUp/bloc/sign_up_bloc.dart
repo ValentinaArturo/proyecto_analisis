@@ -8,6 +8,7 @@ import 'package:proyecto_analisis/repository/user_repository.dart';
 import 'package:proyecto_analisis/signUp/bloc/sign_up_event.dart';
 import 'package:proyecto_analisis/signUp/bloc/sign_up_state.dart';
 import 'package:proyecto_analisis/signUp/model/genre_response.dart';
+import 'package:proyecto_analisis/signUp/model/question_response.dart';
 import 'package:proyecto_analisis/signUp/service/sign_up_service.dart';
 
 class SignUpBloc extends BaseBloc<SignUpEvent, BaseState> {
@@ -17,6 +18,8 @@ class SignUpBloc extends BaseBloc<SignUpEvent, BaseState> {
   }) : super(SignUpInitial()) {
     on<SignUp>(signUp);
     on<Genre>(genre);
+    on<Question>(question);
+
   }
 
   final SignUpService service;
@@ -92,6 +95,35 @@ class SignUpBloc extends BaseBloc<SignUpEvent, BaseState> {
       emit(
         GenreSuccess(
           genreResponse: genreResponse,
+        ),
+      );
+    } on DioError catch (dioError) {
+      emit(
+        SignUpError(
+          dioError.response!.data['msg'],
+        ),
+      );
+    }
+  }
+
+  Future<void> question(
+    Question event,
+    Emitter<BaseState> emit,
+  ) async {
+    emit(
+      SignUpInProgress(),
+    );
+
+    try {
+      final response = await service.genre();
+
+      final questionR = Questions.fromJson(
+        response.data!,
+      );
+
+      emit(
+        QuestionsSuccess(
+          questionR,
         ),
       );
     } on DioError catch (dioError) {

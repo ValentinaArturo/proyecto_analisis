@@ -15,19 +15,12 @@ class UserDetailService {
   );
 
   Future<Response<dynamic>> userDetail({
-    required String password,
     required String email,
     required String name,
     required String lastName,
     required int genre,
     required String birthDate,
     required String phone,
-    required String id1,
-    required String id2,
-    required String id3,
-    required String q1,
-    required String q2,
-    required String q3,
   }) async {
     return client.post(
       signUpPath,
@@ -37,22 +30,7 @@ class UserDetailService {
         "fechaNacimiento": birthDate,
         "genero": genre,
         "email": email,
-        "password": password,
         "telefono": phone,
-        'preguntas': [
-          {
-            'pregunta': id1,
-            'respuesta': q1,
-          },
-          {
-            'pregunta': id2,
-            'respuesta': q2,
-          },
-          {
-            'pregunta': id3,
-            'respuesta': q3,
-          },
-        ],
       },
     );
   }

@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyecto_analisis/repository/user_repository.dart';
+import 'package:proyecto_analisis/resources/constants.dart';
 import 'package:proyecto_analisis/signUp/bloc/sign_up_bloc.dart';
 import 'package:proyecto_analisis/signUp/service/sign_up_service.dart';
 import 'package:proyecto_analisis/signUp/widget/sign_up_body.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+  final bool isSignUp;
+
+  const SignUpScreen({
+    Key? key,
+    required this.isSignUp,
+  }) : super(key: key);
 
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
@@ -22,15 +28,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
         repository: UserRepository(),
       ),
       child: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/register.png'),
-            fit: BoxFit.fill,
-          ),
-        ),
+        decoration: widget.isSignUp
+            ? const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/register.png'),
+                  fit: BoxFit.fill,
+                ),
+              )
+            : const BoxDecoration(
+                color: secondaryColor,
+              ),
         child: ScreenTypeLayout.builder(
-          desktop: (context) => const SignUpBody(),
-          mobile: (context) => const SignUpBody(),
+          desktop: (context) => SignUpBody(
+            isSignUp: widget.isSignUp,
+          ),
+          mobile: (context) => SignUpBody(
+            isSignUp: widget.isSignUp,
+          ),
         ),
       ),
     );
