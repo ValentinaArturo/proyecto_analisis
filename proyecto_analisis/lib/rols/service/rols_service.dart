@@ -19,4 +19,49 @@ class RolsService {
       userPath,
     );
   }
+
+  Future<Response<dynamic>> rolsUser() async {
+    return client.get(
+      rolsPath,
+    );
+  }
+  Future<Response<dynamic>> rolList() async {
+    return client.get(
+      rolListPath,
+    );
+  }
+
+  Future<Response<dynamic>> rolsSave({
+    required final String user,
+    required final int id,
+    required final String userCreate,
+  }) async {
+    return client.post(rolsPath, data: {
+      "IdUsuario": user,
+      "IdRole": id,
+      "IdUsuarioCreacion": userCreate,
+    });
+  }
+
+  Future<Response<dynamic>> rolsEdit({
+    required final String user,
+    required final int id,
+    required final String userCreate,
+  }) async {
+    return client.post(rolsPath, data: {
+      "IdUsuario": user,
+      "IdRole": id,
+      "IdUsuarioCreacion": userCreate,
+    });
+  }
+
+  Future<Response<dynamic>> rolsDelete({
+    required final String user,
+    required final int id,
+  }) async {
+    return client.post(rolsPath, data: {
+      "IdUsuario": user,
+      "IdRole": id,
+    });
+  }
 }

@@ -128,18 +128,35 @@ class _RolsBodyState extends State<RolsBody> with ErrorHandling {
                                           color: Colors.white,
                                         ),
                                       ),
-                                      trailing: InkWell(
-                                        onTap: () {
-                                          Navigator.pushNamed(
-                                            context,
-                                            userDetailRoute,
-                                            arguments: users[index],
-                                          );
-                                        },
-                                        child: const Icon(
-                                          Icons.edit,
-                                          color: Colors.lightBlue,
-                                        ),
+                                      trailing: Row(
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              Navigator.pushNamed(
+                                                context,
+                                                userDetailRoute,
+                                                arguments: users[index],
+                                              );
+                                            },
+                                            child: const Icon(
+                                              Icons.edit,
+                                              color: Colors.lightBlue,
+                                            ),
+                                          ),
+                                          InkWell(
+                                            onTap: () {
+                                              Navigator.pushNamed(
+                                                context,
+                                                userDetailRoute,
+                                                arguments: users[index],
+                                              );
+                                            },
+                                            child: const Icon(
+                                              Icons.delete_forever,
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),

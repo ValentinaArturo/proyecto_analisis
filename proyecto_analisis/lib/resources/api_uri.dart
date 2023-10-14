@@ -9,4 +9,5 @@ const questionsPath = 'preguntas.php';
 const policyPath = 'getPoliticaEmpresa.php';
 const rolPath = 'rolesAsignados.php';
 const userPath = 'usuario.php';
-
+const rolsPath = 'usuario_role.php';
+const rolListPath = 'roles.php';

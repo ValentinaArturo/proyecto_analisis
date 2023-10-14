@@ -8,6 +8,7 @@ import 'package:proyecto_analisis/repository/user_repository.dart';
 import 'package:proyecto_analisis/resources/constants.dart';
 import 'package:proyecto_analisis/rol/model/menu.dart';
 import 'package:proyecto_analisis/rols/rols_screen.dart';
+import 'package:proyecto_analisis/rolsUser/rols_user_screen.dart';
 
 import '../../common/responsive.dart';
 
@@ -213,9 +214,7 @@ class _DashboardBodyState extends State<DashboardBody> {
       } else if (obj.nombre == 'Usuarios') {
         return const RolsScreen();
       } else if (obj.nombre == 'Asignar Roles a un Usuario') {
-        return Container(
-          child: const Text('Asignar Roles a un Usuario'),
-        );
+        return const RolsUserScreen();
       } else if (obj.nombre == 'Asignar Opciones a un Role') {
         return Container(
           child: const Text('Asignar Opciones a un Role'),

@@ -57,6 +57,7 @@ dependencies:
   flutter_pw_validator: ^1.6.0
   custom_radio_grouped_button: ^2.2.1
   easy_sidemenu: ^0.5.0
+  dropdown_button2: ^2.3.9
 
 dev_dependencies:
   flutter_test:
