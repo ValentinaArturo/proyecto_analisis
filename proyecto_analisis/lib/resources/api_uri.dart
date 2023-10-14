@@ -11,4 +11,5 @@ const rolPath = 'rolesAsignados.php';
 const userPath = 'usuario.php';
 const rolsPath = 'usuario_role.php';
 const rolListPath = 'roles.php';
-const modulesPath = 'modulo.php';
+const modulesPath = 'crudmodulo.php';
+const genresPath = 'crudgenero.php';

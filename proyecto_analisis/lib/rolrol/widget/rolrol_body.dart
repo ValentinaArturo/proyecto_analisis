@@ -2,52 +2,51 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
 import 'package:proyecto_analisis/common/bloc/mixin/error_handling.dart';
-import 'package:proyecto_analisis/modules/bloc/modules_bloc.dart';
-import 'package:proyecto_analisis/modules/model/modules.dart' as Module;
 import 'package:proyecto_analisis/repository/user_repository.dart';
 import 'package:proyecto_analisis/resources/constants.dart';
+import 'package:proyecto_analisis/rolrol/bloc/rolrol_bloc.dart';
+import 'package:proyecto_analisis/rolsUser/model/rol.dart';
 
 import '../../common/loader/loader.dart';
 
-class ModulesBody extends StatefulWidget {
-  const ModulesBody({Key? key}) : super(key: key);
+class RolRolBody extends StatefulWidget {
+  const RolRolBody({Key? key}) : super(key: key);
 
   @override
-  State<ModulesBody> createState() => _ModulesBodyState();
+  State<RolRolBody> createState() => _RolRolBodyState();
 }
 
-class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
-  List<Module.Modules> modules = [];
-  late ModulesBloc bloc;
+class _RolRolBodyState extends State<RolRolBody> with ErrorHandling {
+  List<Rol> rols = [];
+  late RolRolBloc bloc;
   late String name;
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _menuNumberController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _getName();
-    context.read<ModulesBloc>().add(
-          Modules(),
+    context.read<RolRolBloc>().add(
+          RolRol(),
         );
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    bloc = context.read<ModulesBloc>();
+    bloc = context.read<RolRolBloc>();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ModulesBloc, BaseState>(
+    return BlocListener<RolRolBloc, BaseState>(
       listener: (context, state) {
         verifyServerError(state);
-        if (state is ModulesSuccess) {
+        if (state is RolRolSuccess) {
           setState(() {
-            modules = state.modulesResponse.users;
+            rols = state.rolRolResponse.rols;
           });
-        } else if (state is ModulesEditSuccess) {
+        } else if (state is RolRolEditSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -55,7 +54,7 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
               ),
             ),
           );
-        } else if (state is ModulesCreateSuccess) {
+        } else if (state is RolRolCreateSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -63,7 +62,7 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
               ),
             ),
           );
-        } else if (state is ModulesDeleteSuccess) {
+        } else if (state is RolRolDeleteSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -71,7 +70,7 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
               ),
             ),
           );
-        } else if (state is ModulesError) {
+        } else if (state is RolRolError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
@@ -111,7 +110,7 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
                             top: MediaQuery.of(context).size.height * 0.05,
                           ),
                           child: ListView.builder(
-                            itemCount: modules.length,
+                            itemCount: rols.length,
                             itemBuilder: (context, index) {
                               return Column(
                                 children: [
@@ -127,14 +126,14 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
                                         color: Colors.purpleAccent,
                                       ),
                                       title: Text(
-                                        'Nombre:   ${modules[index].nombre}',
+                                        'Nombre:   ${rols[index].nombre}',
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                       subtitle: Text(
-                                        'Orden en el Menu:   ${modules[index].ordenMenu}',
+                                        'ID:   ${rols[index].idRole}',
                                         style: const TextStyle(
                                           color: Colors.white,
                                         ),
@@ -145,16 +144,8 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
                                           children: [
                                             InkWell(
                                               onTap: () {
-                                                setState(() {
-                                                  _menuNumberController.text =
-                                                      modules[index]
-                                                          .ordenMenu
-                                                          .toString();
-                                                  _nameController.text =
-                                                      modules[index].nombre;
-                                                });
                                                 _dialogEdit(
-                                                  modules[index],
+                                                  rols[index],
                                                 );
                                               },
                                               child: const Icon(
@@ -165,13 +156,11 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
                                             InkWell(
                                               onTap: () {
                                                 setState(() {
-                                                  _menuNumberController.text =
-                                                      '';
                                                   _nameController.text = '';
                                                 });
 
                                                 _dialogCreate(
-                                                  modules[index],
+                                                  rols[index],
                                                 );
                                               },
                                               child: const Icon(
@@ -182,8 +171,9 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
                                             InkWell(
                                               onTap: () {
                                                 bloc.add(
-                                                  ModuleDelete(
-                                                    id: modules[index].idModulo,
+                                                  RolDelete(
+                                                    id: int.parse(
+                                                        rols[index].idRole),
                                                   ),
                                                 );
                                               },
@@ -210,9 +200,9 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
               ],
             ),
           ),
-          BlocBuilder<ModulesBloc, BaseState>(
+          BlocBuilder<RolRolBloc, BaseState>(
             builder: (context, state) {
-              if (state is ModulesInProgress) {
+              if (state is RolRolInProgress) {
                 return const Loader();
               }
               return Container();
@@ -224,21 +214,16 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
   }
 
   _dialogEdit(
-    final Module.Modules module,
+    final Rol rol,
   ) {
     AlertDialog(
-      title: Text('Editar módulo'),
+      title: Text('Editar Rol'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           TextField(
             controller: _nameController,
-            decoration: InputDecoration(labelText: 'Nombre del módulo'),
-          ),
-          TextField(
-            controller: _menuNumberController,
-            decoration: InputDecoration(labelText: 'Número de menú'),
-            keyboardType: TextInputType.number,
+            decoration: InputDecoration(labelText: 'Nombre del Rol'),
           ),
         ],
       ),
@@ -253,13 +238,11 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
           child: Text('Guardar'),
           onPressed: () {
             String moduleName = _nameController.text;
-            String menuNumber = _menuNumberController.text;
             bloc.add(
-              ModuleEdit(
+              RolEdit(
                 name: moduleName,
-                id: module.idModulo,
+                id: int.parse(rol.idRole),
                 nameCreate: name,
-                menuOrder: menuNumber,
               ),
             );
           },
@@ -269,21 +252,16 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
   }
 
   _dialogCreate(
-    final Module.Modules user,
+    final Rol rol,
   ) {
     AlertDialog(
-      title: Text('Crear módulo'),
+      title: Text('Crear Rol'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           TextField(
             controller: _nameController,
-            decoration: InputDecoration(labelText: 'Nombre del módulo'),
-          ),
-          TextField(
-            controller: _menuNumberController,
-            decoration: InputDecoration(labelText: 'Número de menú'),
-            keyboardType: TextInputType.number,
+            decoration: InputDecoration(labelText: 'Nombre del Rol'),
           ),
         ],
       ),
@@ -298,12 +276,10 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
           child: Text('Crear'),
           onPressed: () {
             String moduleName = _nameController.text;
-            String menuNumber = _menuNumberController.text;
             bloc.add(
-              ModuleCreate(
+              RolCreate(
                 name: moduleName,
                 nameCreate: name,
-                menuOrder: menuNumber,
               ),
             );
           },

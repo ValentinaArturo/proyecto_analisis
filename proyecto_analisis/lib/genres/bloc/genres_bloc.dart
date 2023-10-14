@@ -2,162 +2,159 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
-import 'package:meta/meta.dart';
 import 'package:proyecto_analisis/common/bloc/base_bloc.dart';
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
-import 'package:proyecto_analisis/modules/model/modules.dart';
-import 'package:proyecto_analisis/modules/service/modules_service.dart';
+import 'package:proyecto_analisis/genres/bloc/genres_event.dart';
+import 'package:proyecto_analisis/genres/bloc/genres_state.dart';
+import 'package:proyecto_analisis/genres/model/genres.dart';
+import 'package:proyecto_analisis/genres/service/genres_service.dart';
 import 'package:proyecto_analisis/repository/user_repository.dart';
 
-part 'modules_event.dart';
-part 'modules_state.dart';
+class GenresBloc extends BaseBloc<GenresEvent, BaseState> {
+  GenresBloc({required this.service, required this.userRepository})
+      : super(GenresInitial()) {
+    on<Genres>(genres);
+    on<GenreEdit>(genreEdit);
+    on<GenreDelete>(genreDelete);
+    on<GenreCreate>(genresCreate);
 
-class ModulesBloc extends BaseBloc<ModulesEvent, BaseState> {
-  ModulesBloc({required this.service, required this.userRepository})
-      : super(ModulesInitial()) {
-    on<Modules>(modules);
-    on<ModuleCreate>(modulesCreate);
-    on<ModuleEdit>(moduleEdit);
-    on<ModuleDelete>(moduleDelete);
   }
 
-  final ModulesService service;
+  final GenresService service;
   final UserRepository userRepository;
 
-  Future<void> modules(
-    Modules event,
+  Future<void> genres(
+    Genres event,
     Emitter<BaseState> emit,
   ) async {
     emit(
-      ModulesInProgress(),
+      GenresInProgress(),
     );
 
     try {
-      final response = await service.modules();
+      final response = await service.genres();
 
       if (response.statusCode == 401) {
         emit(
-          ModulesError(
+          GenresError(
             response.data['msg'],
           ),
         );
       } else if (response.statusCode == 200) {
-        final success = ModulesResponse.fromJson(
+        final success = GenresResponse.fromJson(
           response.data!,
         );
         emit(
-          ModulesSuccess(
-            modulesResponse: success,
+          GenresSuccess(
+            genresResponse: success,
           ),
         );
       }
     } on DioError catch (dioError) {
       emit(
-        ModulesError(
+        GenresError(
           dioError.response!.data['msg'],
         ),
       );
     }
   }
 
-  Future<void> modulesCreate(
-    ModuleCreate event,
+  Future<void> genresCreate(
+    GenreCreate event,
     Emitter<BaseState> emit,
   ) async {
     emit(
-      ModulesInProgress(),
+      GenresInProgress(),
     );
 
     try {
-      final response = await service.modulesCreate(
+      final response = await service.genresCreate(
         name: event.name,
-        menuOrder: event.menuOrder,
         userCreate: event.nameCreate,
       );
 
       if (response.statusCode == 401) {
         emit(
-          ModulesError(
+          GenresError(
             response.data['msg'],
           ),
         );
       } else if (response.statusCode == 200) {
         emit(
-          ModulesCreateSuccess(),
+          GenresCreateSuccess(),
         );
       }
     } on DioError catch (dioError) {
       emit(
-        ModulesError(
+        GenresError(
           dioError.response!.data['msg'],
         ),
       );
     }
   }
 
-  Future<void> moduleEdit(
-    ModuleEdit event,
+  Future<void> genreEdit(
+    GenreEdit event,
     Emitter<BaseState> emit,
   ) async {
     emit(
-      ModulesInProgress(),
+      GenresInProgress(),
     );
 
     try {
-      final response = await service.modulesEdit(
+      final response = await service.genresEdit(
         name: event.name,
         id: event.id,
         userCreate: event.nameCreate,
-        menuOrder: event.menuOrder,
       );
 
       if (response.statusCode == 401) {
         emit(
-          ModulesError(
+          GenresError(
             response.data['msg'],
           ),
         );
       } else if (response.statusCode == 200) {
         emit(
-          ModulesEditSuccess(),
+          GenresEditSuccess(),
         );
       }
     } on DioError catch (dioError) {
       emit(
-        ModulesError(
+        GenresError(
           dioError.response!.data['msg'],
         ),
       );
     }
   }
 
-  Future<void> moduleDelete(
-    ModuleDelete event,
+  Future<void> genreDelete(
+    GenreDelete event,
     Emitter<BaseState> emit,
   ) async {
     emit(
-      ModulesInProgress(),
+      GenresInProgress(),
     );
 
     try {
-      final response = await service.modulesDelete(
+      final response = await service.genresDelete(
         id: event.id,
       );
 
       if (response.statusCode == 401) {
         emit(
-          ModulesError(
+          GenresError(
             response.data['msg'],
           ),
         );
       } else if (response.statusCode == 200) {
         emit(
-          ModulesDeleteSuccess(),
+          GenresDeleteSuccess(),
         );
       }
     } on DioError catch (dioError) {
       emit(
-        ModulesError(
+        GenresError(
           dioError.response!.data['msg'],
         ),
       );

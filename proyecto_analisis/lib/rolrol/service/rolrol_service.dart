@@ -2,63 +2,59 @@ import 'package:dio/dio.dart';
 import 'package:proyecto_analisis/factory/client_auth_factory.dart';
 import 'package:proyecto_analisis/resources/api_uri.dart';
 
-class ModulesService {
+class RolRolService {
   Dio client;
 
-  ModulesService()
+  RolRolService()
       : client = ClientAuthFactory.buildClient(
           baseUrl,
         );
 
-  ModulesService.withClient(
+  RolRolService.withClient(
     this.client,
   );
 
-  Future<Response<dynamic>> modules() async {
+  Future<Response<dynamic>> rolRol() async {
     return client.get(
-      modulesPath,
+      rolListPath,
     );
   }
 
-  Future<Response<dynamic>> modulesCreate({
+  Future<Response<dynamic>> rolRolCreate({
     required final name,
-    required final menuOrder,
     required final userCreate,
   }) async {
     return client.post(
-      modulesPath,
+      rolListPath,
       data: {
         "nombre": name,
-        "ordenMenu": menuOrder,
         "usuarioCreacion": userCreate,
       },
     );
   }
 
-  Future<Response<dynamic>> modulesEdit({
+  Future<Response<dynamic>> rolRolEdit({
     required final name,
-    required final menuOrder,
     required final userCreate,
     required final id,
   }) async {
     return client.put(
-      modulesPath,
+      rolListPath,
       data: {
         "nombre": name,
-        "ordenMenu": menuOrder,
         "usuarioModificacion": userCreate,
-        "idModulo": id,
+        "idRole": id,
       },
     );
   }
 
-  Future<Response<dynamic>> modulesDelete({
+  Future<Response<dynamic>> rolRolDelete({
     required final id,
   }) async {
     return client.delete(
-      modulesPath,
+      rolListPath,
       data: {
-        "idModulo": id,
+        "idRole": id,
       },
     );
   }

@@ -5,159 +5,157 @@ import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
 import 'package:proyecto_analisis/common/bloc/base_bloc.dart';
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
-import 'package:proyecto_analisis/modules/model/modules.dart';
-import 'package:proyecto_analisis/modules/service/modules_service.dart';
 import 'package:proyecto_analisis/repository/user_repository.dart';
+import 'package:proyecto_analisis/rolrol/service/rolrol_service.dart';
+import 'package:proyecto_analisis/rolsUser/model/rol.dart';
 
-part 'modules_event.dart';
-part 'modules_state.dart';
+part 'rolrol_event.dart';
+part 'rolrol_state.dart';
 
-class ModulesBloc extends BaseBloc<ModulesEvent, BaseState> {
-  ModulesBloc({required this.service, required this.userRepository})
-      : super(ModulesInitial()) {
-    on<Modules>(modules);
-    on<ModuleCreate>(modulesCreate);
-    on<ModuleEdit>(moduleEdit);
-    on<ModuleDelete>(moduleDelete);
+class RolRolBloc extends BaseBloc<RolRolEvent, BaseState> {
+  RolRolBloc({required this.service, required this.userRepository})
+      : super(RolRolInitial()) {
+    on<RolRol>(rolRol);
+    on<RolCreate>(rolRolCreate);
+    on<RolEdit>(rolEdit);
+    on<RolDelete>(rolDelete);
   }
 
-  final ModulesService service;
+  final RolRolService service;
   final UserRepository userRepository;
 
-  Future<void> modules(
-    Modules event,
+  Future<void> rolRol(
+    RolRol event,
     Emitter<BaseState> emit,
   ) async {
     emit(
-      ModulesInProgress(),
+      RolRolInProgress(),
     );
 
     try {
-      final response = await service.modules();
+      final response = await service.rolRol();
 
       if (response.statusCode == 401) {
         emit(
-          ModulesError(
+          RolRolError(
             response.data['msg'],
           ),
         );
       } else if (response.statusCode == 200) {
-        final success = ModulesResponse.fromJson(
+        final success = RolResponse.fromJson(
           response.data!,
         );
         emit(
-          ModulesSuccess(
-            modulesResponse: success,
+          RolRolSuccess(
+            rolRolResponse: success,
           ),
         );
       }
     } on DioError catch (dioError) {
       emit(
-        ModulesError(
+        RolRolError(
           dioError.response!.data['msg'],
         ),
       );
     }
   }
 
-  Future<void> modulesCreate(
-    ModuleCreate event,
+  Future<void> rolRolCreate(
+    RolCreate event,
     Emitter<BaseState> emit,
   ) async {
     emit(
-      ModulesInProgress(),
+      RolRolInProgress(),
     );
 
     try {
-      final response = await service.modulesCreate(
+      final response = await service.rolRolCreate(
         name: event.name,
-        menuOrder: event.menuOrder,
         userCreate: event.nameCreate,
       );
 
       if (response.statusCode == 401) {
         emit(
-          ModulesError(
+          RolRolError(
             response.data['msg'],
           ),
         );
       } else if (response.statusCode == 200) {
         emit(
-          ModulesCreateSuccess(),
+          RolRolCreateSuccess(),
         );
       }
     } on DioError catch (dioError) {
       emit(
-        ModulesError(
+        RolRolError(
           dioError.response!.data['msg'],
         ),
       );
     }
   }
 
-  Future<void> moduleEdit(
-    ModuleEdit event,
+  Future<void> rolEdit(
+    RolEdit event,
     Emitter<BaseState> emit,
   ) async {
     emit(
-      ModulesInProgress(),
+      RolRolInProgress(),
     );
 
     try {
-      final response = await service.modulesEdit(
+      final response = await service.rolRolEdit(
         name: event.name,
         id: event.id,
         userCreate: event.nameCreate,
-        menuOrder: event.menuOrder,
       );
 
       if (response.statusCode == 401) {
         emit(
-          ModulesError(
+          RolRolError(
             response.data['msg'],
           ),
         );
       } else if (response.statusCode == 200) {
         emit(
-          ModulesEditSuccess(),
+          RolRolEditSuccess(),
         );
       }
     } on DioError catch (dioError) {
       emit(
-        ModulesError(
+        RolRolError(
           dioError.response!.data['msg'],
         ),
       );
     }
   }
 
-  Future<void> moduleDelete(
-    ModuleDelete event,
+  Future<void> rolDelete(
+    RolDelete event,
     Emitter<BaseState> emit,
   ) async {
     emit(
-      ModulesInProgress(),
+      RolRolInProgress(),
     );
 
     try {
-      final response = await service.modulesDelete(
+      final response = await service.rolRolDelete(
         id: event.id,
       );
 
       if (response.statusCode == 401) {
         emit(
-          ModulesError(
+          RolRolError(
             response.data['msg'],
           ),
         );
       } else if (response.statusCode == 200) {
         emit(
-          ModulesDeleteSuccess(),
+          RolRolDeleteSuccess(),
         );
       }
     } on DioError catch (dioError) {
       emit(
-        ModulesError(
+        RolRolError(
           dioError.response!.data['msg'],
         ),
       );

@@ -2,76 +2,77 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
 import 'package:proyecto_analisis/common/bloc/mixin/error_handling.dart';
-import 'package:proyecto_analisis/modules/bloc/modules_bloc.dart';
-import 'package:proyecto_analisis/modules/model/modules.dart' as Module;
+import 'package:proyecto_analisis/genres/bloc/genres_bloc.dart';
+import 'package:proyecto_analisis/genres/bloc/genres_event.dart';
+import 'package:proyecto_analisis/genres/bloc/genres_state.dart';
+import 'package:proyecto_analisis/genres/model/genres.dart';
 import 'package:proyecto_analisis/repository/user_repository.dart';
 import 'package:proyecto_analisis/resources/constants.dart';
 
 import '../../common/loader/loader.dart';
 
-class ModulesBody extends StatefulWidget {
-  const ModulesBody({Key? key}) : super(key: key);
+class GenresBody extends StatefulWidget {
+  const GenresBody({Key? key}) : super(key: key);
 
   @override
-  State<ModulesBody> createState() => _ModulesBodyState();
+  State<GenresBody> createState() => _GenresBodyState();
 }
 
-class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
-  List<Module.Modules> modules = [];
-  late ModulesBloc bloc;
+class _GenresBodyState extends State<GenresBody> with ErrorHandling {
+  List<Genre> genres = [];
+  late GenresBloc bloc;
   late String name;
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _menuNumberController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _getName();
-    context.read<ModulesBloc>().add(
-          Modules(),
+    context.read<GenresBloc>().add(
+          Genres(),
         );
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    bloc = context.read<ModulesBloc>();
+    bloc = context.read<GenresBloc>();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ModulesBloc, BaseState>(
+    return BlocListener<GenresBloc, BaseState>(
       listener: (context, state) {
         verifyServerError(state);
-        if (state is ModulesSuccess) {
+        if (state is GenresSuccess) {
           setState(() {
-            modules = state.modulesResponse.users;
+            genres = state.genresResponse.users;
           });
-        } else if (state is ModulesEditSuccess) {
+        } else if (state is GenresEditSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
-                'Se ha actualizado el modulo con exito',
+                'Se ha actualizado el genero con exito',
               ),
             ),
           );
-        } else if (state is ModulesCreateSuccess) {
+        } else if (state is GenresCreateSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
-                'Se ha creado el modulo con exito',
+                'Se ha creado el genero con exito',
               ),
             ),
           );
-        } else if (state is ModulesDeleteSuccess) {
+        } else if (state is GenresDeleteSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
-                'Se ha eliminado el modulo con exito',
+                'Se ha eliminado el genero con exito',
               ),
             ),
           );
-        } else if (state is ModulesError) {
+        } else if (state is GenresError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
@@ -95,7 +96,7 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
                         top: 30,
                       ),
                       child: const Text(
-                        'Modulos',
+                        'Generos',
                         style: TextStyle(
                           color: Colors.lightBlue,
                           fontSize: 33,
@@ -111,7 +112,7 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
                             top: MediaQuery.of(context).size.height * 0.05,
                           ),
                           child: ListView.builder(
-                            itemCount: modules.length,
+                            itemCount: genres.length,
                             itemBuilder: (context, index) {
                               return Column(
                                 children: [
@@ -127,14 +128,14 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
                                         color: Colors.purpleAccent,
                                       ),
                                       title: Text(
-                                        'Nombre:   ${modules[index].nombre}',
+                                        'Nombre:   ${genres[index].nombre}',
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                       subtitle: Text(
-                                        'Orden en el Menu:   ${modules[index].ordenMenu}',
+                                        'ID:   ${genres[index].idGenero}',
                                         style: const TextStyle(
                                           color: Colors.white,
                                         ),
@@ -146,15 +147,11 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
                                             InkWell(
                                               onTap: () {
                                                 setState(() {
-                                                  _menuNumberController.text =
-                                                      modules[index]
-                                                          .ordenMenu
-                                                          .toString();
                                                   _nameController.text =
-                                                      modules[index].nombre;
+                                                      genres[index].nombre;
                                                 });
                                                 _dialogEdit(
-                                                  modules[index],
+                                                  genres[index],
                                                 );
                                               },
                                               child: const Icon(
@@ -165,13 +162,11 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
                                             InkWell(
                                               onTap: () {
                                                 setState(() {
-                                                  _menuNumberController.text =
-                                                      '';
                                                   _nameController.text = '';
                                                 });
 
                                                 _dialogCreate(
-                                                  modules[index],
+                                                  genres[index],
                                                 );
                                               },
                                               child: const Icon(
@@ -182,8 +177,8 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
                                             InkWell(
                                               onTap: () {
                                                 bloc.add(
-                                                  ModuleDelete(
-                                                    id: modules[index].idModulo,
+                                                  GenreDelete(
+                                                    id: genres[index].idGenero,
                                                   ),
                                                 );
                                               },
@@ -210,9 +205,9 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
               ],
             ),
           ),
-          BlocBuilder<ModulesBloc, BaseState>(
+          BlocBuilder<GenresBloc, BaseState>(
             builder: (context, state) {
-              if (state is ModulesInProgress) {
+              if (state is GenresInProgress) {
                 return const Loader();
               }
               return Container();
@@ -224,21 +219,16 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
   }
 
   _dialogEdit(
-    final Module.Modules module,
+    final Genre genre,
   ) {
     AlertDialog(
-      title: Text('Editar módulo'),
+      title: Text('Editar genero'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           TextField(
             controller: _nameController,
-            decoration: InputDecoration(labelText: 'Nombre del módulo'),
-          ),
-          TextField(
-            controller: _menuNumberController,
-            decoration: InputDecoration(labelText: 'Número de menú'),
-            keyboardType: TextInputType.number,
+            decoration: InputDecoration(labelText: 'Nombre del genero'),
           ),
         ],
       ),
@@ -253,13 +243,11 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
           child: Text('Guardar'),
           onPressed: () {
             String moduleName = _nameController.text;
-            String menuNumber = _menuNumberController.text;
             bloc.add(
-              ModuleEdit(
+              GenreEdit(
                 name: moduleName,
-                id: module.idModulo,
+                id: genre.idGenero,
                 nameCreate: name,
-                menuOrder: menuNumber,
               ),
             );
           },
@@ -269,21 +257,16 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
   }
 
   _dialogCreate(
-    final Module.Modules user,
+    final Genre genre,
   ) {
     AlertDialog(
-      title: Text('Crear módulo'),
+      title: Text('Crear genero'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           TextField(
             controller: _nameController,
-            decoration: InputDecoration(labelText: 'Nombre del módulo'),
-          ),
-          TextField(
-            controller: _menuNumberController,
-            decoration: InputDecoration(labelText: 'Número de menú'),
-            keyboardType: TextInputType.number,
+            decoration: InputDecoration(labelText: 'Nombre del genero'),
           ),
         ],
       ),
@@ -298,12 +281,10 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
           child: Text('Crear'),
           onPressed: () {
             String moduleName = _nameController.text;
-            String menuNumber = _menuNumberController.text;
             bloc.add(
-              ModuleCreate(
+              GenreCreate(
                 name: moduleName,
                 nameCreate: name,
-                menuOrder: menuNumber,
               ),
             );
           },

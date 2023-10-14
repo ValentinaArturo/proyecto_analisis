@@ -2,63 +2,59 @@ import 'package:dio/dio.dart';
 import 'package:proyecto_analisis/factory/client_auth_factory.dart';
 import 'package:proyecto_analisis/resources/api_uri.dart';
 
-class ModulesService {
+class GenresService {
   Dio client;
 
-  ModulesService()
+  GenresService()
       : client = ClientAuthFactory.buildClient(
           baseUrl,
         );
 
-  ModulesService.withClient(
+  GenresService.withClient(
     this.client,
   );
 
-  Future<Response<dynamic>> modules() async {
+  Future<Response<dynamic>> genres() async {
     return client.get(
-      modulesPath,
+      genresPath,
     );
   }
 
-  Future<Response<dynamic>> modulesCreate({
+  Future<Response<dynamic>> genresCreate({
     required final name,
-    required final menuOrder,
     required final userCreate,
   }) async {
     return client.post(
-      modulesPath,
+      genresPath,
       data: {
         "nombre": name,
-        "ordenMenu": menuOrder,
         "usuarioCreacion": userCreate,
       },
     );
   }
 
-  Future<Response<dynamic>> modulesEdit({
+  Future<Response<dynamic>> genresEdit({
     required final name,
-    required final menuOrder,
     required final userCreate,
     required final id,
   }) async {
     return client.put(
-      modulesPath,
+      genresPath,
       data: {
         "nombre": name,
-        "ordenMenu": menuOrder,
         "usuarioModificacion": userCreate,
-        "idModulo": id,
+        "idGenero": id,
       },
     );
   }
 
-  Future<Response<dynamic>> modulesDelete({
+  Future<Response<dynamic>> genresDelete({
     required final id,
   }) async {
     return client.delete(
-      modulesPath,
+      genresPath,
       data: {
-        "idModulo": id,
+        "idGenero": id,
       },
     );
   }

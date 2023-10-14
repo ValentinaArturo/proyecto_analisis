@@ -31,6 +31,7 @@ class _RolsUserBodyState extends State<RolsUserBody> with ErrorHandling {
   void initState() {
     super.initState();
     name = '';
+    _getName();
     _selectedRole = Rol(
       idRole: '',
       nombre: '',
@@ -284,7 +285,7 @@ class _RolsUserBodyState extends State<RolsUserBody> with ErrorHandling {
                   RolEdit(
                     user: name,
                     id: int.parse(_selectedRole.idRole),
-                    userCreate: _getName(),
+                    userCreate: name,
                   ),
                 );
                 Navigator.of(context).pop();
@@ -332,7 +333,7 @@ class _RolsUserBodyState extends State<RolsUserBody> with ErrorHandling {
                   RolCreate(
                     user: name,
                     id: int.parse(_selectedRole.idRole),
-                    userCreate: _getName(),
+                    userCreate: name,
                   ),
                 );
                 Navigator.of(context).pop();
