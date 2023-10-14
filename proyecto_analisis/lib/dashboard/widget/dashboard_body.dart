@@ -4,6 +4,7 @@ import 'package:proyecto_analisis/common/components/header.dart';
 import 'package:proyecto_analisis/common/components/my_files.dart';
 import 'package:proyecto_analisis/common/components/recent_files.dart';
 import 'package:proyecto_analisis/common/components/storage_details.dart';
+import 'package:proyecto_analisis/modules/modules_screen.dart';
 import 'package:proyecto_analisis/repository/user_repository.dart';
 import 'package:proyecto_analisis/resources/constants.dart';
 import 'package:proyecto_analisis/rol/model/menu.dart';
@@ -200,9 +201,7 @@ class _DashboardBodyState extends State<DashboardBody> {
           child: const Text('Roles'),
         );
       } else if (obj.nombre == 'Modulos') {
-        return Container(
-          child: const Text('Modulos'),
-        );
+        return ModulesScreen();
       } else if (obj.nombre == 'Menus') {
         return Container(
           child: const Text('Menus'),
