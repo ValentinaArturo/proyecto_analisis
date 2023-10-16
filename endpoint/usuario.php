@@ -10,6 +10,7 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, GET, PUT, OPTIONS, PATCH, DELETE');
 header('Access-Control-Allow-Credentials: true');
 header("Access-Control-Allow-Headers: Authorization, Content-Type");
+date_default_timezone_set("America/Guatemala");
 
 
 const KEY = 'analisisDeSistemas1234#';
@@ -63,49 +64,103 @@ if ($token) {
                 ));
                 break;
             case 'PUT':
-                // $json = file_get_contents("php://input");
+                $json = file_get_contents("php://input");
 
-                // if ($json == false || trim($json) == "") {
-                //     echo json_encode([
-                //         "status" => 400,
-                //         "msg" => "Error en datos recibidos",
-                //     ]);
-                //     die();
-                // }
+                if ($json == false || trim($json) == "") {
+                    echo json_encode([
+                        "status" => 400,
+                        "msg" => "Error en datos de entrada",
+                    ]);
+                    die();
+                }
+                
+                $data = json_decode($json,true);
+                                
+                if (
+                    !isset($data["nombre"]) ||
+                    !isset($data["apellido"]) ||
+                    !isset($data["fechaNacimiento"]) ||
+                    !isset($data["genero"]) ||
+                    !isset($data["email"]) ||
+                    !isset($data["telefono"]) ||
+                    !isset($data["idSucursal"]) ||
+                    !isset($data["usuarioModifica"]) ||
+                    !isset($data["idUsuario"]) ||
+                    !isset($data["idStatusUsuario"]) ||
+                    $data["nombre"] == "" ||
+                    $data["apellido"] == "" ||
+                    $data["fechaNacimiento"] == "" ||
+                    $data["genero"] == "" ||
+                    $data["email"] == "" ||
+                    $data["telefono"] == "" ||
+                    $data["idSucursal"] == "" ||
+                    $data["usuarioModifica"] == "" ||
+                    $data["idUsuario"] == "" ||
+                    $data["idStatusUsuario"] == "" ||
+                    count($data) !== 10)
+                {
+                    echo json_encode([
+                        "status" => 400,
+                        "msg" => "Formato de datos incorrectos",
+                    ]);
+                    die();
+                }
+                
+                $nombre = $data["nombre"];
+                $apellido = $data["apellido"];
+                $fechaNacimiento = $data["fechaNacimiento"];
+                $idStatusUsuario = $data["idStatusUsuario"];
+                $genero = $data["genero"];
+                $email = $data["email"];
+                $telefono = $data["telefono"];
+                $idSucursal = $data["idSucursal"];
+                $usuarioModifica = $data["usuarioModifica"];
+                $idUsuario = $data["idUsuario"];
+                $fechaHoraActual = date('Y-m-d H:i:s');
 
-                // $data = json_decode($json,true);
 
-                // if (
-                //     !isset($data["nombre"]) ||
-                //     !isset($data["apellido"]) ||
-                //     !isset($data["fechaNacimiento"]) ||
-                //     !isset($data["genero"]) ||
-                //     !isset($data["email"]) ||
-                //     !isset($data["telefono"]) ||
-                //     !isset($data["password"]) ||
-                //     !isset($data["IdSucursal"]) ||
-                //     $data["nombre"] == "" ||
-                //     $data["apellido"] == "" ||
-                //     $data["fechaNacimiento"] == "" ||
-                //     $data["genero"] == "" ||
-                //     $data["email"] == "" ||
-                //     $data["telefono"] == "" ||
-                //     $data["password"] == "" ||
-                //     $data["IdSucursal"] == "" ||
-                //     count($data) !== 8
-                // ) {
-                //     echo json_encode([
-                //         "status" => 400,
-                //         "msg" => "Formato de datos incorrecto",
-                //     ]);
-                //     die();
-                // }
+                $query_put = "UPDATE USUARIO SET 
+                Nombre=:nombre,
+                Apellido=:apellido,
+                FechaNacimiento=:fechaNacimiento,
+                IdStatusUsuario=:idStatusUsuario,
+                IdGenero=:idGenero,
+                CorreoElectronico=:email,
+                TelefonoMovil=:telefono,
+                IdSucursal=:idSucursal,
+                FechaModificacion=:fechaHoraActual,
+                UsuarioModificacion=:usuarioModifica
+                WHERE IdUsuario=:idUsuario";
 
-                echo json_encode(array(
-                    "status" => 404,
-                    "msg" => "Método no disponible"
-                ));
-                break;
+                $stmt_validation = $dbhost->prepare($query_put);
+                $stmt_validation->bindParam(':nombre', $nombre);
+                $stmt_validation->bindParam(':apellido', $apellido);
+                $stmt_validation->bindParam(':fechaNacimiento', $fechaNacimiento);
+                $stmt_validation->bindParam(':idStatusUsuario', $idStatusUsuario);
+                $stmt_validation->bindParam(':idGenero', $genero);
+                $stmt_validation->bindParam(':email', $email);
+                $stmt_validation->bindParam(':telefono', $telefono);
+                $stmt_validation->bindParam(':idSucursal', $idStatusUsuario);
+                $stmt_validation->bindParam(':fechaHoraActual', $fechaHoraActual);
+                $stmt_validation->bindParam(':usuarioModifica', $usuarioModifica);
+                $stmt_validation->bindParam(':idUsuario', $idUsuario);
+                $stmt_validation->execute();
+
+                if($stmt_validation->rowCount() > 0 ){
+
+                    echo json_encode(array(
+                        "status" => 200,
+                        "msg" => "Usuario actualizado exitosamente"
+                    ));
+                    die();
+                }else{
+                    echo json_encode(array(
+                        "status" => 401,
+                        "msg" => "Ocurrio un error en el servidor, intenta nuevamente"
+                    ));
+                    die();
+                }
+
                 
                 break;
             case 'DELETE':
