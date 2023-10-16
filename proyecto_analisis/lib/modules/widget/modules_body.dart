@@ -123,7 +123,7 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
                                     ),
                                     child: ListTile(
                                       leading: const Icon(
-                                        Icons.people,
+                                        Icons.table_chart,
                                         color: Colors.purpleAccent,
                                       ),
                                       title: Text(

@@ -4,6 +4,7 @@ import 'package:proyecto_analisis/common/components/header.dart';
 import 'package:proyecto_analisis/common/components/my_files.dart';
 import 'package:proyecto_analisis/common/components/recent_files.dart';
 import 'package:proyecto_analisis/common/components/storage_details.dart';
+import 'package:proyecto_analisis/company/company_screen.dart';
 import 'package:proyecto_analisis/genres/genres_screen.dart';
 import 'package:proyecto_analisis/modules/modules_screen.dart';
 import 'package:proyecto_analisis/repository/user_repository.dart';
@@ -185,21 +186,21 @@ class _DashboardBodyState extends State<DashboardBody> {
   List<Widget> _getMenuWidgets() {
     List<Widget> myWidgets = widget.menu.options.map((obj) {
       if (obj.nombre == 'Empresas') {
-        return _dashBoard();
+        return const CompanyScreen();
       } else if (obj.nombre == 'Sucursales') {
         return Container(
           child: const Text('Sucursales'),
         );
       } else if (obj.nombre == 'Generos') {
-        return GenresScreen();
+        return const GenresScreen();
       } else if (obj.nombre == 'Estatus Usuario') {
         return Container(
           child: const Text('Estatus Usuario'),
         );
       } else if (obj.nombre == 'Roles') {
-        return RolRolScreen();
+        return const RolRolScreen();
       } else if (obj.nombre == 'Modulos') {
-        return ModulesScreen();
+        return const ModulesScreen();
       } else if (obj.nombre == 'Menus') {
         return Container(
           child: const Text('Menus'),

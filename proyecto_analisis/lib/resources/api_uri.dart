@@ -13,3 +13,4 @@ const rolsPath = 'usuario_role.php';
 const rolListPath = 'roles.php';
 const modulesPath = 'crudmodulo.php';
 const genresPath = 'crudgenero.php';
+const companyPath = 'crudempresa.php';

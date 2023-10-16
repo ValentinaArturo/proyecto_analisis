@@ -124,7 +124,7 @@ class _GenresBodyState extends State<GenresBody> with ErrorHandling {
                                     ),
                                     child: ListTile(
                                       leading: const Icon(
-                                        Icons.people,
+                                        Icons.insert_emoticon,
                                         color: Colors.purpleAccent,
                                       ),
                                       title: Text(
