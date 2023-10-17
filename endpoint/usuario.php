@@ -10,7 +10,6 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, GET, PUT, OPTIONS, PATCH, DELETE');
 header('Access-Control-Allow-Credentials: true');
 header("Access-Control-Allow-Headers: Authorization, Content-Type");
-date_default_timezone_set("America/Guatemala");
 
 
 const KEY = 'analisisDeSistemas1234#';
@@ -160,14 +159,61 @@ if ($token) {
                     ));
                     die();
                 }
-
                 
                 break;
             case 'DELETE':
-                echo json_encode(array(
-                    "status" => 404,
-                    "msg" => "Método no disponible"
-                ));
+                $json = file_get_contents("php://input");
+
+                if ($json == false || trim($json) == "") {
+                    echo json_encode([
+                        "status" => 400,
+                        "msg" => "Error en datos de entrada",
+                    ]);
+                    die();
+                }
+                
+                $data = json_decode($json,true);
+
+                if (
+                    !isset($data["idUsuario"]) ||
+                    $data["idUsuario"] == ""  ||
+                    count($data) !== 1)
+                {
+                    echo json_encode([
+                        "status" => 400,
+                        "msg" => "Formato de datos incorrectos",
+                    ]);
+                    die();
+                }
+
+                $idUsuario = $data["idUsuario"];
+
+                $query_question = "DELETE FROM USUARIO_PREGUNTA WHERE IdUsuario=:idUsuario";
+                $stmt_question = $dbhost->prepare($query_question);
+                $stmt_question->bindParam(':idUsuario', $idUsuario);
+                $stmt_question->execute();
+
+                $query_put = "DELETE FROM USUARIO WHERE IdUsuario=:idUsuario";
+                $stmt_validation = $dbhost->prepare($query_put);
+                $stmt_validation->bindParam(':idUsuario', $idUsuario);
+                $stmt_validation->execute();
+
+
+                if($stmt_validation->rowCount() > 0 ){
+
+                    echo json_encode(array(
+                        "status" => 200,
+                        "msg" => "Usuario eliminado exitosamente"
+                    ));
+                    die();
+                }else{
+                    echo json_encode(array(
+                        "status" => 401,
+                        "msg" => "Ocurrio un error en el servidor, intenta nuevamente"
+                    ));
+                    die();
+                }
+
                 break;
             default:
                 echo json_encode(array(
