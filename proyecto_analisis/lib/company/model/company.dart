@@ -16,22 +16,21 @@ class CompanyResponse {
 }
 
 class Company {
-  final int idEmpresa;
+  final String idEmpresa;
   final String nombre;
   final String direccion;
   final String nit;
-  final int passwordCantidadMayusculas;
-  final int passwordCantidadMinusculas;
-  final int passwordCantidadCaracteresEspeciales;
-  final int passwordCantidadCaducidadDias;
-  final int passwordLargo;
-  final int passwordIntentosAntesDeBloquear;
-  final int passwordCantidadNumeros;
-  final int passwordCantidadPreguntasValidar;
+  final String passwordCantidadMayusculas;
+  final String passwordCantidadMinusculas;
+  final String passwordCantidadCaracteresEspeciales;
+  final String passwordCantidadCaducidadDias;
+  final String passwordLargo;
+  final String passwordIntentosAntesDeBloquear;
+  final String passwordCantidadNumeros;
+  final String passwordCantidadPreguntasValidar;
   final DateTime fechaCreacion;
   final String usuarioCreacion;
-  final dynamic fechaModificacion;
-  final dynamic usuarioModificacion;
+
 
   Company({
     required this.idEmpresa,
@@ -48,8 +47,6 @@ class Company {
     required this.passwordCantidadPreguntasValidar,
     required this.fechaCreacion,
     required this.usuarioCreacion,
-    required this.fechaModificacion,
-    required this.usuarioModificacion,
   });
 
   factory Company.fromJson(Map<String, dynamic> json) => Company(
@@ -70,8 +67,6 @@ class Company {
             json["PasswordCantidadPreguntasValidar"],
         fechaCreacion: DateTime.parse(json["FechaCreacion"]),
         usuarioCreacion: json["UsuarioCreacion"],
-        fechaModificacion: json["FechaModificacion"],
-        usuarioModificacion: json["UsuarioModificacion"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -90,7 +85,5 @@ class Company {
         "PasswordCantidadPreguntasValidar": passwordCantidadPreguntasValidar,
         "FechaCreacion": fechaCreacion.toIso8601String(),
         "UsuarioCreacion": usuarioCreacion,
-        "FechaModificacion": fechaModificacion,
-        "UsuarioModificacion": usuarioModificacion,
       };
 }

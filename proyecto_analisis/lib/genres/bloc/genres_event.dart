@@ -5,7 +5,7 @@ class Genres extends GenresEvent {}
 
 class GenreEdit extends GenresEvent {
   final String name;
-  final int id;
+  final String id;
   final String nameCreate;
 
   GenreEdit({
@@ -26,7 +26,7 @@ class GenreCreate extends GenresEvent {
 }
 
 class GenreDelete extends GenresEvent {
-  final int id;
+  final String id;
 
   GenreDelete({
     required this.id,

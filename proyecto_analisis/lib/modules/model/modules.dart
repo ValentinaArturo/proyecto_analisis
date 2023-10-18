@@ -16,9 +16,9 @@ class ModulesResponse {
 }
 
 class Modules {
-  final int idModulo;
+  final String idModulo;
   final String nombre;
-  final int ordenMenu;
+  final String ordenMenu;
 
   Modules({
     required this.idModulo,

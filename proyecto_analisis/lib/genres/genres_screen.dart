@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:proyecto_analisis/Genres/bloc/Genres_bloc.dart';
+import 'package:proyecto_analisis/genres/bloc/genres_bloc.dart';
 import 'package:proyecto_analisis/genres/service/genres_service.dart';
 import 'package:proyecto_analisis/genres/widget/genres_body.dart';
 import 'package:proyecto_analisis/repository/user_repository.dart';

@@ -7,7 +7,7 @@ class Modules extends ModulesEvent {}
 
 class ModuleEdit extends ModulesEvent {
   final String name;
-  final int id;
+  final String id;
   final String nameCreate;
   final String menuOrder;
 
@@ -32,7 +32,7 @@ class ModuleCreate extends ModulesEvent {
 }
 
 class ModuleDelete extends ModulesEvent {
-  final int id;
+  final String id;
 
   ModuleDelete({
     required this.id,

@@ -6,14 +6,14 @@ class CompanyEdit extends CompanyEvent {
   final String name;
   final String direccion;
   final String nit;
-  final int passwordCantidadMayusculas;
-  final int passwordCantidadMinusculas;
-  final int passwordCantidadCaracteresEspeciales;
-  final int passwordCantidadCaducidadDias;
-  final int passwordLargo;
-  final int passwordIntentosAntesDeBloquear;
-  final int passwordCantidadNumeros;
-  final int passwordCantidadPreguntasValidar;
+  final String passwordCantidadMayusculas;
+  final String passwordCantidadMinusculas;
+  final String passwordCantidadCaracteresEspeciales;
+  final String passwordCantidadCaducidadDias;
+  final String passwordLargo;
+  final String passwordIntentosAntesDeBloquear;
+  final String passwordCantidadNumeros;
+  final String passwordCantidadPreguntasValidar;
   final String nameCreate;
 
   CompanyEdit({
@@ -37,14 +37,14 @@ class CompanyCreate extends CompanyEvent {
   final String nameCreate;
   final String direccion;
   final String nit;
-  final int passwordCantidadMayusculas;
-  final int passwordCantidadMinusculas;
-  final int passwordCantidadCaracteresEspeciales;
-  final int passwordCantidadCaducidadDias;
-  final int passwordLargo;
-  final int passwordIntentosAntesDeBloquear;
-  final int passwordCantidadNumeros;
-  final int passwordCantidadPreguntasValidar;
+  final String passwordCantidadMayusculas;
+  final String passwordCantidadMinusculas;
+  final String passwordCantidadCaracteresEspeciales;
+  final String passwordCantidadCaducidadDias;
+  final String passwordLargo;
+  final String passwordIntentosAntesDeBloquear;
+  final String passwordCantidadNumeros;
+  final String passwordCantidadPreguntasValidar;
 
   CompanyCreate({
     required this.name,
@@ -63,7 +63,7 @@ class CompanyCreate extends CompanyEvent {
 }
 
 class CompanyDelete extends CompanyEvent {
-  final int id;
+  final String id;
 
   CompanyDelete({
     required this.id,

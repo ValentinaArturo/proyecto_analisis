@@ -242,78 +242,78 @@ class _CompanyBodyState extends State<CompanyBody> with ErrorHandling {
     final model.Company company,
   ) {
     AlertDialog(
-      title: Text('Editar empresa'),
+      title: const Text('Editar empresa'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           TextField(
             controller: _nameController,
-            decoration: InputDecoration(labelText: 'Nombre de la empresa'),
+            decoration: const InputDecoration(labelText: 'Nombre de la empresa'),
           ),
           TextField(
             controller: _direccionController,
-            decoration: InputDecoration(labelText: 'Dirección'),
+            decoration: const InputDecoration(labelText: 'Dirección'),
           ),
           TextField(
             controller: _nitController,
-            decoration: InputDecoration(labelText: 'NIT'),
+            decoration: const InputDecoration(labelText: 'NIT'),
           ),
           TextField(
             controller: _passwordCantidadMayusculasController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 labelText: 'Cantidad de Mayúsculas en la Contraseña'),
           ),
           TextField(
             controller: _passwordCantidadMinusculasController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 labelText: 'Cantidad de Minúsculas en la Contraseña'),
           ),
           TextField(
             controller: _passwordCantidadCaracteresEspecialesController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 labelText:
                     'Cantidad de Caracteres Especiales en la Contraseña'),
           ),
           TextField(
             controller: _passwordCantidadCaducidadDiasController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 labelText: 'Días de Caducidad de la Contraseña'),
           ),
           TextField(
             controller: _passwordLargoController,
-            decoration: InputDecoration(labelText: 'Largo de la Contraseña'),
+            decoration: const InputDecoration(labelText: 'Largo de la Contraseña'),
           ),
           TextField(
             controller: _passwordIntentosAntesDeBloquearController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 labelText: 'Intentos antes de Bloquear la Contraseña'),
           ),
           TextField(
             controller: _passwordCantidadNumerosController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 labelText: 'Cantidad de Números en la Contraseña'),
           ),
           TextField(
             controller: _passwordCantidadPreguntasValidarController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 labelText: 'Cantidad de Preguntas para Validar'),
           ),
           TextField(
             controller: _nameCreateController,
             decoration:
-                InputDecoration(labelText: 'Nombre de Creación de Empresa'),
+                const InputDecoration(labelText: 'Nombre de Creación de Empresa'),
           )
         ],
       ),
       actions: <Widget>[
         TextButton(
-          child: Text('Cancelar'),
+          child: const Text('Cancelar'),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
         TextButton(
-          child: Text('Guardar'),
+          child: const Text('Guardar'),
           onPressed: () {
             bloc.add(
               CompanyEdit(
@@ -321,20 +321,20 @@ class _CompanyBodyState extends State<CompanyBody> with ErrorHandling {
                 direccion: _direccionController.text,
                 nit: _nitController.text,
                 passwordCantidadMayusculas:
-                    int.parse(_passwordCantidadMayusculasController.text),
+                    _passwordCantidadMayusculasController.text,
                 passwordCantidadMinusculas:
-                    int.parse(_passwordCantidadMinusculasController.text),
-                passwordCantidadCaracteresEspeciales: int.parse(
-                    _passwordCantidadCaracteresEspecialesController.text),
+                    _passwordCantidadMinusculasController.text,
+                passwordCantidadCaracteresEspeciales:
+                    _passwordCantidadCaracteresEspecialesController.text,
                 passwordCantidadCaducidadDias:
-                    int.parse(_passwordCantidadCaducidadDiasController.text),
-                passwordLargo: int.parse(_passwordLargoController.text),
+                    _passwordCantidadCaducidadDiasController.text,
+                passwordLargo: _passwordLargoController.text,
                 passwordIntentosAntesDeBloquear:
-                    int.parse(_passwordIntentosAntesDeBloquearController.text),
+                    _passwordIntentosAntesDeBloquearController.text,
                 passwordCantidadNumeros:
-                    int.parse(_passwordCantidadNumerosController.text),
+                    _passwordCantidadNumerosController.text,
                 passwordCantidadPreguntasValidar:
-                    int.parse(_passwordCantidadPreguntasValidarController.text),
+                    _passwordCantidadPreguntasValidarController.text,
                 nameCreate: _nameCreateController.text,
               ),
             );
@@ -348,78 +348,78 @@ class _CompanyBodyState extends State<CompanyBody> with ErrorHandling {
     final model.Company company,
   ) {
     AlertDialog(
-      title: Text('Crear empresa'),
+      title: const Text('Crear empresa'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           TextField(
             controller: _nameController,
-            decoration: InputDecoration(labelText: 'Nombre de la empresa'),
+            decoration: const InputDecoration(labelText: 'Nombre de la empresa'),
           ),
           TextField(
             controller: _direccionController,
-            decoration: InputDecoration(labelText: 'Dirección'),
+            decoration: const InputDecoration(labelText: 'Dirección'),
           ),
           TextField(
             controller: _nitController,
-            decoration: InputDecoration(labelText: 'NIT'),
+            decoration: const InputDecoration(labelText: 'NIT'),
           ),
           TextField(
             controller: _passwordCantidadMayusculasController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 labelText: 'Cantidad de Mayúsculas en la Contraseña'),
           ),
           TextField(
             controller: _passwordCantidadMinusculasController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 labelText: 'Cantidad de Minúsculas en la Contraseña'),
           ),
           TextField(
             controller: _passwordCantidadCaracteresEspecialesController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 labelText:
                     'Cantidad de Caracteres Especiales en la Contraseña'),
           ),
           TextField(
             controller: _passwordCantidadCaducidadDiasController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 labelText: 'Días de Caducidad de la Contraseña'),
           ),
           TextField(
             controller: _passwordLargoController,
-            decoration: InputDecoration(labelText: 'Largo de la Contraseña'),
+            decoration: const InputDecoration(labelText: 'Largo de la Contraseña'),
           ),
           TextField(
             controller: _passwordIntentosAntesDeBloquearController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 labelText: 'Intentos antes de Bloquear la Contraseña'),
           ),
           TextField(
             controller: _passwordCantidadNumerosController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 labelText: 'Cantidad de Números en la Contraseña'),
           ),
           TextField(
             controller: _passwordCantidadPreguntasValidarController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 labelText: 'Cantidad de Preguntas para Validar'),
           ),
           TextField(
             controller: _nameCreateController,
             decoration:
-                InputDecoration(labelText: 'Nombre de Creación de Empresa'),
+                const InputDecoration(labelText: 'Nombre de Creación de Empresa'),
           )
         ],
       ),
       actions: <Widget>[
         TextButton(
-          child: Text('Cancelar'),
+          child: const Text('Cancelar'),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
         TextButton(
-          child: Text('Crear'),
+          child: const Text('Crear'),
           onPressed: () {
             String moduleName = _nameController.text;
             bloc.add(
@@ -428,20 +428,20 @@ class _CompanyBodyState extends State<CompanyBody> with ErrorHandling {
                 direccion: _direccionController.text,
                 nit: _nitController.text,
                 passwordCantidadMayusculas:
-                    int.parse(_passwordCantidadMayusculasController.text),
+                    _passwordCantidadMayusculasController.text,
                 passwordCantidadMinusculas:
-                    int.parse(_passwordCantidadMinusculasController.text),
-                passwordCantidadCaracteresEspeciales: int.parse(
-                    _passwordCantidadCaracteresEspecialesController.text),
+                    _passwordCantidadMinusculasController.text,
+                passwordCantidadCaracteresEspeciales:
+                    _passwordCantidadCaracteresEspecialesController.text,
                 passwordCantidadCaducidadDias:
-                    int.parse(_passwordCantidadCaducidadDiasController.text),
-                passwordLargo: int.parse(_passwordLargoController.text),
+                    _passwordCantidadCaducidadDiasController.text,
+                passwordLargo: _passwordLargoController.text,
                 passwordIntentosAntesDeBloquear:
-                    int.parse(_passwordIntentosAntesDeBloquearController.text),
+                    _passwordIntentosAntesDeBloquearController.text,
                 passwordCantidadNumeros:
-                    int.parse(_passwordCantidadNumerosController.text),
+                    _passwordCantidadNumerosController.text,
                 passwordCantidadPreguntasValidar:
-                    int.parse(_passwordCantidadPreguntasValidarController.text),
+                    _passwordCantidadPreguntasValidarController.text,
                 nameCreate: _nameCreateController.text,
               ),
             );

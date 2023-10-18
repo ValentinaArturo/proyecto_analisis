@@ -15,7 +15,7 @@ class GenresResponse {
       ));
 }
 class Genre {
-  final int idGenero;
+  final String idGenero;
   final String nombre;
 
   Genre({
