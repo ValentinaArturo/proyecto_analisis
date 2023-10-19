@@ -44,7 +44,7 @@ if ($token) {
         switch ($method) {
             case 'GET':
 
-                $query_validation ='SELECT * FROM DEPARTAMENTO';
+                $query_validation ='SELECT * FROM PUESTO';
                 $stmt_validation = $dbhost->prepare($query_validation);
                 $stmt_validation->execute();
         
@@ -73,10 +73,10 @@ if ($token) {
 
                 if (
                     !isset($data["Nombre"]) ||
-                    !isset($data["IdEmpresa"]) ||
+                    !isset($data["IdDepartamento"]) ||
                     !isset($data["UsuarioCreacion"]) ||
                     $data["Nombre"] == "" ||
-                    $data["IdEmpresa"] == "" ||
+                    $data["IdDepartamento"] == "" ||
                     $data["UsuarioCreacion"] == "" ||
                     count($data) !== 3
                 ) {
@@ -87,14 +87,14 @@ if ($token) {
                     die();
                 }
 
-                $IdEmpresa = $data["IdEmpresa"];
+                $IdEmpresa = $data["IdDepartamento"];
                 $nombre = $data["Nombre"];
                 $IdUsuarioCreacion = $data["UsuarioCreacion"];
                 $fechaHoraActual = date('Y-m-d H:i:s');
 
-                $query_post = "INSERT INTO DEPARTAMENTO(
+                $query_post = "INSERT INTO PUESTO(
                     Nombre, 
-                    IdEmpresa, 
+                    IdDepartamento, 
                     FechaCreacion, 
                     UsuarioCreacion) VALUES (
                         :nombre,
@@ -112,7 +112,7 @@ if ($token) {
 
                     echo json_encode(array(
                         "status" => 200,
-                        "msg" => "Departamento creado exitosamente"
+                        "msg" => "Puesto creado exitosamente"
                     ));
                     
                 }else{
@@ -141,13 +141,13 @@ if ($token) {
 
                 if (
                     !isset($data["Nombre"]) ||
-                    !isset($data["IdEmpresa"]) ||
-                    !isset($data["UsuarioModificacion"]) ||
                     !isset($data["IdDepartamento"]) ||
+                    !isset($data["UsuarioModificacion"]) ||
+                    !isset($data["IdPuesto"]) ||
                     $data["Nombre"] == "" ||
-                    $data["IdEmpresa"] == "" ||
-                    $data["UsuarioModificacion"] == "" ||
                     $data["IdDepartamento"] == "" ||
+                    $data["UsuarioModificacion"] == "" ||
+                    $data["IdPuesto"] == "" ||
                     count($data) !== 4
                 ) {
                     echo json_encode([
@@ -157,18 +157,18 @@ if ($token) {
                     die();
                 }
 
-                $IdEmpresa = $data["IdEmpresa"];
+                $IdEmpresa = $data["IdDepartamento"];
                 $nombre = $data["Nombre"];
                 $IdUsuarioCreacion = $data["UsuarioModificacion"];
-                $IdDepartametno = $data["IdDepartamento"];
+                $IdDepartametno = $data["IdPuesto"];
                 $fechaHoraActual = date('Y-m-d H:i:s');
 
-                $query_post = "UPDATE DEPARTAMENTO SET 
+                $query_post = "UPDATE PUESTO SET 
                 Nombre=:nombre,
-                IdEmpresa=:idEmpresa,
+                IdDepartamento=:idEmpresa,
                 FechaModificacion=:fechaHoraActual,
-                UsuarioModificacion=:usuarioCreacion
-                WHERE IdDepartamento=:IdDepartamento";
+                UsuarioModificacion=:usuarioCreacion 
+                WHERE IdPuesto=:IdDepartamento";
                 $stmt_post = $dbhost->prepare($query_post);
                 $stmt_post->bindParam(':nombre', $nombre);
                 $stmt_post->bindParam(':idEmpresa', $IdEmpresa);
@@ -181,7 +181,7 @@ if ($token) {
 
                     echo json_encode(array(
                         "status" => 200,
-                        "msg" => "Departamento actualizado exitosamente"
+                        "msg" => "Puesto actualizado exitosamente"
                     ));
                     
                 }else{
