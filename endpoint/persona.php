@@ -260,53 +260,10 @@ if ($token) {
 
                 break;
             case 'DELETE':
-                $json = file_get_contents("php://input");
-                $fechaHoraActual = date('Y-m-d H:i:s');
-
-                if ($json == false || trim($json) == "") {
-                    echo json_encode([
-                        "status" => 400,
-                        "msg" => "Error en datos recibidos",
-                    ]);
-                    die();
-                }
-
-                $data = json_decode($json,true);
-
-                if (
-                    !isset($data["IdEstadoCivil"]) ||
-                    $data["IdEstadoCivil"] == "" ||
-                    count($data) !== 1
-                ) {
-                    echo json_encode([
-                        "status" => 400,
-                        "msg" => "Formato de datos incorrecto",
-                    ]);
-                    die();
-                }
-
-                $IdUsuarioCreacion = $data["IdEstadoCivil"];
-
-
-                $query_post = "DELETE FROM ESTADO_CIVIL WHERE IdEstadoCivil=:idEstadoCivil ";
-                $stmt_post = $dbhost->prepare($query_post);
-                $stmt_post->bindParam(':idEstadoCivil', $IdUsuarioCreacion, PDO::PARAM_INT);
-                $stmt_post->execute();
-
-                if($stmt_post->rowCount() > 0 ){
-
-                    echo json_encode(array(
-                        "status" => 200,
-                        "msg" => "Estado civil eliminado exitosamente"
-                    ));
-                    
-                }else{
-                    
-                    echo json_encode(array(
-                        "status" => 401,
-                        "msg" => "Ocurrio un error, intenta nuevamente"
-                    ));
-                }
+                echo json_encode(array(
+                    "status" => 401,
+                    "msg" => "METODO NO DISPONIBLE"
+                ));
                 break;
             default:
                 echo json_encode(array(
