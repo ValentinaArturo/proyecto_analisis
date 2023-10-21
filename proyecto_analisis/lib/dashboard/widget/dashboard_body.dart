@@ -6,6 +6,7 @@ import 'package:proyecto_analisis/common/components/recent_files.dart';
 import 'package:proyecto_analisis/common/components/storage_details.dart';
 import 'package:proyecto_analisis/company/company_screen.dart';
 import 'package:proyecto_analisis/genres/genres_screen.dart';
+import 'package:proyecto_analisis/menu/menu_screen.dart';
 import 'package:proyecto_analisis/modules/modules_screen.dart';
 import 'package:proyecto_analisis/repository/user_repository.dart';
 import 'package:proyecto_analisis/resources/constants.dart';
@@ -52,6 +53,19 @@ class _DashboardBodyState extends State<DashboardBody> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: Container(),
+        backgroundColor: primaryColor,
+        elevation: 5,
+        title: Text(
+          name,
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+      ),
       drawer: SideMenu(
         controller: sideMenu,
         style: SideMenuStyle(
@@ -202,9 +216,7 @@ class _DashboardBodyState extends State<DashboardBody> {
       } else if (obj.nombre == 'Modulos') {
         return const ModulesScreen();
       } else if (obj.nombre == 'Menus') {
-        return Container(
-          child: const Text('Menus'),
-        );
+        return MenuScreen();
       } else if (obj.nombre == 'Opciones') {
         return Container(
           child: const Text('Opciones'),

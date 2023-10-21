@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
 import 'package:proyecto_analisis/common/bloc/mixin/error_handling.dart';
+import 'package:proyecto_analisis/repository/user_repository.dart';
 import 'package:proyecto_analisis/resources/constants.dart';
 import 'package:proyecto_analisis/rols/bloc/rols_bloc.dart';
 import 'package:proyecto_analisis/rols/bloc/rols_event.dart';
@@ -21,10 +22,13 @@ class RolsBody extends StatefulWidget {
 class _RolsBodyState extends State<RolsBody> with ErrorHandling {
   late RolsBloc bloc;
   List<User> users = [];
+  late String name;
 
   @override
   void initState() {
     super.initState();
+    name = '';
+    _getName();
     context.read<RolsBloc>().add(
           Rols(),
         );
@@ -128,35 +132,39 @@ class _RolsBodyState extends State<RolsBody> with ErrorHandling {
                                           color: Colors.white,
                                         ),
                                       ),
-                                      trailing: Row(
-                                        children: [
-                                          InkWell(
-                                            onTap: () {
-                                              Navigator.pushNamed(
-                                                context,
-                                                userDetailRoute,
-                                                arguments: users[index],
-                                              );
-                                            },
-                                            child: const Icon(
-                                              Icons.edit,
-                                              color: Colors.lightBlue,
+                                      trailing: Container(
+                                        width: 150,
+                                        child: Row(
+                                          children: [
+                                            InkWell(
+                                              onTap: () {
+                                                Navigator.pushNamed(
+                                                  context,
+                                                  userDetailRoute,
+                                                  arguments: users[index],
+                                                );
+                                              },
+                                              child: const Icon(
+                                                Icons.edit,
+                                                color: Colors.lightBlue,
+                                              ),
                                             ),
-                                          ),
-                                          InkWell(
-                                            onTap: () {
-                                              Navigator.pushNamed(
-                                                context,
-                                                userDetailRoute,
-                                                arguments: users[index],
-                                              );
-                                            },
-                                            child: const Icon(
-                                              Icons.delete_forever,
-                                              color: Colors.red,
+                                            InkWell(
+                                              onTap: () {
+                                                bloc.add(
+                                                  RolDelete(
+                                                    user: name,
+                                                    id: users[index].idUsuario,
+                                                  ),
+                                                );
+                                              },
+                                              child: const Icon(
+                                                Icons.delete_forever,
+                                                color: Colors.red,
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -184,5 +192,12 @@ class _RolsBodyState extends State<RolsBody> with ErrorHandling {
         ],
       ),
     );
+  }
+  _getName() async {
+    final UserRepository userRepository = UserRepository();
+    final name = await userRepository.getName();
+    setState(() {
+      this.name = name;
+    });
   }
 }

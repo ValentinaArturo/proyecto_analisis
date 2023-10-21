@@ -33,7 +33,7 @@ class RolsService {
 
   Future<Response<dynamic>> rolsSave({
     required final String user,
-    required final int id,
+    required final String id,
     required final String userCreate,
   }) async {
     return client.post(rolsPath, data: {
@@ -45,7 +45,7 @@ class RolsService {
 
   Future<Response<dynamic>> rolsEdit({
     required final String user,
-    required final int id,
+    required final String id,
     required final String userCreate,
   }) async {
     return client.post(rolsPath, data: {
@@ -57,7 +57,7 @@ class RolsService {
 
   Future<Response<dynamic>> rolsDelete({
     required final String user,
-    required final int id,
+    required final String id,
   }) async {
     return client.post(rolsPath, data: {
       "IdUsuario": user,

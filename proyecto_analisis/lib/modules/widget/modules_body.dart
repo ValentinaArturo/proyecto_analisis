@@ -103,6 +103,20 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
                         ),
                       ),
                     ),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          _menuNumberController.text = '';
+                          _nameController.text = '';
+                        });
+
+                        _dialogCreate();
+                      },
+                      child: const Icon(
+                        Icons.add,
+                        color: Colors.green,
+                      ),
+                    ),
                     Expanded(
                       child: Card(
                         color: bgColor,
@@ -160,23 +174,6 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
                                               child: const Icon(
                                                 Icons.edit,
                                                 color: Colors.lightBlue,
-                                              ),
-                                            ),
-                                            InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  _menuNumberController.text =
-                                                      '';
-                                                  _nameController.text = '';
-                                                });
-
-                                                _dialogCreate(
-                                                  modules[index],
-                                                );
-                                              },
-                                              child: const Icon(
-                                                Icons.add,
-                                                color: Colors.green,
                                               ),
                                             ),
                                             InkWell(
@@ -272,9 +269,7 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
         });
   }
 
-  _dialogCreate(
-    final Module.Modules user,
-  ) {
+  _dialogCreate() {
     showDialog(
         context: context,
         builder: (context) {

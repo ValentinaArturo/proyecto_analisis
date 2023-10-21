@@ -8,7 +8,7 @@ class RolsUser extends RolsEvent {}
 
 class RolEdit extends RolsEvent {
   final String user;
-  final int id;
+  final String id;
   final String userCreate;
 
   RolEdit({
@@ -20,7 +20,7 @@ class RolEdit extends RolsEvent {
 
 class RolCreate extends RolsEvent {
   final String user;
-  final int id;
+  final String id;
   final String userCreate;
 
   RolCreate({
@@ -32,7 +32,7 @@ class RolCreate extends RolsEvent {
 
 class RolDelete extends RolsEvent {
   final String user;
-  final int id;
+  final String id;
 
   RolDelete({
     required this.user,

@@ -200,16 +200,14 @@ class _RolsUserBodyState extends State<RolsUserBody> with ErrorHandling {
                                                   RolDelete(
                                                     user: users[index]
                                                         .nombreUsuario,
-                                                    id: int.parse(
-                                                      _roles
-                                                          .firstWhere(
-                                                            (obj) =>
-                                                                obj.nombre ==
-                                                                users[index]
-                                                                    .nombreRol,
-                                                          )
-                                                          .idRole,
-                                                    ),
+                                                    id: _roles
+                                                        .firstWhere(
+                                                          (obj) =>
+                                                              obj.nombre ==
+                                                              users[index]
+                                                                  .nombreRol,
+                                                        )
+                                                        .idRole,
                                                   ),
                                                 );
                                               },
@@ -284,7 +282,7 @@ class _RolsUserBodyState extends State<RolsUserBody> with ErrorHandling {
                 bloc.add(
                   RolEdit(
                     user: name,
-                    id: int.parse(_selectedRole.idRole),
+                    id: _selectedRole.idRole,
                     userCreate: name,
                   ),
                 );
@@ -332,7 +330,7 @@ class _RolsUserBodyState extends State<RolsUserBody> with ErrorHandling {
                 bloc.add(
                   RolCreate(
                     user: name,
-                    id: int.parse(_selectedRole.idRole),
+                    id: _selectedRole.idRole,
                     userCreate: name,
                   ),
                 );
