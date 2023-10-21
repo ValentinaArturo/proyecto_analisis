@@ -15,3 +15,4 @@ const modulesPath = 'crudmodulo.php';
 const genresPath = 'crudgenero.php';
 const companyPath = 'crudempresa.php';
 const menuPath = 'crudmenu.php';
+const branchPath = 'sucursal.php';

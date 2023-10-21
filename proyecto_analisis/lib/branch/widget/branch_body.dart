@@ -1,78 +1,78 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:proyecto_analisis/branch/bloc/branch_bloc.dart';
+import 'package:proyecto_analisis/branch/model/branch.dart' as model;
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
 import 'package:proyecto_analisis/common/bloc/mixin/error_handling.dart';
-import 'package:proyecto_analisis/menu/bloc/menu_bloc.dart';
-import 'package:proyecto_analisis/menu/model/menu.dart' as model;
 import 'package:proyecto_analisis/repository/user_repository.dart';
 import 'package:proyecto_analisis/resources/constants.dart';
 
 import '../../common/loader/loader.dart';
 
-class MenuBody extends StatefulWidget {
-  const MenuBody({Key? key}) : super(key: key);
+class BranchBody extends StatefulWidget {
+  const BranchBody({Key? key}) : super(key: key);
 
   @override
-  State<MenuBody> createState() => _MenuBodyState();
+  State<BranchBody> createState() => _BranchBodyState();
 }
 
-class _MenuBodyState extends State<MenuBody> with ErrorHandling {
-  List<model.Menu> menu = [];
-  late MenuBloc bloc;
+class _BranchBodyState extends State<BranchBody> with ErrorHandling {
+  List<model.Branch> branch = [];
+  late BranchBloc bloc;
   late String name;
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _menuNumberController = TextEditingController();
-  final TextEditingController _moduleNumberController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _companyController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _getName();
-    context.read<MenuBloc>().add(
-          Menu(),
+    context.read<BranchBloc>().add(
+          Branch(),
         );
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    bloc = context.read<MenuBloc>();
+    bloc = context.read<BranchBloc>();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<MenuBloc, BaseState>(
+    return BlocListener<BranchBloc, BaseState>(
       listener: (context, state) {
         verifyServerError(state);
-        if (state is MenuSuccess) {
+        if (state is BranchSuccess) {
           setState(() {
-            menu = state.menuResponse.users;
+            branch = state.branchResponse.branches;
           });
-        } else if (state is MenuEditSuccess) {
+        } else if (state is BranchEditSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
-                'Se ha actualizado el menu con exito',
+                'Se ha actualizado la sucursal con éxito',
               ),
             ),
           );
-        } else if (state is MenuCreateSuccess) {
+        } else if (state is BranchCreateSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
-                'Se ha creado el menu con exito',
+                'Se ha creado la sucursal con éxito',
               ),
             ),
           );
-        } else if (state is MenuDeleteSuccess) {
+        } else if (state is BranchDeleteSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
-                'Se ha eliminado el menu con exito',
+                'Se ha eliminado la sucursal con éxito',
               ),
             ),
           );
-        } else if (state is MenuError) {
+        } else if (state is BranchError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
@@ -96,26 +96,12 @@ class _MenuBodyState extends State<MenuBody> with ErrorHandling {
                         top: 30,
                       ),
                       child: const Text(
-                        'Menu',
+                        'Sucursal',
                         style: TextStyle(
                           color: Colors.lightBlue,
                           fontSize: 33,
                           fontWeight: FontWeight.bold,
                         ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          _menuNumberController.text = '';
-                          _nameController.text = '';
-                        });
-
-                        _dialogCreate();
-                      },
-                      child: const Icon(
-                        Icons.add,
-                        color: Colors.green,
                       ),
                     ),
                     Expanded(
@@ -126,7 +112,7 @@ class _MenuBodyState extends State<MenuBody> with ErrorHandling {
                             top: MediaQuery.of(context).size.height * 0.05,
                           ),
                           child: ListView.builder(
-                            itemCount: menu.length,
+                            itemCount: branch.length,
                             itemBuilder: (context, index) {
                               return Column(
                                 children: [
@@ -142,27 +128,17 @@ class _MenuBodyState extends State<MenuBody> with ErrorHandling {
                                         color: Colors.purpleAccent,
                                       ),
                                       title: Text(
-                                        'Nombre:   ${menu[index].nombre}',
+                                        'Nombre:   ${branch[index].nombre}',
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      subtitle: Column(
-                                        children: [
-                                          Text(
-                                            'Modulo:   ${menu[index].idModulo}',
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          Text(
-                                            'Orden en el Menu:   ${menu[index].ordenMenu}',
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ],
+                                      subtitle: Text(
+                                        'Dirección:   ${branch[index].direccion}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                        ),
                                       ),
                                       trailing: Container(
                                         width: 150,
@@ -171,17 +147,17 @@ class _MenuBodyState extends State<MenuBody> with ErrorHandling {
                                             InkWell(
                                               onTap: () {
                                                 setState(() {
-                                                  _menuNumberController.text =
-                                                      menu[index]
-                                                          .ordenMenu
+                                                  _addressController.text =
+                                                      branch[index]
+                                                          .idBranch
                                                           .toString();
                                                   _nameController.text =
-                                                      menu[index].nombre;
-                                                  _menuNumberController.text =
-                                                      menu[index].idModulo;
+                                                      branch[index].nombre;
+                                                  _addressController.text =
+                                                      branch[index].idEmpresa;
                                                 });
                                                 _dialogEdit(
-                                                  menu[index],
+                                                  branch[index],
                                                 );
                                               },
                                               child: const Icon(
@@ -191,9 +167,26 @@ class _MenuBodyState extends State<MenuBody> with ErrorHandling {
                                             ),
                                             InkWell(
                                               onTap: () {
+                                                setState(() {
+                                                  _addressController.text = '';
+                                                  _nameController.text = '';
+                                                });
+
+                                                _dialogCreate(
+                                                  branch[index],
+                                                );
+                                              },
+                                              child: const Icon(
+                                                Icons.add,
+                                                color: Colors.green,
+                                              ),
+                                            ),
+                                            InkWell(
+                                              onTap: () {
                                                 bloc.add(
-                                                  MenuDelete(
-                                                    id: menu[index].idMenu,
+                                                  BranchDelete(
+                                                    idBranch:
+                                                        branch[index].idBranch,
                                                   ),
                                                 );
                                               },
@@ -220,9 +213,9 @@ class _MenuBodyState extends State<MenuBody> with ErrorHandling {
               ],
             ),
           ),
-          BlocBuilder<MenuBloc, BaseState>(
+          BlocBuilder<BranchBloc, BaseState>(
             builder: (context, state) {
-              if (state is MenuInProgress) {
+              if (state is BranchInProgress) {
                 return const Loader();
               }
               return Container();
@@ -234,28 +227,25 @@ class _MenuBodyState extends State<MenuBody> with ErrorHandling {
   }
 
   _dialogEdit(
-    final model.Menu menu,
+    final model.Branch branch,
   ) {
     showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Editar módulo'),
+            title: Text('Editar sucursal'),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 TextField(
                   controller: _nameController,
-                  decoration: InputDecoration(labelText: 'Nombre del menu'),
+                  decoration:
+                      InputDecoration(labelText: 'Nombre de la sucursal'),
                 ),
                 TextField(
-                  controller: _menuNumberController,
-                  decoration: InputDecoration(labelText: 'Número de menú'),
-                  keyboardType: TextInputType.number,
-                ),
-                TextField(
-                  controller: _moduleNumberController,
-                  decoration: InputDecoration(labelText: 'Número de modulo'),
+                  controller: _addressController,
+                  decoration:
+                      InputDecoration(labelText: 'Direccion de sucursal'),
                   keyboardType: TextInputType.number,
                 ),
               ],
@@ -270,15 +260,16 @@ class _MenuBodyState extends State<MenuBody> with ErrorHandling {
               TextButton(
                 child: Text('Guardar'),
                 onPressed: () {
-                  String moduleName = _nameController.text;
-                  String menuNumber = _menuNumberController.text;
+                  String branchName = _nameController.text;
+                  String branchNumber = _addressController.text;
                   bloc.add(
-                    MenuEdit(
-                      name: moduleName,
-                      id: menu.idModulo,
-                      nameCreate: name,
-                      menuOrder: menuNumber,
-                      idMenu: menu.idMenu,
+                    BranchEdit(
+                      nombre: branchName,
+                      id: branch.idEmpresa,
+                      idBranch: branch.idBranch,
+                      idEmpresa: branch.idEmpresa,
+                      direccion: branchNumber,
+                      usuarioCreacion: name,
                     ),
                   );
                 },
@@ -288,62 +279,69 @@ class _MenuBodyState extends State<MenuBody> with ErrorHandling {
         });
   }
 
-  _dialogCreate() {
+  _dialogCreate(
+    final model.Branch branch,
+  ) {
     showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Crear menu'),
-            content: IntrinsicHeight(
-              child: Container(
-                width: 300,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    TextField(
-                      controller: _nameController,
-                      decoration: InputDecoration(labelText: 'Nombre del menu'),
-                    ),
-                    TextField(
-                      controller: _menuNumberController,
-                      decoration: InputDecoration(labelText: 'Número de menú'),
-                      keyboardType: TextInputType.number,
-                    ),
-                    TextField(
-                      controller: _moduleNumberController,
-                      decoration:
-                          InputDecoration(labelText: 'Número de modulo'),
-                      keyboardType: TextInputType.number,
-                    ),
-                  ],
-                ),
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Crear sucursal'),
+          content: IntrinsicHeight(
+            child: Container(
+              width: 300,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  TextField(
+                    controller: _nameController,
+                    decoration:
+                        InputDecoration(labelText: 'Nombre de la sucursal'),
+                  ),
+                  TextField(
+                    controller: _addressController,
+                    decoration:
+                        InputDecoration(labelText: 'Número de sucursal'),
+                    keyboardType: TextInputType.number,
+                  ),
+                  TextField(
+                    controller: _companyController,
+                    decoration: InputDecoration(labelText: 'ID de Empresa'),
+                    keyboardType: TextInputType.number,
+                  ),
+                ],
               ),
             ),
-            actions: <Widget>[
-              TextButton(
-                child: Text('Cancelar'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: Text('Crear'),
-                onPressed: () {
-                  String moduleName = _nameController.text;
-                  String menuNumber = _menuNumberController.text;
-                  bloc.add(
-                    MenuCreate(
-                      name: moduleName,
-                      nameCreate: name,
-                      menuOrder: menuNumber,
-                      id: _moduleNumberController.text,
-                    ),
-                  );
-                },
-              ),
-            ],
-          );
-        });
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Crear'),
+              onPressed: () {
+                String branchName = _nameController.text;
+                String branchNumber = _addressController.text;
+                bloc.add(
+                  BranchCreate(
+                    nombre: branchName,
+                    usuarioCreacion: name,
+                    direccion: branchNumber,
+                    id: branch.idEmpresa,
+                    idEmpresa: _companyController.text,
+                  ),
+                );
+                Navigator.of(context)
+                    .pop(); // Cerrar el cuadro de diálogo después de crear la sucursal.
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   _getName() async {
