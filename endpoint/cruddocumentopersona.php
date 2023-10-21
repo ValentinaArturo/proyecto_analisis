@@ -39,7 +39,7 @@ if ($token) {
     if (Token::Verify($token, KEY)) {
         switch ($method) {
             case 'GET':
-                $query_validation = "SELECT * FROM DOCUMENTO_PERSONA";
+                $query_validation = "SELECT * FROM DOCUMENTO_PERSONA;";
                 $stmt_validation = $dbhost->prepare($query_validation);
                 $stmt_validation->execute();
                 $results = $stmt_validation->fetchAll(PDO::FETCH_ASSOC);
@@ -84,80 +84,46 @@ if ($token) {
                 $NoDocumento = $data["noDocumento"];
                 $UsuarioCreacion = $data["usuarioCreacion"];
 
-                $query_validation2 = "Select Nombre From TIPO_DOCUMENTO Where IdTipoDocumento=:idTipoDocumento";
-                $stmt_validation2 = $dbhost->prepare($query_validation2);
-                $stmt_validation2->bindParam(':IdTipoDocumento', $IdTipoDocumento);
-                $stmt_validation2->execute();
+                $query_validation = "Select NoDocumento From DOCUMENTO_PERSONA Where NoDocumento=:NoDocumento";
+                $stmt_validation = $dbhost->prepare($query_validation);
+                $stmt_validation->bindParam(':NoDocumento', $NoDocumento);
+                $stmt_validation->execute();
 
-                if ($stmt_validation2->rowCount() !== 0) {
+                if ($stmt_validation->rowCount() == 0) {
+                    $query_post = "INSERT INTO DOCUMENTO_PERSONA(IdTipoDocumento, IdPersona, NoDocumento,
+                    FechaCreacion, UsuarioCreacion,FechaModificacion,UsuarioModificacion) 
+                    VALUES (:IdTipoDocumento,:IdPersona,:NoDocumento,:FechaHoraActual,:UsuarioCreacion,NULL,NULL)";
+                    $stmt_post = $dbhost->prepare($query_post);
+                    $stmt_post->bindParam(':IdTipoDocumento', $IdTipoDocumento);
+                    $stmt_post->bindParam(':IdPersona', $IdPersona);
+                    $stmt_post->bindParam(':NoDocumento', $NoDocumento);
+                    $stmt_post->bindParam(':FechaHoraActual', $fechaHoraActual);
+                    $stmt_post->bindParam(':UsuarioCreacion', $UsuarioCreacion);
+                    $stmt_post->execute();
 
-                    $query_validation1 = "Select Nombre From PERSONA Where IdPersona=:idPersona";
-                    $stmt_validation1 = $dbhost->prepare($query_validation1);
-                    $stmt_validation1->bindParam(':IdPersona', $idPersona);
-                    $stmt_validation1->execute();
-
-                    if ($stmt_validation1->rowCount() == 0) {
-
-                        $query_validation = "Select NoDocumento From DOCUMENTO_PERSONA Where NoDocumento=:NoDocumento";
-                        $stmt_validation = $dbhost->prepare($query_validation);
-                        $stmt_validation->bindParam(':NoDocumento', $NoDocumento);
-                        $stmt_validation->execute();
-
-                        if ($stmt_validation->rowCount() == 0) {
-
-                            $query_post = "INSERT INTO DOCUMENTO_PERSONA(IdTipoDocumento,IdPersona,NoDocumento,FechaCreacion,UsuarioCreacion,FechaModificacion,UsuarioModificacion) 
-                                VALUES (:IdTipoDocumento,:IdPersona,:NoDocumento,:FechaHoraActual,:UsuarioCreacion,NULL,NULL)";
-                            $stmt_post = $dbhost->prepare($query_post);
-                            $stmt_post->bindParam(':IdTipoDocumento', $IdTipoDocumento);
-                            $stmt_post->bindParam(':IdPersona', $IdPersona);
-                            $stmt_post->bindParam(':NoDocumento', $NoDocumento);
-                            $stmt_post->bindParam(':FechaHoraActual', $fechaHoraActual);
-                            $stmt_post->bindParam(':UsuarioCreacion', $UsuarioCreacion);
-                            $stmt_post->execute();
-
-                            if ($stmt_post->rowCount() > 0) {
-                                echo json_encode(
-                                    array(
-                                        "status" => 200,
-                                        "msg" => "Menú agregado exitosamente"
-                                    )
-                                );
-
-                            } else {
-
-                                echo json_encode(
-                                    array(
-                                        "status" => 401,
-                                        "msg" => "Ocurrio un error, intenta nuevamente"
-                                    )
-                                );
-                            }
-                            break;
-                        } else {
-                            echo json_encode(
-                                array(
-                                    "status" => 401,
-                                    "msg" => "¡El No Documento está en uso, valide!"
-                                )
-                            );
-                            break;
-                        }
+                    if ($stmt_post->rowCount() > 0) {
+                        echo json_encode(
+                            array(
+                                "status" => 200,
+                                "msg" => "Documento persona agregado exitosamente"
+                            )
+                        );
 
                     } else {
+
                         echo json_encode(
                             array(
                                 "status" => 401,
-                                "msg" => "¡Persona no existe, valide!"
+                                "msg" => "Ocurrio un error, intenta nuevamente"
                             )
                         );
-                        break;
                     }
-
+                    break;
                 } else {
                     echo json_encode(
                         array(
                             "status" => 401,
-                            "msg" => "¡Tipo de documento no existe, valide!"
+                            "msg" => "¡El Documento está en uso, valide!"
                         )
                     );
                     break;
@@ -181,11 +147,11 @@ if ($token) {
                     !isset($data["idTipoDocumento"]) ||
                     !isset($data["idPersona"]) ||
                     !isset($data["noDocumento"]) ||
-                    !isset($data["usuarioCreacion"]) ||
+                    !isset($data["usuarioModificacion"]) ||
                     $data["idTipoDocumento"] == "" ||
                     $data["idPersona"] == "" ||
                     $data["noDocumento"] == "" ||
-                    $data["usuarioCreacion"] == "" ||
+                    $data["usuarioModificacion"] == "" ||
                     count($data) !== 4
                 ) {
                     echo json_encode([
@@ -198,84 +164,50 @@ if ($token) {
                 $IdTipoDocumento = $data["idTipoDocumento"];
                 $IdPersona = $data["idPersona"];
                 $NoDocumento = $data["noDocumento"];
-                $UsuarioCreacion = $data["usuarioCreacion"];
+                $UsuarioModificacion = $data["usuarioModificacion"];
 
-                $query_validation2 = "Select Nombre From TIPO_DOCUMENTO Where IdTipoDocumento=:idTipoDocumento";
-                $stmt_validation2 = $dbhost->prepare($query_validation2);
-                $stmt_validation2->bindParam(':IdTipoDocumento', $IdTipoDocumento);
-                $stmt_validation2->execute();
+                $query_validation = "Select NoDocumento From DOCUMENTO_PERSONA Where NoDocumento=:NoDocumento";
+                $stmt_validation = $dbhost->prepare($query_validation);
+                $stmt_validation->bindParam(':NoDocumento', $NoDocumento);
+                $stmt_validation->execute();
 
-                if ($stmt_validation2->rowCount() !== 0) {
+                if ($stmt_validation->rowCount() == 0) {
+                    $query_post = "UPDATE DOCUMENTO_PERSONA SET IdTipoDocumento=:IdTipoDocumento,
+                    IdPersona=:IdPersona, noDocumento=:noDocumento,
+                    FechaModificacion=:FechaHoraActual,
+                    UsuarioModificacion=:UsuarioModificacion
+                    WHERE IdTipoDocumento=:idTipoDocumento And IdPersona=:idPersona And NoDocumento=:noDocumento";
+                    $stmt_post = $dbhost->prepare($query_post);
+                    $stmt_post->bindParam(':IdTipoDocumento', $IdTipoDocumento);
+                    $stmt_post->bindParam(':IdPersona', $IdPersona);
+                    $stmt_post->bindParam(':NoDocumento', $NoDocumento);
+                    $stmt_post->bindParam(':FechaHoraActual', $fechaHoraActual);
+                    $stmt_post->bindParam(':UsuarioModificacion', $UsuarioModificacion);
+                    $stmt_post->execute();
 
-                    $query_validation1 = "Select Nombre From PERSONA Where IdPersona=:idPersona";
-                    $stmt_validation1 = $dbhost->prepare($query_validation1);
-                    $stmt_validation1->bindParam(':Nombre', $Nombre);
-                    $stmt_validation1->execute();
-
-                    if ($stmt_validation1->rowCount() == 0) {
-
-                        $query_validation = "Select NoDocumento From DOCUMENTO_PERSONA Where NoDocumento=:NoDocumento";
-                        $stmt_validation = $dbhost->prepare($query_validation);
-                        $stmt_validation->bindParam(':Nombre', $Nombre);
-                        $stmt_validation->execute();
-
-                        if ($stmt_validation->rowCount() == 0) {
-
-                            $query_post = "UPDATE DOCUMENTO_PERSONA SET IdTipoDocumento=:IdTipoDocumento, IdPersona=:IdPersona, NoDocumento=:NoDocumento,
-                            FechaModificacion=:FechaHoraActual,
-                            UsuarioModificacion=:UsuarioModificacion
-                            WHERE IdMenu=:IdMenu";
-                            $stmt_post = $dbhost->prepare($query_post);
-                            $stmt_post->bindParam(':IdTipoDocumento', $IdTipoDocumento);
-                            $stmt_post->bindParam(':IdPersona', $IdPersona);
-                            $stmt_post->bindParam(':NoDocumento', $NoDocumento);
-                            $stmt_post->bindParam(':FechaHoraActual', $fechaHoraActual);
-                            $stmt_post->bindParam(':UsuarioModificacion', $UsuarioModificacion);
-                            $stmt_post->execute();
-
-                            if ($stmt_post->rowCount() > 0) {
-                                echo json_encode(
-                                    array(
-                                        "status" => 200,
-                                        "msg" => "Documento persona actualizado exitosamente"
-                                    )
-                                );
-
-                            } else {
-
-                                echo json_encode(
-                                    array(
-                                        "status" => 401,
-                                        "msg" => "Ocurrio un error, intenta nuevamente"
-                                    )
-                                );
-                            }
-                            break;
-                        } else {
-                            echo json_encode(
-                                array(
-                                    "status" => 401,
-                                    "msg" => "¡El No Documento está en uso, valide!"
-                                )
-                            );
-                            break;
-                        }
+                    if ($stmt_post->rowCount() > 0) {
+                        echo json_encode(
+                            array(
+                                "status" => 200,
+                                "msg" => "Documento persona actualizado exitosamente"
+                            )
+                        );
 
                     } else {
+
                         echo json_encode(
                             array(
                                 "status" => 401,
-                                "msg" => "¡Persona no existe, valide!"
+                                "msg" => "Ocurrio un error, intenta nuevamente"
                             )
                         );
-                        break;
                     }
-
+                    break;
                 } else {
                     echo json_encode(
                         array(
                             "status" => 401,
-                            "msg" => "¡Tipo de documento no existe, valide!"
+                            "msg" => "¡El Documento está en uso, valide!"
                         )
                     );
                     break;
@@ -314,11 +246,13 @@ if ($token) {
                 $IdPersona = $data["idPersona"];
                 $NoDocumento = $data["noDocumento"];
 
-                $query_delete = "DELETE FROM DOCUMENTO_PERSONA WHERE IdTipoDocumento=:IdTipoDocumento And IdPersona=:IdPersona And NoDocumento=:NoDocumento "; 
+                $query_delete = "DELETE FROM DOCUMENTO_PERSONA WHERE IdTipoDocumento=:idTipoDocumento And
+                IdPersona=:idPersona And NoDocumento=:noDocumento";
+
                 $stmt_post = $dbhost->prepare($query_delete);
-                $stmt_post->bindParam(':IdTipoDocumento', $IdMenu, PDO::PARAM_INT);
-                $stmt_post->bindParam(':IdPersona', $IdPersona, PDO::PARAM_INT);
-                $stmt_post->bindParam(':NoDocumento', $NoDocumento, PDO::PARAM_INT);
+                $stmt_post->bindParam(':idTipoDocumento', $IdTipoDocumento, PDO::PARAM_INT);
+                $stmt_post->bindParam(':idPersona', $IdPersona, PDO::PARAM_INT);
+                $stmt_post->bindParam(':noDocumento', $NoDocumento, PDO::PARAM_INT);
                 $stmt_post->execute();
 
                 if ($stmt_post->rowCount() > 0) {
