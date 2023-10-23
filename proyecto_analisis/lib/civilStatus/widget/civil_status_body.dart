@@ -102,6 +102,19 @@ class _CivilStatusBodyState extends State<CivilStatusBody> with ErrorHandling {
                         ),
                       ),
                     ),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          _nameController.text = '';
+                        });
+
+                        _dialogCreate();
+                      },
+                      child: const Icon(
+                        Icons.add,
+                        color: Colors.green,
+                      ),
+                    ),
                     Expanded(
                       child: Card(
                         color: bgColor,
@@ -150,21 +163,6 @@ class _CivilStatusBodyState extends State<CivilStatusBody> with ErrorHandling {
                                               child: const Icon(
                                                 Icons.edit,
                                                 color: Colors.lightBlue,
-                                              ),
-                                            ),
-                                            InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  _nameController.text = '';
-                                                });
-
-                                                _dialogCreate(
-                                                  civilStatusList[index],
-                                                );
-                                              },
-                                              child: const Icon(
-                                                Icons.add,
-                                                color: Colors.green,
                                               ),
                                             ),
                                             InkWell(
@@ -256,9 +254,7 @@ class _CivilStatusBodyState extends State<CivilStatusBody> with ErrorHandling {
         });
   }
 
-  _dialogCreate(
-    final model.CivilStatus civilStatus,
-  ) {
+  _dialogCreate() {
     showDialog(
       context: context,
       builder: (context) {

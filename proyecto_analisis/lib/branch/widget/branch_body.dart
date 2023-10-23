@@ -104,6 +104,20 @@ class _BranchBodyState extends State<BranchBody> with ErrorHandling {
                         ),
                       ),
                     ),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          _addressController.text = '';
+                          _nameController.text = '';
+                        });
+
+                        _dialogCreate();
+                      },
+                      child: const Icon(
+                        Icons.add,
+                        color: Colors.green,
+                      ),
+                    ),
                     Expanded(
                       child: Card(
                         color: bgColor,
@@ -163,22 +177,6 @@ class _BranchBodyState extends State<BranchBody> with ErrorHandling {
                                               child: const Icon(
                                                 Icons.edit,
                                                 color: Colors.lightBlue,
-                                              ),
-                                            ),
-                                            InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  _addressController.text = '';
-                                                  _nameController.text = '';
-                                                });
-
-                                                _dialogCreate(
-                                                  branch[index],
-                                                );
-                                              },
-                                              child: const Icon(
-                                                Icons.add,
-                                                color: Colors.green,
                                               ),
                                             ),
                                             InkWell(
@@ -279,9 +277,7 @@ class _BranchBodyState extends State<BranchBody> with ErrorHandling {
         });
   }
 
-  _dialogCreate(
-    final model.Branch branch,
-  ) {
+  _dialogCreate() {
     showDialog(
       context: context,
       builder: (context) {
@@ -330,7 +326,7 @@ class _BranchBodyState extends State<BranchBody> with ErrorHandling {
                     nombre: branchName,
                     usuarioCreacion: name,
                     direccion: branchNumber,
-                    id: branch.idEmpresa,
+                    id: _companyController.text,
                     idEmpresa: _companyController.text,
                   ),
                 );

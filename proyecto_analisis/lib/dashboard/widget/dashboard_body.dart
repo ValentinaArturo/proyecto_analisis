@@ -1,19 +1,26 @@
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
+import 'package:proyecto_analisis/branch/branch_screen.dart';
+import 'package:proyecto_analisis/civilStatus/civil_status_screen.dart';
 import 'package:proyecto_analisis/common/components/header.dart';
 import 'package:proyecto_analisis/common/components/my_files.dart';
 import 'package:proyecto_analisis/common/components/recent_files.dart';
 import 'package:proyecto_analisis/common/components/storage_details.dart';
 import 'package:proyecto_analisis/company/company_screen.dart';
+import 'package:proyecto_analisis/department/department_screen.dart';
+import 'package:proyecto_analisis/employee/employee_screen.dart';
 import 'package:proyecto_analisis/genres/genres_screen.dart';
 import 'package:proyecto_analisis/menu/menu_screen.dart';
 import 'package:proyecto_analisis/modules/modules_screen.dart';
+import 'package:proyecto_analisis/person/person_screen.dart';
+import 'package:proyecto_analisis/position/position_screen.dart';
 import 'package:proyecto_analisis/repository/user_repository.dart';
 import 'package:proyecto_analisis/resources/constants.dart';
 import 'package:proyecto_analisis/rol/model/menu.dart';
 import 'package:proyecto_analisis/rolrol/rolrol_screen.dart';
 import 'package:proyecto_analisis/rols/rols_screen.dart';
 import 'package:proyecto_analisis/rolsUser/rols_user_screen.dart';
+import 'package:proyecto_analisis/status/status_screen.dart';
 
 import '../../common/responsive.dart';
 
@@ -54,12 +61,14 @@ class _DashboardBodyState extends State<DashboardBody> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Container(),
+        leading: Icon(
+          Icons.person,
+        ),
         backgroundColor: primaryColor,
         elevation: 5,
         title: Text(
           name,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
             fontSize: 20,
@@ -202,21 +211,17 @@ class _DashboardBodyState extends State<DashboardBody> {
       if (obj.nombre == 'Empresas') {
         return const CompanyScreen();
       } else if (obj.nombre == 'Sucursales') {
-        return Container(
-          child: const Text('Sucursales'),
-        );
+        return BranchScreen();
       } else if (obj.nombre == 'Generos') {
         return const GenresScreen();
       } else if (obj.nombre == 'Estatus Usuario') {
-        return Container(
-          child: const Text('Estatus Usuario'),
-        );
+        return StatusScreen();
       } else if (obj.nombre == 'Roles') {
         return const RolRolScreen();
       } else if (obj.nombre == 'Modulos') {
         return const ModulesScreen();
       } else if (obj.nombre == 'Menus') {
-        return MenuScreen();
+        return const MenuScreen();
       } else if (obj.nombre == 'Opciones') {
         return Container(
           child: const Text('Opciones'),
@@ -230,13 +235,9 @@ class _DashboardBodyState extends State<DashboardBody> {
           child: const Text('Asignar Opciones a un Role'),
         );
       } else if (obj.nombre == 'Estados Civiles') {
-        return Container(
-          child: const Text('Estados Civiles'),
-        );
+        return CivilStatusScreen();
       } else if (obj.nombre == 'Status Empleado') {
-        return Container(
-          child: const Text('Status Empleado'),
-        );
+        return StatusScreen();
       } else if (obj.nombre == 'Flujos Status Empleado') {
         return Container(
           child: const Text('Flujos Status Empleado'),
@@ -246,17 +247,11 @@ class _DashboardBodyState extends State<DashboardBody> {
           child: const Text('Tipos de Documento'),
         );
       } else if (obj.nombre == 'Departamentos') {
-        return Container(
-          child: const Text('Departamentos'),
-        );
+        return DepartmentScreen();
       } else if (obj.nombre == 'Puestos') {
-        return Container(
-          child: const Text('Puestos'),
-        );
+        return PositionScreen();
       } else if (obj.nombre == 'Personas') {
-        return Container(
-          child: const Text('Personas'),
-        );
+        return PersonScreen();
       } else if (obj.nombre == 'Documentos de Personas') {
         return Container(
           child: const Text('Documentos de Personas'),
@@ -266,9 +261,7 @@ class _DashboardBodyState extends State<DashboardBody> {
           child: const Text('Bancos'),
         );
       } else if (obj.nombre == 'Empleados') {
-        return Container(
-          child: const Text('Empleados'),
-        );
+        return EmployeeScreen();
       }
       return Text(obj.nombre);
     }).toList();

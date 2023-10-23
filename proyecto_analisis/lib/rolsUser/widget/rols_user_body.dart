@@ -8,6 +8,7 @@ import 'package:proyecto_analisis/resources/constants.dart';
 import 'package:proyecto_analisis/rols/bloc/rols_bloc.dart';
 import 'package:proyecto_analisis/rols/bloc/rols_event.dart';
 import 'package:proyecto_analisis/rols/bloc/rols_state.dart';
+import 'package:proyecto_analisis/rols/model/user_response.dart' as model;
 import 'package:proyecto_analisis/rolsUser/model/rol.dart';
 import 'package:proyecto_analisis/rolsUser/model/rol_user.dart';
 
@@ -26,6 +27,8 @@ class _RolsUserBodyState extends State<RolsUserBody> with ErrorHandling {
   List<Rol> _roles = [];
   late Rol _selectedRole;
   late String name;
+  List<model.User> user = [];
+  late model.User _selectedUser;
 
   @override
   void initState() {
@@ -40,11 +43,29 @@ class _RolsUserBodyState extends State<RolsUserBody> with ErrorHandling {
       fechaModificacion: DateTime(0),
       usuarioModificacion: '',
     );
+    _selectedUser = model.User(
+      idUsuario: '',
+      nombre: '',
+      apellido: '',
+      fechaNacimiento: DateTime(0),
+      idStatusUsuario: '',
+      password: '',
+      idGenero: '',
+      intentosDeAcceso: '',
+      correoElectronico: '',
+      requiereCambiarPassword: '',
+      telefonoMovil: '',
+      idSucursal: '',
+      fechaCreacion: '',
+    );
     context.read<RolsBloc>().add(
           RolsUser(),
         );
     context.read<RolsBloc>().add(
           RolList(),
+        );
+    context.read<RolsBloc>().add(
+          Rols(),
         );
   }
 
@@ -100,6 +121,11 @@ class _RolsUserBodyState extends State<RolsUserBody> with ErrorHandling {
               ),
             ),
           );
+        } else if (state is RolsSuccess) {
+          setState(() {
+            user = state.userResponse.users;
+            _selectedUser = state.userResponse.users.first;
+          });
         }
       },
       child: Stack(
@@ -122,6 +148,15 @@ class _RolsUserBodyState extends State<RolsUserBody> with ErrorHandling {
                           fontSize: 33,
                           fontWeight: FontWeight.bold,
                         ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        _dialogCreate();
+                      },
+                      child: const Icon(
+                        Icons.add,
+                        color: Colors.green,
                       ),
                     ),
                     Expanded(
@@ -181,17 +216,6 @@ class _RolsUserBodyState extends State<RolsUserBody> with ErrorHandling {
                                               child: const Icon(
                                                 Icons.edit,
                                                 color: Colors.lightBlue,
-                                              ),
-                                            ),
-                                            InkWell(
-                                              onTap: () {
-                                                _dialogCreate(
-                                                  users[index],
-                                                );
-                                              },
-                                              child: const Icon(
-                                                Icons.add,
-                                                color: Colors.green,
                                               ),
                                             ),
                                             InkWell(
@@ -295,27 +319,43 @@ class _RolsUserBodyState extends State<RolsUserBody> with ErrorHandling {
     );
   }
 
-  _dialogCreate(
-    final RolUser user,
-  ) {
+  _dialogCreate() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Selecciona un rol'),
-          content: DropdownButton2<Rol>(
-            value: _selectedRole,
-            items: _roles.map((role) {
-              return DropdownMenuItem<Rol>(
-                value: role,
-                child: Text(role.nombre),
-              );
-            }).toList(),
-            onChanged: (value) {
-              setState(() {
-                _selectedRole = value!;
-              });
-            },
+          title: const Text('Selecciona un usuario rol'),
+          content: Column(
+            children: [
+              DropdownButton2<Rol>(
+                value: _selectedRole,
+                items: _roles.map((role) {
+                  return DropdownMenuItem<Rol>(
+                    value: role,
+                    child: Text(role.nombre),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedRole = value!;
+                  });
+                },
+              ),
+              DropdownButton2<model.User>(
+                value: _selectedUser,
+                items: user.map((user) {
+                  return DropdownMenuItem<model.User>(
+                    value: user,
+                    child: Text(user.nombre),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedUser = value!;
+                  });
+                },
+              ),
+            ],
           ),
           actions: [
             ElevatedButton(

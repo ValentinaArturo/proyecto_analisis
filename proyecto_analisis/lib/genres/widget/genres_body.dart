@@ -104,6 +104,19 @@ class _GenresBodyState extends State<GenresBody> with ErrorHandling {
                         ),
                       ),
                     ),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          _nameController.text = '';
+                        });
+
+                        _dialogCreate();
+                      },
+                      child: const Icon(
+                        Icons.add,
+                        color: Colors.green,
+                      ),
+                    ),
                     Expanded(
                       child: Card(
                         color: bgColor,
@@ -161,21 +174,6 @@ class _GenresBodyState extends State<GenresBody> with ErrorHandling {
                                             ),
                                             InkWell(
                                               onTap: () {
-                                                setState(() {
-                                                  _nameController.text = '';
-                                                });
-
-                                                _dialogCreate(
-                                                  genres[index],
-                                                );
-                                              },
-                                              child: const Icon(
-                                                Icons.add,
-                                                color: Colors.green,
-                                              ),
-                                            ),
-                                            InkWell(
-                                              onTap: () {
                                                 bloc.add(
                                                   GenreDelete(
                                                     id: genres[index].idGenero,
@@ -222,83 +220,79 @@ class _GenresBodyState extends State<GenresBody> with ErrorHandling {
     final Genre genre,
   ) {
     showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Editar genero'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              TextField(
-                controller: _nameController,
-                decoration: InputDecoration(labelText: 'Nombre del genero'),
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Editar genero'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                TextField(
+                  controller: _nameController,
+                  decoration: InputDecoration(labelText: 'Nombre del genero'),
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Cancelar'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text('Guardar'),
+                onPressed: () {
+                  bloc.add(
+                    GenreEdit(
+                      name: _nameController.text,
+                      id: genre.idGenero,
+                      nameCreate: name,
+                    ),
+                  );
+                },
               ),
             ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Guardar'),
-              onPressed: () {
-                bloc.add(
-                  GenreEdit(
-                    name: _nameController.text,
-                    id: genre.idGenero,
-                    nameCreate: name,
-                  ),
-                );
-              },
-            ),
-          ],
-        );
-      }
-    );
+          );
+        });
   }
 
-  _dialogCreate(
-    final Genre genre,
-  ) {
+  _dialogCreate() {
     showDialog(
         context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Crear genero'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              TextField(
-                controller: _nameController,
-                decoration: InputDecoration(labelText: 'Nombre del genero'),
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Crear genero'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                TextField(
+                  controller: _nameController,
+                  decoration: InputDecoration(labelText: 'Nombre del genero'),
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Cancelar'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text('Crear'),
+                onPressed: () {
+                  bloc.add(
+                    GenreCreate(
+                      name: _nameController.text,
+                      nameCreate: name,
+                    ),
+                  );
+                },
               ),
             ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Crear'),
-              onPressed: () {
-                bloc.add(
-                  GenreCreate(
-                    name: _nameController.text,
-                    nameCreate: name,
-                  ),
-                );
-              },
-            ),
-          ],
-        );
-      }
-    );
+          );
+        });
   }
 
   _getName() async {
