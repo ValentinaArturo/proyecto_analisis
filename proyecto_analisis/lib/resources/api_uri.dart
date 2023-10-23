@@ -20,3 +20,4 @@ const civilStatusPath = 'estadoCivil.php';
 const personPath = 'persona.php';
 const employeePath = 'empleado.php';
 const positionPath = 'puesto.php';
+const statusPath = 'statusEmpleado.php';

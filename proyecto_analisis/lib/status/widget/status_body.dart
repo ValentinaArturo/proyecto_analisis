@@ -2,53 +2,51 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
 import 'package:proyecto_analisis/common/bloc/mixin/error_handling.dart';
-import 'package:proyecto_analisis/position/bloc/position_bloc.dart';
-import 'package:proyecto_analisis/position/model/position.dart' as model;
 import 'package:proyecto_analisis/repository/user_repository.dart';
 import 'package:proyecto_analisis/resources/constants.dart';
+import 'package:proyecto_analisis/status/bloc/status_bloc.dart';
+import 'package:proyecto_analisis/status/model/status.dart' as model;
 
 import '../../common/loader/loader.dart';
 
-class PositionBody extends StatefulWidget {
-  const PositionBody({Key? key}) : super(key: key);
+class StatusBody extends StatefulWidget {
+  const StatusBody({Key? key}) : super(key: key);
 
   @override
-  State<PositionBody> createState() => _PositionBodyState();
+  State<StatusBody> createState() => _StatusBodyState();
 }
 
-class _PositionBodyState extends State<PositionBody> with ErrorHandling {
-  List<model.Position> position = [];
-  late PositionBloc bloc;
+class _StatusBodyState extends State<StatusBody> with ErrorHandling {
+  List<model.Status> status = [];
+  late StatusBloc bloc;
   late String name;
   final TextEditingController _nombreController = TextEditingController();
-  final TextEditingController _idDepartamentoController =
-      TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _getName();
-    context.read<PositionBloc>().add(
-          Position(),
+    context.read<StatusBloc>().add(
+          Status(),
         );
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    bloc = context.read<PositionBloc>();
+    bloc = context.read<StatusBloc>();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<PositionBloc, BaseState>(
+    return BlocListener<StatusBloc, BaseState>(
       listener: (context, state) {
         verifyServerError(state);
-        if (state is PositionSuccess) {
+        if (state is StatusSuccess) {
           setState(() {
-            position = state.positionResponse.positions;
+            status = state.statusResponse.statusList;
           });
-        } else if (state is PositionEditSuccess) {
+        } else if (state is StatusEditSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -56,7 +54,7 @@ class _PositionBodyState extends State<PositionBody> with ErrorHandling {
               ),
             ),
           );
-        } else if (state is PositionCreateSuccess) {
+        } else if (state is StatusCreateSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -64,7 +62,7 @@ class _PositionBodyState extends State<PositionBody> with ErrorHandling {
               ),
             ),
           );
-        } else if (state is PositionDeleteSuccess) {
+        } else if (state is StatusDeleteSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -72,7 +70,7 @@ class _PositionBodyState extends State<PositionBody> with ErrorHandling {
               ),
             ),
           );
-        } else if (state is PositionError) {
+        } else if (state is StatusError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
@@ -108,7 +106,6 @@ class _PositionBodyState extends State<PositionBody> with ErrorHandling {
                       onTap: () {
                         setState(() {
                           _nombreController.text = '';
-                          _idDepartamentoController.text = '';
                         });
 
                         _dialogCreate();
@@ -126,7 +123,7 @@ class _PositionBodyState extends State<PositionBody> with ErrorHandling {
                             top: MediaQuery.of(context).size.height * 0.05,
                           ),
                           child: ListView.builder(
-                            itemCount: position.length,
+                            itemCount: status.length,
                             itemBuilder: (context, index) {
                               return Column(
                                 children: [
@@ -142,7 +139,7 @@ class _PositionBodyState extends State<PositionBody> with ErrorHandling {
                                         color: Colors.purpleAccent,
                                       ),
                                       title: Text(
-                                        'Nombre:   ${position[index].nombre}',
+                                        'Nombre:   ${status[index].nombre}',
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
@@ -156,14 +153,10 @@ class _PositionBodyState extends State<PositionBody> with ErrorHandling {
                                               onTap: () {
                                                 setState(() {
                                                   _nombreController.text =
-                                                      position[index].nombre;
-                                                  _idDepartamentoController
-                                                          .text =
-                                                      position[index]
-                                                          .idDepartamento;
+                                                      status[index].nombre;
                                                 });
                                                 _dialogEdit(
-                                                  position[index],
+                                                  status[index],
                                                 );
                                               },
                                               child: const Icon(
@@ -174,9 +167,9 @@ class _PositionBodyState extends State<PositionBody> with ErrorHandling {
                                             InkWell(
                                               onTap: () {
                                                 bloc.add(
-                                                  PositionDelete(
-                                                    id: position[index]
-                                                        .idPuesto,
+                                                  StatusDelete(
+                                                    id: status[index]
+                                                        .idStatusEmpleado,
                                                   ),
                                                 );
                                               },
@@ -203,9 +196,9 @@ class _PositionBodyState extends State<PositionBody> with ErrorHandling {
               ],
             ),
           ),
-          BlocBuilder<PositionBloc, BaseState>(
+          BlocBuilder<StatusBloc, BaseState>(
             builder: (context, state) {
-              if (state is PositionInProgress) {
+              if (state is StatusInProgress) {
                 return const Loader();
               }
               return Container();
@@ -217,7 +210,7 @@ class _PositionBodyState extends State<PositionBody> with ErrorHandling {
   }
 
   _dialogEdit(
-    final model.Position position,
+    final model.Status status,
   ) {
     showDialog(
       context: context,
@@ -230,10 +223,6 @@ class _PositionBodyState extends State<PositionBody> with ErrorHandling {
               TextField(
                 controller: _nombreController,
                 decoration: InputDecoration(labelText: 'Nombre'),
-              ),
-              TextField(
-                controller: _idDepartamentoController,
-                decoration: InputDecoration(labelText: 'ID Departamento'),
               ),
             ],
           ),
@@ -248,11 +237,10 @@ class _PositionBodyState extends State<PositionBody> with ErrorHandling {
               child: Text('Guardar'),
               onPressed: () {
                 bloc.add(
-                  PositionEdit(
+                  StatusEdit(
                     nombre: _nombreController.text,
-                    idDepartamento: _idDepartamentoController.text,
                     usuarioModificacion: name,
-                    idPuesto: position.idPuesto,
+                    idStatusUsuario: status.idStatusEmpleado,
                   ),
                 );
               },
@@ -279,10 +267,6 @@ class _PositionBodyState extends State<PositionBody> with ErrorHandling {
                     controller: _nombreController,
                     decoration: InputDecoration(labelText: 'Nombre'),
                   ),
-                  TextField(
-                    controller: _idDepartamentoController,
-                    decoration: InputDecoration(labelText: 'ID Departamento'),
-                  ),
                 ],
               ),
             ),
@@ -298,9 +282,8 @@ class _PositionBodyState extends State<PositionBody> with ErrorHandling {
               child: Text('Crear'),
               onPressed: () {
                 bloc.add(
-                  PositionCreate(
+                  StatusCreate(
                     nombre: _nombreController.text,
-                    idDepartamento: _idDepartamentoController.text,
                     usuarioModificacion: name,
                   ),
                 );
