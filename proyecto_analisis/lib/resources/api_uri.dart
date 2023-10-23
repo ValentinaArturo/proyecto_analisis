@@ -18,3 +18,4 @@ const menuPath = 'crudmenu.php';
 const branchPath = 'sucursal.php';
 const civilStatusPath = 'estadoCivil.php';
 const personPath = 'persona.php';
+const employeePath = 'empleado.php';
