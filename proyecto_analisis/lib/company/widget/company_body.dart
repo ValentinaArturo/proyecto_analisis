@@ -68,6 +68,9 @@ class _CompanyBodyState extends State<CompanyBody> with ErrorHandling {
             company = state.companyResponse.comapnies;
           });
         } else if (state is CompanyEditSuccess) {
+          context.read<CompanyBloc>().add(
+            Company(),
+          );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -76,6 +79,9 @@ class _CompanyBodyState extends State<CompanyBody> with ErrorHandling {
             ),
           );
         } else if (state is CompanyCreateSuccess) {
+          context.read<CompanyBloc>().add(
+            Company(),
+          );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -84,6 +90,9 @@ class _CompanyBodyState extends State<CompanyBody> with ErrorHandling {
             ),
           );
         } else if (state is CompanyDeleteSuccess) {
+          context.read<CompanyBloc>().add(
+            Company(),
+          );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -352,11 +361,6 @@ class _CompanyBodyState extends State<CompanyBody> with ErrorHandling {
                       decoration: const InputDecoration(
                           labelText: 'Cantidad de Preguntas para Validar'),
                     ),
-                    TextField(
-                      controller: _nameCreateController,
-                      decoration: const InputDecoration(
-                          labelText: 'Nombre de Creación de Empresa'),
-                    )
                   ],
                 ),
               ),
@@ -391,7 +395,7 @@ class _CompanyBodyState extends State<CompanyBody> with ErrorHandling {
                           _passwordCantidadNumerosController.text,
                       passwordCantidadPreguntasValidar:
                           _passwordCantidadPreguntasValidarController.text,
-                      nameCreate: _nameCreateController.text,
+                      nameCreate: name,
                     ),
                   );
                   Navigator.of(context).pop();
@@ -470,11 +474,6 @@ class _CompanyBodyState extends State<CompanyBody> with ErrorHandling {
                         decoration: const InputDecoration(
                             labelText: 'Cantidad de Preguntas para Validar'),
                       ),
-                      TextField(
-                        controller: _nameCreateController,
-                        decoration: const InputDecoration(
-                            labelText: 'Nombre de Creación de Empresa'),
-                      )
                     ],
                   ),
                 ),
@@ -509,7 +508,7 @@ class _CompanyBodyState extends State<CompanyBody> with ErrorHandling {
                             _passwordCantidadNumerosController.text,
                         passwordCantidadPreguntasValidar:
                             _passwordCantidadPreguntasValidarController.text,
-                        nameCreate: _nameCreateController.text,
+                        nameCreate: name,
                       ),
                     );
                     Navigator.of(context).pop();

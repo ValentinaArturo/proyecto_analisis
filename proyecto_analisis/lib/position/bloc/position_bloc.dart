@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:proyecto_analisis/common/bloc/base_bloc.dart';
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
+import 'package:proyecto_analisis/department/model/department.dart';
 import 'package:proyecto_analisis/position/model/position.dart';
 import 'package:proyecto_analisis/position/service/position_service.dart';
 import 'package:proyecto_analisis/repository/user_repository.dart';
@@ -20,11 +21,30 @@ class PositionBloc extends BaseBloc<PositionEvent, BaseState> {
     on<PositionCreate>(positionCreate);
     on<PositionEdit>(positionEdit);
     on<PositionDelete>(positionDelete);
+    on<Department>(department);
   }
 
   final PositionService service;
   final UserRepository userRepository;
+  Future<void> department(
+      Department event,
+      Emitter<BaseState> emit,
+      ) async {
+    emit(PositionInProgress());
 
+    try {
+      final response = await service.department();
+
+      if (response.statusCode == 401) {
+        emit(PositionError(response.data['msg']));
+      } else if (response.statusCode == 200) {
+        final success = DepartmentResponse.fromJson(response.data!);
+        emit(DepartmentSuccess(departmentResponse: success));
+      }
+    } on DioError catch (dioError) {
+      emit(PositionError(dioError.response!.data['msg']));
+    }
+  }
   Future<void> position(
     Position event,
     Emitter<BaseState> emit,

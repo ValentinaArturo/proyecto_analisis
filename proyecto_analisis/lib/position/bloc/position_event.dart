@@ -3,6 +3,7 @@ part of 'position_bloc.dart';
 abstract class PositionEvent {}
 
 class Position extends PositionEvent {}
+class Department extends PositionEvent {}
 
 class PositionEdit extends PositionEvent {
   final String nombre;

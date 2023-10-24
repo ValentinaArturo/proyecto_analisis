@@ -1,7 +1,4 @@
-import 'package:proyecto_analisis/common/bloc/base_state.dart';
-import 'package:proyecto_analisis/common/models/success_response.dart';
-import 'package:proyecto_analisis/signUp/model/genre_response.dart';
-import 'package:proyecto_analisis/signUp/model/question.dart';
+part of 'user_detail_bloc.dart';
 
 abstract class UserDetailState extends BaseState {
   const UserDetailState();
@@ -41,4 +38,19 @@ class QuestionsSuccess extends UserDetailState {
   QuestionsSuccess(
     this.question,
   );
+}
+class BranchSuccess extends UserDetailState {
+  final BranchResponse branchResponse;
+
+  BranchSuccess({
+    required this.branchResponse,
+  });
+}
+
+class StatusSuccess extends UserDetailState {
+  final StatusResponse statusResponse;
+
+  StatusSuccess({
+    required this.statusResponse,
+  });
 }

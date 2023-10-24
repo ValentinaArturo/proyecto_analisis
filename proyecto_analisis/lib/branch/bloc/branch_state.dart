@@ -27,3 +27,10 @@ class BranchError extends BranchState {
       this.error,
       );
 }
+class CompanySuccess extends BranchState {
+  final CompanyResponse companyResponse;
+
+  CompanySuccess({
+    required this.companyResponse,
+  });
+}

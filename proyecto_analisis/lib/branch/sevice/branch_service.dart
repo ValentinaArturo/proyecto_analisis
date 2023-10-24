@@ -19,12 +19,16 @@ class BranchService {
       branchPath,
     );
   }
-
+  Future<Response<dynamic>> company() async {
+    return client.get(
+      companyPath,
+    );
+  }
   Future<Response<dynamic>> branchCreate({
     required final id,
     required final nombre,
     required final direccion,
-    required final idEmpresa,
+    required final int idEmpresa,
     required final usuarioCreacion,
   }) async {
     return client.post(
@@ -34,7 +38,6 @@ class BranchService {
         "Direccion": direccion,
         "IdEmpresa": idEmpresa,
         "UsuarioCreacion": usuarioCreacion,
-        "idModulo": id,
       },
     );
   }

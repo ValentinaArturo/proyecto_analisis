@@ -94,7 +94,7 @@ class CompanyService {
     return client.delete(
       companyPath,
       data: {
-        "idGenero": id,
+        "idEmpresa": id,
       },
     );
   }

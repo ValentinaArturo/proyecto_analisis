@@ -2,10 +2,6 @@ import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_analisis/branch/branch_screen.dart';
 import 'package:proyecto_analisis/civilStatus/civil_status_screen.dart';
-import 'package:proyecto_analisis/common/components/header.dart';
-import 'package:proyecto_analisis/common/components/my_files.dart';
-import 'package:proyecto_analisis/common/components/recent_files.dart';
-import 'package:proyecto_analisis/common/components/storage_details.dart';
 import 'package:proyecto_analisis/company/company_screen.dart';
 import 'package:proyecto_analisis/department/department_screen.dart';
 import 'package:proyecto_analisis/employee/employee_screen.dart';
@@ -61,7 +57,7 @@ class _DashboardBodyState extends State<DashboardBody> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(
+        leading: const Icon(
           Icons.person,
         ),
         backgroundColor: primaryColor,
@@ -161,49 +157,6 @@ class _DashboardBodyState extends State<DashboardBody> {
     setState(() {
       this.name = name;
     });
-  }
-
-  Widget _dashBoard() {
-    return SafeArea(
-      child: SingleChildScrollView(
-        primary: false,
-        padding: const EdgeInsets.all(defaultPadding),
-        child: Column(
-          children: [
-            Header(
-              name: name,
-            ),
-            const SizedBox(height: defaultPadding),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 5,
-                  child: Column(
-                    children: [
-                      const MyFiles(),
-                      const SizedBox(height: defaultPadding),
-                      const RecentFiles(),
-                      if (Responsive.isMobile(context))
-                        const SizedBox(height: defaultPadding),
-                      if (Responsive.isMobile(context)) const StorageDetails(),
-                    ],
-                  ),
-                ),
-                if (!Responsive.isMobile(context))
-                  const SizedBox(width: defaultPadding),
-                // On Mobile means if the screen is less than 850 we don't want to show it
-                if (!Responsive.isMobile(context))
-                  const Expanded(
-                    flex: 2,
-                    child: StorageDetails(),
-                  ),
-              ],
-            )
-          ],
-        ),
-      ),
-    );
   }
 
   List<Widget> _getMenuWidgets() {

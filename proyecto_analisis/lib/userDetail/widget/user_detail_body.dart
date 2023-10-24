@@ -1,19 +1,20 @@
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:proyecto_analisis/branch/model/branch.dart' as model;
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
 import 'package:proyecto_analisis/common/bloc/mixin/error_handling.dart';
 import 'package:proyecto_analisis/common/textField/input.dart';
 import 'package:proyecto_analisis/common/validation/validate_email.dart';
+import 'package:proyecto_analisis/repository/user_repository.dart';
 import 'package:proyecto_analisis/resources/constants.dart';
 import 'package:proyecto_analisis/rols/model/user_response.dart';
 import 'package:proyecto_analisis/routes/landing_routes_constants.dart';
 import 'package:proyecto_analisis/signUp/model/genre.dart';
+import 'package:proyecto_analisis/status/model/status.dart' as model;
 import 'package:proyecto_analisis/userDetail/bloc/user_detail_bloc.dart';
-import 'package:proyecto_analisis/userDetail/bloc/user_detail_event.dart';
-import 'package:proyecto_analisis/userDetail/bloc/user_detail_state.dart';
-
 import '../../common/loader/loader.dart';
 
 class UserDetailBody extends StatefulWidget {
@@ -35,14 +36,37 @@ class _UserDetailBodyState extends State<UserDetailBody> with ErrorHandling {
   TextEditingController birthDate = TextEditingController();
   TextEditingController phone = TextEditingController();
   TextEditingController email = TextEditingController();
+  late String _name;
 
   int? gender;
   List<GenreItem> genres = [];
   late UserDetailBloc bloc;
+  List<model.Branch> branch = [];
+  List<model.Status> status = [];
+  late model.Branch dropdownValueBranch;
+  late model.Status dropdownValueStatus;
 
   @override
   void initState() {
     super.initState();
+    _name = '';
+    _getName();
+    dropdownValueStatus = model.Status(
+      idStatusEmpleado: '',
+      nombre: '',
+      fechaCreacion: '',
+      usuarioCreacion: '',
+    );
+    dropdownValueBranch = model.Branch(
+      idBranch: '',
+      nombre: '',
+      direccion: '',
+      idEmpresa: '',
+      fechaCreacion: DateTime(0),
+      usuarioCreacion: '',
+      fechaModificacion: '',
+      usuarioModificacion: '',
+    );
     gender = int.parse(widget.user.idGenero);
     name.text = widget.user.nombre;
     lastName.text = widget.user.apellido;
@@ -51,6 +75,12 @@ class _UserDetailBodyState extends State<UserDetailBody> with ErrorHandling {
     email.text = widget.user.correoElectronico;
     context.read<UserDetailBloc>().add(
           Genre(),
+        );
+    context.read<UserDetailBloc>().add(
+          Branch(),
+        );
+    context.read<UserDetailBloc>().add(
+          Status(),
         );
   }
 
@@ -82,6 +112,21 @@ class _UserDetailBodyState extends State<UserDetailBody> with ErrorHandling {
                   ),
                 );
               });
+        } else if (state is BranchSuccess) {
+          setState(() {
+            branch = state.branchResponse.branches;
+            dropdownValueBranch = branch.firstWhere(
+              (objeto) => objeto.idBranch == widget.user.idSucursal,
+            );
+          });
+        } else if (state is StatusSuccess) {
+          setState(() {
+            status = state.statusResponse.statusList;
+            dropdownValueStatus = status.firstWhere(
+              (objeto) =>
+                  objeto.idStatusEmpleado == widget.user.idStatusUsuario,
+            );
+          });
         } else if (state is GenreSuccess) {
           setState(() {
             genres = state.genreResponse.genres;
@@ -210,6 +255,37 @@ class _UserDetailBodyState extends State<UserDetailBody> with ErrorHandling {
                                 const SizedBox(
                                   height: 40,
                                 ),
+                                DropdownButton2<model.Branch>(
+                                  value: dropdownValueBranch,
+                                  items: branch.map((company) {
+                                    return DropdownMenuItem<model.Branch>(
+                                      value: company,
+                                      child: Text(company.nombre),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      dropdownValueBranch = value!;
+                                    });
+                                  },
+                                ),
+                                const SizedBox(
+                                  height: 40,
+                                ),
+                                DropdownButton2<model.Status>(
+                                  value: dropdownValueStatus,
+                                  items: status.map((company) {
+                                    return DropdownMenuItem<model.Status>(
+                                      value: company,
+                                      child: Text(company.nombre),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      dropdownValueStatus = value!;
+                                    });
+                                  },
+                                ),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -225,6 +301,13 @@ class _UserDetailBodyState extends State<UserDetailBody> with ErrorHandling {
                                               genre: gender!,
                                               birthDate: birthDate.text,
                                               phone: phone.text,
+                                              idSucursal:
+                                                  dropdownValueBranch.idBranch,
+                                              nameCreate: _name,
+                                              idUsuario: widget.user.idUsuario,
+                                              idStatusUsuario:
+                                                  dropdownValueStatus
+                                                      .idStatusEmpleado,
                                             ),
                                           );
                                         }
@@ -267,5 +350,13 @@ class _UserDetailBodyState extends State<UserDetailBody> with ErrorHandling {
         ],
       ),
     );
+  }
+
+  _getName() async {
+    final UserRepository userRepository = UserRepository();
+    final name = await userRepository.getName();
+    setState(() {
+      _name = name;
+    });
   }
 }

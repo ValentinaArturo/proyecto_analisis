@@ -20,6 +20,30 @@ class EmployeeService {
     );
   }
 
+  Future<Response<dynamic>> person() async {
+    return client.get(
+      personPath,
+    );
+  }
+
+  Future<Response<dynamic>> branch() async {
+    return client.get(
+      branchPath,
+    );
+  }
+
+  Future<Response<dynamic>> position() async {
+    return client.get(
+      positionPath,
+    );
+  }
+
+  Future<Response<dynamic>> status() async {
+    return client.get(
+      statusPath,
+    );
+  }
+
   Future<Response<dynamic>> createEmployee({
     required String idPersona,
     required String idSucursal,

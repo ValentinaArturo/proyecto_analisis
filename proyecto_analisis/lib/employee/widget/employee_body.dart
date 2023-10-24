@@ -1,11 +1,16 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:proyecto_analisis/branch/model/branch.dart' as model;
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
 import 'package:proyecto_analisis/common/bloc/mixin/error_handling.dart';
 import 'package:proyecto_analisis/employee/bloc/employee_bloc.dart';
 import 'package:proyecto_analisis/employee/model/employee.dart' as model;
+import 'package:proyecto_analisis/person/model/person.dart' as model;
+import 'package:proyecto_analisis/position/model/position.dart' as model;
 import 'package:proyecto_analisis/repository/user_repository.dart';
 import 'package:proyecto_analisis/resources/constants.dart';
+import 'package:proyecto_analisis/status/model/status.dart' as model;
 
 import '../../common/loader/loader.dart';
 
@@ -18,6 +23,15 @@ class EmployeeBody extends StatefulWidget {
 
 class _EmployeeBodyState extends State<EmployeeBody> with ErrorHandling {
   List<model.Employee> employees = [];
+  List<model.Person> person = [];
+  List<model.Branch> branch = [];
+  List<model.Position> position = [];
+  List<model.Status> status = [];
+  late model.Person dropdownValue;
+  late model.Branch dropdownValueBranch;
+  late model.Position dropdownValuePosition;
+  late model.Status dropdownValueStatus;
+
   late EmployeeBloc bloc;
   late String name;
   final TextEditingController _idPersonaController = TextEditingController();
@@ -46,6 +60,18 @@ class _EmployeeBodyState extends State<EmployeeBody> with ErrorHandling {
     context.read<EmployeeBloc>().add(
           Employee(),
         );
+    context.read<EmployeeBloc>().add(
+          Person(),
+        );
+    context.read<EmployeeBloc>().add(
+          Branch(),
+        );
+    context.read<EmployeeBloc>().add(
+          Position(),
+        );
+    context.read<EmployeeBloc>().add(
+          Status(),
+        );
   }
 
   @override
@@ -63,7 +89,33 @@ class _EmployeeBodyState extends State<EmployeeBody> with ErrorHandling {
           setState(() {
             employees = state.employeeResponse.employees;
           });
+        } else if (state is PersonSuccess) {
+          setState(() {
+            person = state.personResponse.users;
+            dropdownValue = state.personResponse.users[0];
+          });
+        } else if (state is BranchSuccess) {
+          setState(() {
+            branch = state.branchResponse.branches;
+            dropdownValueBranch = state.branchResponse.branches[0];
+          });
+        } else if (state is PositionSuccess) {
+          setState(() {
+            position = state.positionResponse.positions;
+            dropdownValuePosition = state.positionResponse.positions[0];
+          });
+        } else if (state is StatusSuccess) {
+          setState(() {
+            status = state.statusResponse.statusList;
+            dropdownValueStatus = state.statusResponse.statusList[0];
+          });
         } else if (state is EmployeeEditSuccess) {
+          context.read<EmployeeBloc>().add(
+                Employee(),
+              );
+          context.read<EmployeeBloc>().add(
+                Person(),
+              );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -72,6 +124,12 @@ class _EmployeeBodyState extends State<EmployeeBody> with ErrorHandling {
             ),
           );
         } else if (state is EmployeeCreateSuccess) {
+          context.read<EmployeeBloc>().add(
+                Employee(),
+              );
+          context.read<EmployeeBloc>().add(
+                Person(),
+              );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -80,6 +138,12 @@ class _EmployeeBodyState extends State<EmployeeBody> with ErrorHandling {
             ),
           );
         } else if (state is EmployeeDeleteSuccess) {
+          context.read<EmployeeBloc>().add(
+                Employee(),
+              );
+          context.read<EmployeeBloc>().add(
+                Person(),
+              );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -165,7 +229,7 @@ class _EmployeeBodyState extends State<EmployeeBody> with ErrorHandling {
                                         color: Colors.purpleAccent,
                                       ),
                                       title: Text(
-                                        'Persona:   ${employees[index].idPersona} ${employees[index].idEmpleado}',
+                                        'Persona:  ${person.firstWhere((objeto) => objeto.idPersona == employees[index].idPersona).nombre}',
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
@@ -194,22 +258,27 @@ class _EmployeeBodyState extends State<EmployeeBody> with ErrorHandling {
                                             InkWell(
                                               onTap: () {
                                                 setState(() {
-                                                  _idPersonaController.text =
-                                                      employees[index]
-                                                          .idPersona;
-                                                  _idSucursalController.text =
-                                                      employees[index]
-                                                          .idSucursal;
+                                                  dropdownValueBranch = branch
+                                                      .firstWhere((objeto) =>
+                                                          objeto.idBranch ==
+                                                          employees[index]
+                                                              .idSucursal);
                                                   _fechaContratacionController
                                                           .text =
                                                       employees[index]
                                                           .fechaContratacion;
-                                                  _idPuestoController.text =
-                                                      employees[index].idPuesto;
-                                                  _idStatusEmpleadoController
-                                                          .text =
-                                                      employees[index]
-                                                          .idStatusEmpleado;
+                                                  dropdownValuePosition =
+                                                      position.firstWhere(
+                                                          (objeto) =>
+                                                              objeto.idPuesto ==
+                                                              employees[index]
+                                                                  .idPuesto);
+                                                  dropdownValueStatus = status
+                                                      .firstWhere((objeto) =>
+                                                          objeto
+                                                              .idStatusEmpleado ==
+                                                          employees[index]
+                                                              .idStatusEmpleado);
                                                   _ingresoSueldoBaseController
                                                           .text =
                                                       employees[index]
@@ -296,56 +365,89 @@ class _EmployeeBodyState extends State<EmployeeBody> with ErrorHandling {
       builder: (context) {
         return AlertDialog(
           title: Text('Editar Empleado'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              TextField(
-                controller: _idPersonaController,
-                decoration: InputDecoration(labelText: 'IdPersona'),
+          content: SingleChildScrollView(
+            child: Container(
+              width: 800,
+              height: 800,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  DropdownButton2<model.Branch>(
+                    value: dropdownValueBranch,
+                    items: branch.map((company) {
+                      return DropdownMenuItem<model.Branch>(
+                        value: company,
+                        child: Text(company.nombre),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        dropdownValueBranch = value!;
+                      });
+                    },
+                  ),
+                  TextField(
+                    controller: _fechaContratacionController,
+                    decoration: InputDecoration(labelText: 'FechaContratacion'),
+                  ),
+                  DropdownButton2<model.Position>(
+                    value: dropdownValuePosition,
+                    items: position.map((company) {
+                      return DropdownMenuItem<model.Position>(
+                        value: company,
+                        child: Text(company.nombre),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        dropdownValuePosition = value!;
+                      });
+                    },
+                  ),
+                  DropdownButton2<model.Status>(
+                    value: dropdownValueStatus,
+                    items: status.map((company) {
+                      return DropdownMenuItem<model.Status>(
+                        value: company,
+                        child: Text(company.nombre),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        dropdownValueStatus = value!;
+                      });
+                    },
+                  ),
+                  TextField(
+                    controller: _ingresoSueldoBaseController,
+                    decoration: InputDecoration(labelText: 'IngresoSueldoBase'),
+                  ),
+                  TextField(
+                    controller: _ingresoBonificacionDecretoController,
+                    decoration: InputDecoration(
+                        labelText: 'IngresoBonificacionDecreto'),
+                  ),
+                  TextField(
+                    controller: _ingresoOtrosIngresosController,
+                    decoration:
+                        InputDecoration(labelText: 'IngresoOtrosIngresos'),
+                  ),
+                  TextField(
+                    controller: _descuentoIgssController,
+                    decoration: InputDecoration(labelText: 'DescuentoIgss'),
+                  ),
+                  TextField(
+                    controller: _decuentoISRController,
+                    decoration: InputDecoration(labelText: 'DecuentoISR'),
+                  ),
+                  TextField(
+                    controller: _descuentoInasistenciasController,
+                    decoration:
+                        InputDecoration(labelText: 'DescuentoInasistencias'),
+                  ),
+                ],
               ),
-              TextField(
-                controller: _idSucursalController,
-                decoration: InputDecoration(labelText: 'IdSucursal'),
-              ),
-              TextField(
-                controller: _fechaContratacionController,
-                decoration: InputDecoration(labelText: 'FechaContratacion'),
-              ),
-              TextField(
-                controller: _idPuestoController,
-                decoration: InputDecoration(labelText: 'IdPuesto'),
-              ),
-              TextField(
-                controller: _idStatusEmpleadoController,
-                decoration: InputDecoration(labelText: 'IdStatusEmpleado'),
-              ),
-              TextField(
-                controller: _ingresoSueldoBaseController,
-                decoration: InputDecoration(labelText: 'IngresoSueldoBase'),
-              ),
-              TextField(
-                controller: _ingresoBonificacionDecretoController,
-                decoration:
-                    InputDecoration(labelText: 'IngresoBonificacionDecreto'),
-              ),
-              TextField(
-                controller: _ingresoOtrosIngresosController,
-                decoration: InputDecoration(labelText: 'IngresoOtrosIngresos'),
-              ),
-              TextField(
-                controller: _descuentoIgssController,
-                decoration: InputDecoration(labelText: 'DescuentoIgss'),
-              ),
-              TextField(
-                controller: _decuentoISRController,
-                decoration: InputDecoration(labelText: 'DecuentoISR'),
-              ),
-              TextField(
-                controller: _descuentoInasistenciasController,
-                decoration:
-                    InputDecoration(labelText: 'DescuentoInasistencias'),
-              ),
-            ],
+            ),
           ),
           actions: <Widget>[
             TextButton(
@@ -359,7 +461,7 @@ class _EmployeeBodyState extends State<EmployeeBody> with ErrorHandling {
               onPressed: () {
                 bloc.add(
                   EmployeeEdit(
-                    idPersona: _idPersonaController.text,
+                    idPersona: employee.idPersona,
                     idSucursal: _idSucursalController.text,
                     fechaContratacion: _fechaContratacionController.text,
                     idPuesto: _idPuestoController.text,
@@ -376,6 +478,7 @@ class _EmployeeBodyState extends State<EmployeeBody> with ErrorHandling {
                     idEmpleado: employee.idEmpleado,
                   ),
                 );
+                Navigator.of(context).pop();
               },
             ),
           ],
@@ -390,31 +493,72 @@ class _EmployeeBodyState extends State<EmployeeBody> with ErrorHandling {
       builder: (context) {
         return AlertDialog(
           title: Text('Crear Empleado'),
-          content: IntrinsicHeight(
+          content: SingleChildScrollView(
             child: Container(
-              width: 300,
+              width: 800,
+              height: 800,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  TextField(
-                    controller: _idPersonaController,
-                    decoration: InputDecoration(labelText: 'IdPersona'),
+                  DropdownButton2<model.Person>(
+                    value: dropdownValue,
+                    items: person.map((company) {
+                      return DropdownMenuItem<model.Person>(
+                        value: company,
+                        child: Text(company.nombre),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        dropdownValue = value!;
+                      });
+                    },
                   ),
-                  TextField(
-                    controller: _idSucursalController,
-                    decoration: InputDecoration(labelText: 'IdSucursal'),
+                  DropdownButton2<model.Branch>(
+                    value: dropdownValueBranch,
+                    items: branch.map((company) {
+                      return DropdownMenuItem<model.Branch>(
+                        value: company,
+                        child: Text(company.nombre),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        dropdownValueBranch = value!;
+                      });
+                    },
                   ),
                   TextField(
                     controller: _fechaContratacionController,
                     decoration: InputDecoration(labelText: 'FechaContratacion'),
                   ),
-                  TextField(
-                    controller: _idPuestoController,
-                    decoration: InputDecoration(labelText: 'IdPuesto'),
+                  DropdownButton2<model.Position>(
+                    value: dropdownValuePosition,
+                    items: position.map((company) {
+                      return DropdownMenuItem<model.Position>(
+                        value: company,
+                        child: Text(company.nombre),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        dropdownValuePosition = value!;
+                      });
+                    },
                   ),
-                  TextField(
-                    controller: _idStatusEmpleadoController,
-                    decoration: InputDecoration(labelText: 'IdStatusEmpleado'),
+                  DropdownButton2<model.Status>(
+                    value: dropdownValueStatus,
+                    items: status.map((company) {
+                      return DropdownMenuItem<model.Status>(
+                        value: company,
+                        child: Text(company.nombre),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        dropdownValueStatus = value!;
+                      });
+                    },
                   ),
                   TextField(
                     controller: _ingresoSueldoBaseController,
@@ -475,6 +619,7 @@ class _EmployeeBodyState extends State<EmployeeBody> with ErrorHandling {
                     usuarioCreacion: name,
                   ),
                 );
+                Navigator.of(context).pop();
               },
             ),
           ],

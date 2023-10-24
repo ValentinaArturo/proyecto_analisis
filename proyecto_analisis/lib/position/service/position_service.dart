@@ -19,7 +19,11 @@ class PositionService {
       positionPath,
     );
   }
-
+  Future<Response<dynamic>> department() async {
+    return client.get(
+      departmentPath,
+    );
+  }
   Future<Response<dynamic>> createPosition({
     required final String nombre,
     required final String idDepartamento,

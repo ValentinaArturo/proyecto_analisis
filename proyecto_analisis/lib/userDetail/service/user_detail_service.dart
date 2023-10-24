@@ -13,7 +13,16 @@ class UserDetailService {
   UserDetailService.withClient(
     this.client,
   );
-
+  Future<Response<dynamic>> branch() async {
+    return client.get(
+      branchPath,
+    );
+  }
+  Future<Response<dynamic>> status() async {
+    return client.get(
+      statusPath,
+    );
+  }
   Future<Response<dynamic>> userDetail({
     required String email,
     required String name,
@@ -21,6 +30,10 @@ class UserDetailService {
     required int genre,
     required String birthDate,
     required String phone,
+    required String idSucursal,
+    required String nameCreate,
+    required String idUsuario,
+    required String idStatusUsuario,
   }) async {
     return client.post(
       signUpPath,
@@ -31,6 +44,10 @@ class UserDetailService {
         "genero": genre,
         "email": email,
         "telefono": phone,
+        "idSucursal": idSucursal,
+        "usuarioModifica": nameCreate,
+        "idUsuario": idUsuario,
+        "idStatusUsuario": idStatusUsuario,
       },
     );
   }
@@ -51,7 +68,4 @@ class UserDetailService {
       },
     );
   }
-
 }
-
-

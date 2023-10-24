@@ -67,6 +67,21 @@ class _RolsBodyState extends State<RolsBody> with ErrorHandling {
               children: [
                 Column(
                   children: [
+
+                    Container(
+                      padding: const EdgeInsets.only(
+                        left: 35,
+                        top: 30,
+                      ),
+                      child: const Text(
+                        'Usuarios',
+                        style: TextStyle(
+                          color: Colors.lightBlue,
+                          fontSize: 33,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                     Container(
                       alignment: Alignment.topRight,
                       child: TextButton(
@@ -79,20 +94,6 @@ class _RolsBodyState extends State<RolsBody> with ErrorHandling {
                         },
                         child: const Text(
                           'Agregar usuario',
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(
-                        left: 35,
-                        top: 30,
-                      ),
-                      child: const Text(
-                        'Usuarios',
-                        style: TextStyle(
-                          color: Colors.lightBlue,
-                          fontSize: 33,
-                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),

@@ -24,6 +24,14 @@ class PositionError extends PositionState {
   final String? error;
 
   PositionError(
-      this.error,
-      );
+    this.error,
+  );
+}
+
+class DepartmentSuccess extends PositionState {
+  final DepartmentResponse departmentResponse;
+
+  DepartmentSuccess({
+    required this.departmentResponse,
+  });
 }

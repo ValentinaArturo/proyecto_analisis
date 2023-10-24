@@ -4,6 +4,14 @@ abstract class EmployeeEvent {}
 
 class Employee extends EmployeeEvent {}
 
+class Person extends EmployeeEvent {}
+
+class Position extends EmployeeEvent {}
+
+class Status extends EmployeeEvent {}
+
+class Branch extends EmployeeEvent {}
+
 class EmployeeEdit extends EmployeeEvent {
   final String idPersona;
   final String idSucursal;

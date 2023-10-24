@@ -1,9 +1,11 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyecto_analisis/branch/bloc/branch_bloc.dart';
 import 'package:proyecto_analisis/branch/model/branch.dart' as model;
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
 import 'package:proyecto_analisis/common/bloc/mixin/error_handling.dart';
+import 'package:proyecto_analisis/company/model/company.dart' as model;
 import 'package:proyecto_analisis/repository/user_repository.dart';
 import 'package:proyecto_analisis/resources/constants.dart';
 
@@ -23,14 +25,35 @@ class _BranchBodyState extends State<BranchBody> with ErrorHandling {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _companyController = TextEditingController();
+  List<model.Company> company = [];
+  late model.Company dropdownValue;
 
   @override
   void initState() {
     super.initState();
     _getName();
+    dropdownValue = model.Company(
+      idEmpresa: '',
+      nombre: '',
+      direccion: '',
+      nit: '',
+      passwordCantidadMayusculas: '',
+      passwordCantidadMinusculas: '',
+      passwordCantidadCaracteresEspeciales: '',
+      passwordCantidadCaducidadDias: '',
+      passwordLargo: '',
+      passwordIntentosAntesDeBloquear: '',
+      passwordCantidadNumeros: '',
+      passwordCantidadPreguntasValidar: '',
+      fechaCreacion: DateTime(0),
+      usuarioCreacion: '',
+    );
     context.read<BranchBloc>().add(
           Branch(),
         );
+    context.read<BranchBloc>().add(
+      Company(),
+    );
   }
 
   @override
@@ -48,7 +71,15 @@ class _BranchBodyState extends State<BranchBody> with ErrorHandling {
           setState(() {
             branch = state.branchResponse.branches;
           });
+        }else if (state is CompanySuccess) {
+          setState(() {
+            company = state.companyResponse.comapnies;
+            dropdownValue = company[0];
+          });
         } else if (state is BranchEditSuccess) {
+          context.read<BranchBloc>().add(
+            Branch(),
+          );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -57,6 +88,9 @@ class _BranchBodyState extends State<BranchBody> with ErrorHandling {
             ),
           );
         } else if (state is BranchCreateSuccess) {
+          context.read<BranchBloc>().add(
+            Branch(),
+          );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -65,6 +99,9 @@ class _BranchBodyState extends State<BranchBody> with ErrorHandling {
             ),
           );
         } else if (state is BranchDeleteSuccess) {
+          context.read<BranchBloc>().add(
+            Branch(),
+          );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -161,14 +198,10 @@ class _BranchBodyState extends State<BranchBody> with ErrorHandling {
                                             InkWell(
                                               onTap: () {
                                                 setState(() {
-                                                  _addressController.text =
-                                                      branch[index]
-                                                          .idBranch
-                                                          .toString();
                                                   _nameController.text =
                                                       branch[index].nombre;
                                                   _addressController.text =
-                                                      branch[index].idEmpresa;
+                                                      branch[index].direccion;
                                                 });
                                                 _dialogEdit(
                                                   branch[index],
@@ -270,6 +303,10 @@ class _BranchBodyState extends State<BranchBody> with ErrorHandling {
                       usuarioCreacion: name,
                     ),
                   );
+                  Navigator.of(context).pop();
+                  context.read<BranchBloc>().add(
+                    Branch(),
+                  );
                 },
               ),
             ],
@@ -283,9 +320,10 @@ class _BranchBodyState extends State<BranchBody> with ErrorHandling {
       builder: (context) {
         return AlertDialog(
           title: Text('Crear sucursal'),
-          content: IntrinsicHeight(
+          content: SingleChildScrollView(
             child: Container(
-              width: 300,
+              width:200,
+              height: 200,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -300,10 +338,19 @@ class _BranchBodyState extends State<BranchBody> with ErrorHandling {
                         InputDecoration(labelText: 'Número de sucursal'),
                     keyboardType: TextInputType.number,
                   ),
-                  TextField(
-                    controller: _companyController,
-                    decoration: InputDecoration(labelText: 'ID de Empresa'),
-                    keyboardType: TextInputType.number,
+                  DropdownButton2<model.Company>(
+                    value: dropdownValue,
+                    items: company.map((company) {
+                      return DropdownMenuItem<model.Company>(
+                        value: company,
+                        child: Text(company.nombre),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        dropdownValue = value!;
+                      });
+                    },
                   ),
                 ],
               ),
@@ -327,11 +374,11 @@ class _BranchBodyState extends State<BranchBody> with ErrorHandling {
                     usuarioCreacion: name,
                     direccion: branchNumber,
                     id: _companyController.text,
-                    idEmpresa: _companyController.text,
+                    idEmpresa: dropdownValue.idEmpresa,
                   ),
                 );
                 Navigator.of(context)
-                    .pop(); // Cerrar el cuadro de diálogo después de crear la sucursal.
+                    .pop();
               },
             ),
           ],

@@ -4,6 +4,8 @@ abstract class BranchEvent {}
 
 class Branch extends BranchEvent {}
 
+class Company extends BranchEvent {}
+
 class BranchEdit extends BranchEvent {
   final String id;
   final String idBranch;

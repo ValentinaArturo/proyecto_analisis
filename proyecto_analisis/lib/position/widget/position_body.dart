@@ -1,7 +1,9 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
 import 'package:proyecto_analisis/common/bloc/mixin/error_handling.dart';
+import 'package:proyecto_analisis/department/model/department.dart' as model;
 import 'package:proyecto_analisis/position/bloc/position_bloc.dart';
 import 'package:proyecto_analisis/position/model/position.dart' as model;
 import 'package:proyecto_analisis/repository/user_repository.dart';
@@ -23,6 +25,8 @@ class _PositionBodyState extends State<PositionBody> with ErrorHandling {
   final TextEditingController _nombreController = TextEditingController();
   final TextEditingController _idDepartamentoController =
       TextEditingController();
+  List<model.Department> departments = [];
+  late model.Department dropdownValue;
 
   @override
   void initState() {
@@ -30,6 +34,9 @@ class _PositionBodyState extends State<PositionBody> with ErrorHandling {
     _getName();
     context.read<PositionBloc>().add(
           Position(),
+        );
+    context.read<PositionBloc>().add(
+          Department(),
         );
   }
 
@@ -48,7 +55,15 @@ class _PositionBodyState extends State<PositionBody> with ErrorHandling {
           setState(() {
             position = state.positionResponse.positions;
           });
+        } else if (state is DepartmentSuccess) {
+          setState(() {
+            departments = state.departmentResponse.departments;
+            dropdownValue = departments[0];
+          });
         } else if (state is PositionEditSuccess) {
+          context.read<PositionBloc>().add(
+                Position(),
+              );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -57,6 +72,9 @@ class _PositionBodyState extends State<PositionBody> with ErrorHandling {
             ),
           );
         } else if (state is PositionCreateSuccess) {
+          context.read<PositionBloc>().add(
+                Position(),
+              );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -65,6 +83,9 @@ class _PositionBodyState extends State<PositionBody> with ErrorHandling {
             ),
           );
         } else if (state is PositionDeleteSuccess) {
+          context.read<PositionBloc>().add(
+                Position(),
+              );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -157,10 +178,12 @@ class _PositionBodyState extends State<PositionBody> with ErrorHandling {
                                                 setState(() {
                                                   _nombreController.text =
                                                       position[index].nombre;
-                                                  _idDepartamentoController
-                                                          .text =
-                                                      position[index]
-                                                          .idDepartamento;
+                                                  dropdownValue = departments
+                                                      .firstWhere((objeto) =>
+                                                          objeto
+                                                              .idDepartamento ==
+                                                          position[index]
+                                                              .idDepartamento);
                                                 });
                                                 _dialogEdit(
                                                   position[index],
@@ -231,9 +254,19 @@ class _PositionBodyState extends State<PositionBody> with ErrorHandling {
                 controller: _nombreController,
                 decoration: InputDecoration(labelText: 'Nombre'),
               ),
-              TextField(
-                controller: _idDepartamentoController,
-                decoration: InputDecoration(labelText: 'ID Departamento'),
+              DropdownButton2<model.Department>(
+                value: dropdownValue,
+                items: departments.map((company) {
+                  return DropdownMenuItem<model.Department>(
+                    value: company,
+                    child: Text(company.nombre),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    dropdownValue = value!;
+                  });
+                },
               ),
             ],
           ),
@@ -255,6 +288,7 @@ class _PositionBodyState extends State<PositionBody> with ErrorHandling {
                     idPuesto: position.idPuesto,
                   ),
                 );
+                Navigator.of(context).pop();
               },
             ),
           ],
@@ -271,7 +305,7 @@ class _PositionBodyState extends State<PositionBody> with ErrorHandling {
           title: Text('Crear posición'),
           content: IntrinsicHeight(
             child: Container(
-              width: 300,
+              width: 400,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -279,9 +313,19 @@ class _PositionBodyState extends State<PositionBody> with ErrorHandling {
                     controller: _nombreController,
                     decoration: InputDecoration(labelText: 'Nombre'),
                   ),
-                  TextField(
-                    controller: _idDepartamentoController,
-                    decoration: InputDecoration(labelText: 'ID Departamento'),
+                  DropdownButton2<model.Department>(
+                    value: dropdownValue,
+                    items: departments.map((company) {
+                      return DropdownMenuItem<model.Department>(
+                        value: company,
+                        child: Text(company.nombre),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        dropdownValue = value!;
+                      });
+                    },
                   ),
                 ],
               ),
@@ -304,6 +348,7 @@ class _PositionBodyState extends State<PositionBody> with ErrorHandling {
                     usuarioModificacion: name,
                   ),
                 );
+                Navigator.of(context).pop();
               },
             ),
           ],

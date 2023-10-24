@@ -54,7 +54,6 @@ class RolsService {
       "usuarioModificacion": userCreate,
     });
   }
-
   Future<Response<dynamic>> rolsDelete({
     required final String user,
     required final String id,
