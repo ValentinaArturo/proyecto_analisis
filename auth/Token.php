@@ -85,6 +85,24 @@ class Token{
         return $payload;
     }
 
+    static function GetUserID($token){
+
+        $token_parts = explode('.', $token);
+
+        if(!isset($token_parts[0]) || !isset($token_parts[1]) || !isset($token_parts[2]) ){
+            echo json_encode(array(
+                "status" => 401,
+                "msg" => "Token Invalido - Sin Formato"
+            ));
+            return false;
+        }
+
+        $payload = json_decode(base64_decode($token_parts[1]), true);
+        $idUsuario = $payload["id"];
+        
+        return $idUsuario;
+    }
+
 }
 
 ?>
