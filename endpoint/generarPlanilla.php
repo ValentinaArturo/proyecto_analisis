@@ -58,15 +58,11 @@ if ($token) {
                 $data = json_decode($json,true);
 
                 if (
-                    !isset($data["IdStatusActual"]) ||
-                    !isset($data["IdStatusNuevo"]) ||
-                    !isset($data["NombreEvento"]) ||
-                    !isset($data["UsuarioCreacion"]) ||
-                    $data["IdStatusActual"] == "" ||
-                    $data["IdStatusNuevo"] == "" ||
-                    $data["NombreEvento"] == "" ||
-                    $data["UsuarioCreacion"] == "" ||
-                    count($data) !== 4
+                    !isset($data["year"]) ||
+                    !isset($data["month"]) ||
+                    $data["year"] == "" ||
+                    $data["month"] == "" ||
+                    count($data) !== 2
                 ) {
                     echo json_encode([
                         "status" => 400,
@@ -75,45 +71,28 @@ if ($token) {
                     die();
                 }
 
-                $IdStatusActual =  $data["IdStatusActual"];
-                $IdStatusNuevo = $data["IdStatusNuevo"];
-                $NombreEvento = $data["NombreEvento"];
-                $UsuarioCreacion = $data["UsuarioCreacion"];
-                $fechaHoraActual = date('Y-m-d H:i:s');
+                $year =  $data["year"];
+                $month = $data["month"];
+                $usuarioCreacion = Token::GetUserID($token);
 
-                $query_post = "INSERT INTO 
-                FLUJO_STATUS_EMPLEADO(
-                    IdStatusActual,
-                    IdStatusNuevo,
-                    NombreEvento, 
-                    FechaCreacion, 
-                    UsuarioCreacion) 
-                    VALUES (
-                        :idStatusActual,
-                        :idStatusNuevo,
-                        :nombreEvento,
-                        :fechaHoraActual,
-                        :usuarioCreacion)";
-                $stmt_post = $dbhost->prepare($query_post);
-                $stmt_post->bindParam(':idStatusActual', $IdStatusActual, PDO::PARAM_INT);
-                $stmt_post->bindParam(':idStatusNuevo', $IdStatusNuevo, PDO::PARAM_INT);
-                $stmt_post->bindParam(':nombreEvento', $NombreEvento);
-                $stmt_post->bindParam(':fechaHoraActual', $fechaHoraActual);
-                $stmt_post->bindParam(':usuarioCreacion', $UsuarioCreacion);
+                $query = "CALL generar_planilla(:year,:month,:usuarioCreacion)";
+                $stmt_post = $dbhost->prepare($query);
+                $stmt_post->bindParam(':year', $year,PDO::PARAM_INT);
+                $stmt_post->bindParam(':month', $month,PDO::PARAM_INT);
+                $stmt_post->bindParam(':usuarioCreacion', $usuarioCreacion);
                 $stmt_post->execute();
 
-                if($stmt_post->rowCount() > 0 ){
+                $customMessage = $stmt_post->fetchColumn();
 
-                    echo json_encode(array(
-                        "status" => 200,
-                        "msg" => "Flujo creado exitosamente"
-                    ));
-                    
-                }else{
-                    
+                if ($customMessage == "No se puede generar planilla, planilla ya generada") {
                     echo json_encode(array(
                         "status" => 401,
-                        "msg" => "Ocurrio un error, intenta nuevamente"
+                        "msg" => "No se puede generar planilla, planilla ya generada"
+                    ));
+                } else {
+                    echo json_encode(array(
+                        "status" => 200,
+                        "msg" => "Planilla Generado con exito"
                     ));
                 }
 

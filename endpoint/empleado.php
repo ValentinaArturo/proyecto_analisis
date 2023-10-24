@@ -80,9 +80,6 @@ if ($token) {
                     !isset($data["IngresoSueldoBase"]) ||
                     !isset($data["IngresoBonificacionDecreto"]) ||
                     !isset($data["IngresoOtrosIngresos"]) ||
-                    !isset($data["DescuentoIgss"]) ||
-                    !isset($data["DecuentoISR"]) ||
-                    !isset($data["DescuentoInasistencias"]) ||
                     !isset($data["UsuarioCreacion"]) ||
                     $data["IdPersona"] == "" ||
                     $data["IdSucursal"] == "" ||
@@ -92,11 +89,8 @@ if ($token) {
                     $data["IngresoSueldoBase"] == "" ||
                     $data["IngresoBonificacionDecreto"] == "" ||
                     $data["IngresoOtrosIngresos"] == "" ||
-                    $data["DescuentoIgss"] == "" ||
-                    $data["DecuentoISR"] == "" ||
-                    $data["DescuentoInasistencias"] == "" ||
                     $data["UsuarioCreacion"] == "" ||
-                    count($data) !== 12
+                    count($data) !== 9
                 ) {
                     echo json_encode([
                         "status" => 400,
@@ -113,9 +107,9 @@ if ($token) {
                 $IngresoSueldoBase = $data["IngresoSueldoBase"];
                 $IngresoBonificacionDecreto = $data["IngresoBonificacionDecreto"];
                 $IngresoOtrosIngresos = $data["IngresoOtrosIngresos"];
-                $DescuentoIggs = $data["DescuentoIgss"];
-                $DescuentoISR = $data["DecuentoISR"];
-                $DecuentoInasistencias = $data["DescuentoInasistencias"];
+                $DescuentoIggs = $data["IngresoSueldoBase"] * 0.0483;
+                $DescuentoISR = ($data["IngresoSueldoBase"] * 0.05) / 12;
+                $DecuentoInasistencias = "0.00";
                 $UsuarioCreacion = $data["UsuarioCreacion"];
                 $fechaHoraActual = date('Y-m-d H:i:s');
 
@@ -296,10 +290,53 @@ if ($token) {
 
                 break;
             case 'DELETE':
-                echo json_encode(array(
-                    "status" => 401,
-                    "msg" => "METODO NO DISPONIBLE"
-                ));
+                $json = file_get_contents("php://input");
+                $fechaHoraActual = date('Y-m-d H:i:s');
+
+                if ($json == false || trim($json) == "") {
+                    echo json_encode([
+                        "status" => 400,
+                        "msg" => "Error en datos recibidos",
+                    ]);
+                    die();
+                }
+
+                $data = json_decode($json,true);
+
+                if (
+                    !isset($data["IdEmpleado"]) ||
+                    $data["IdEmpleado"] == "" ||
+                    count($data) !== 1
+                ) {
+                    echo json_encode([
+                        "status" => 400,
+                        "msg" => "Formato de datos incorrecto",
+                    ]);
+                    die();
+                }
+
+                $IdEmpleado = $data["IdEmpleado"];
+
+                $query_post = "DELETE FROM EMPLEADO WHERE IdEmpleado=:idEmpleado";
+                $stmt_post = $dbhost->prepare($query_post);
+                $stmt_post->bindParam(':idEmpleado', $IdEmpleado,PDO::PARAM_INT);
+                $stmt_post->execute();
+
+                if($stmt_post->rowCount() > 0 ){
+
+                    echo json_encode(array(
+                        "status" => 200,
+                        "msg" => "Empleado eliminado exitosamente"
+                    ));
+                    
+                }else{
+                    
+                    echo json_encode(array(
+                        "status" => 401,
+                        "msg" => "Ocurrio un error, intenta nuevamente"
+                    ));
+                }
+
                 break;
             default:
                 echo json_encode(array(
