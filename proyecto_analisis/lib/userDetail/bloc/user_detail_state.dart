@@ -48,7 +48,7 @@ class BranchSuccess extends UserDetailState {
 }
 
 class StatusSuccess extends UserDetailState {
-  final StatusResponse statusResponse;
+  final StatusUserResponse statusResponse;
 
   StatusSuccess({
     required this.statusResponse,

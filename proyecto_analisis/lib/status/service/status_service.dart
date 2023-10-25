@@ -20,6 +20,25 @@ class StatusService {
     );
   }
 
+  Future<Response<dynamic>> statusUser() async {
+    return client.get(
+      statusUserPath,
+    );
+  }
+
+  Future<Response<dynamic>> createStatusUser({
+    required final String nombre,
+    required final String usuarioModificacion,
+  }) async {
+    return client.post(
+      statusUserPath,
+      data: {
+        "IdUsuarioCreacion": usuarioModificacion,
+        "NombreStatus": nombre,
+      },
+    );
+  }
+
   Future<Response<dynamic>> createStatus({
     required final String nombre,
     required final String usuarioModificacion,
@@ -33,16 +52,34 @@ class StatusService {
     );
   }
 
+  Future<Response<dynamic>> editStatusUser({
+    required final String nombre,
+    required final String usuarioModificacion,
+    required final String idStatusUsuario,
+  }) async {
+    return client.put(
+      statusUserPath,
+      data: {
+        "NombreStatus": nombre,
+        "IdUsuarioModificacion": usuarioModificacion,
+        "IdStatusUsuario": idStatusUsuario,
+      },
+    );
+  }
+
   Future<Response<dynamic>> editStatus({
     required final String nombre,
     required final String usuarioModificacion,
     required final String idStatusUsuario,
   }) async {
-    return client.put(statusPath, data: {
-      "NombreStatus": nombre,
-      "IdUsuarioModificacion": usuarioModificacion,
-      "IdStatusUsuario": idStatusUsuario,
-    });
+    return client.put(
+      statusPath,
+      data: {
+        "NombreStatus": nombre,
+        "IdUsuarioModificacion": usuarioModificacion,
+        "IdStatusUsuario": idStatusUsuario,
+      },
+    );
   }
 
   Future<Response<dynamic>> statusDelete({
@@ -50,6 +87,17 @@ class StatusService {
   }) async {
     return client.delete(
       statusPath,
+      data: {
+        "IdStatusUsuario": id,
+      },
+    );
+  }
+
+  Future<Response<dynamic>> statusUserDelete({
+    required final id,
+  }) async {
+    return client.delete(
+      statusUserPath,
       data: {
         "IdStatusUsuario": id,
       },

@@ -33,3 +33,35 @@ class StatusDelete extends StatusEvent {
     required this.id,
   });
 }
+
+class StatusUser extends StatusEvent {}
+
+class StatusUserEdit extends StatusEvent {
+  final String nombre;
+  final String idStatusUsuario;
+  final String usuarioModificacion;
+
+  StatusUserEdit({
+    required this.nombre,
+    required this.idStatusUsuario,
+    required this.usuarioModificacion,
+  });
+}
+
+class StatusUserCreate extends StatusEvent {
+  final String nombre;
+  final String usuarioModificacion;
+
+  StatusUserCreate({
+    required this.nombre,
+    required this.usuarioModificacion,
+  });
+}
+
+class StatusUserDelete extends StatusEvent {
+  final String id;
+
+  StatusUserDelete({
+    required this.id,
+  });
+}

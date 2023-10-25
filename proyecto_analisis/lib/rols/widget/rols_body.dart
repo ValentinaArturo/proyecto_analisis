@@ -143,7 +143,13 @@ class _RolsBodyState extends State<RolsBody> with ErrorHandling {
                                                   context,
                                                   userDetailRoute,
                                                   arguments: users[index],
-                                                );
+                                                ).then((value){
+                                                  if(value != null){
+                                                    context.read<RolsBloc>().add(
+                                                      Rols(),
+                                                    );
+                                                  }
+                                                });
                                               },
                                               child: const Icon(
                                                 Icons.edit,

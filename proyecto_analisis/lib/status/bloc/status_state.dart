@@ -25,3 +25,15 @@ class StatusError extends StatusState {
 
   StatusError(this.error);
 }
+class StatusUserSuccess extends StatusState {
+  final StatusUserResponse statusResponse;
+
+  StatusUserSuccess({
+    required this.statusResponse,
+  });
+}
+class StatusUserEditSuccess extends StatusState {}
+
+class StatusUserCreateSuccess extends StatusState {}
+
+class StatusUserDeleteSuccess extends StatusState {}

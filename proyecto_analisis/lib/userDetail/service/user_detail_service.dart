@@ -1,42 +1,45 @@
 import 'package:dio/dio.dart';
-import 'package:proyecto_analisis/factory/client_factory.dart';
+import 'package:proyecto_analisis/factory/client_auth_factory.dart';
 import 'package:proyecto_analisis/resources/api_uri.dart';
 
 class UserDetailService {
   Dio client;
 
   UserDetailService()
-      : client = ClientFactory.buildClient(
+      : client = ClientAuthFactory.buildClient(
           baseUrl,
         );
 
   UserDetailService.withClient(
     this.client,
   );
+
   Future<Response<dynamic>> branch() async {
     return client.get(
       branchPath,
     );
   }
+
   Future<Response<dynamic>> status() async {
     return client.get(
-      statusPath,
+      statusUserPath,
     );
   }
+
   Future<Response<dynamic>> userDetail({
     required String email,
     required String name,
     required String lastName,
-    required int genre,
+    required String genre,
     required String birthDate,
     required String phone,
-    required String idSucursal,
+    required int idSucursal,
     required String nameCreate,
     required String idUsuario,
-    required String idStatusUsuario,
+    required int idStatusUsuario,
   }) async {
-    return client.post(
-      signUpPath,
+    return client.put(
+      userPath,
       data: {
         "nombre": name,
         "apellido": lastName,

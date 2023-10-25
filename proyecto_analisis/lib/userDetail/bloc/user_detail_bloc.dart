@@ -8,7 +8,9 @@ import 'package:proyecto_analisis/repository/user_repository.dart';
 import 'package:proyecto_analisis/signUp/model/genre_response.dart';
 import 'package:proyecto_analisis/signUp/model/question.dart';
 import 'package:proyecto_analisis/status/model/status.dart';
+import 'package:proyecto_analisis/status/model/status_user.dart';
 import 'package:proyecto_analisis/userDetail/service/user_detail_service.dart';
+import 'package:supercharged/supercharged.dart';
 
 part 'user_detail_event.dart';
 
@@ -82,7 +84,7 @@ class UserDetailBloc extends BaseBloc<UserDetailEvent, BaseState> {
           ),
         );
       } else if (response.statusCode == 200) {
-        final success = StatusResponse.fromJson(
+        final success = StatusUserResponse.fromJson(
           response.data!,
         );
         emit(
@@ -114,10 +116,10 @@ class UserDetailBloc extends BaseBloc<UserDetailEvent, BaseState> {
         name: event.name,
         lastName: event.lastName,
         birthDate: event.birthDate,
-        genre: event.genre,
+        genre: event.genre.toString(),
         phone: event.phone,
-        idStatusUsuario: event.idStatusUsuario,
-        idSucursal: event.idSucursal,
+        idStatusUsuario: event.idStatusUsuario.toInt()!,
+        idSucursal: event.idSucursal.toInt()!,
         idUsuario: event.idUsuario,
         nameCreate: event.nameCreate,
       );

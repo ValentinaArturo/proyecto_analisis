@@ -5,19 +5,19 @@ import 'package:proyecto_analisis/common/bloc/mixin/error_handling.dart';
 import 'package:proyecto_analisis/repository/user_repository.dart';
 import 'package:proyecto_analisis/resources/constants.dart';
 import 'package:proyecto_analisis/status/bloc/status_bloc.dart';
-import 'package:proyecto_analisis/status/model/status.dart' as model;
+import 'package:proyecto_analisis/status/model/status_user.dart' as model;
 
 import '../../common/loader/loader.dart';
 
-class StatusBody extends StatefulWidget {
-  const StatusBody({Key? key}) : super(key: key);
+class StatusUserBody extends StatefulWidget {
+  const StatusUserBody({Key? key}) : super(key: key);
 
   @override
-  State<StatusBody> createState() => _StatusBodyState();
+  State<StatusUserBody> createState() => _StatusUserBodyState();
 }
 
-class _StatusBodyState extends State<StatusBody> with ErrorHandling {
-  List<model.Status> status = [];
+class _StatusUserBodyState extends State<StatusUserBody> with ErrorHandling {
+  List<model.StatusUser> status = [];
   late StatusBloc bloc;
   late String name;
   final TextEditingController _nombreController = TextEditingController();
@@ -27,8 +27,8 @@ class _StatusBodyState extends State<StatusBody> with ErrorHandling {
     super.initState();
     _getName();
     context.read<StatusBloc>().add(
-          Status(),
-        );
+      StatusUser(),
+    );
   }
 
   @override
@@ -42,13 +42,13 @@ class _StatusBodyState extends State<StatusBody> with ErrorHandling {
     return BlocListener<StatusBloc, BaseState>(
       listener: (context, state) {
         verifyServerError(state);
-        if (state is StatusSuccess) {
+        if (state is StatusUserSuccess) {
           setState(() {
-            status = state.statusResponse.statusList;
+            status = state.statusResponse.statusUserList;
           });
-        } else if (state is StatusEditSuccess) {
+        } else if (state is StatusUserEditSuccess) {
           context.read<StatusBloc>().add(
-            Status(),
+            StatusUser(),
           );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -57,9 +57,9 @@ class _StatusBodyState extends State<StatusBody> with ErrorHandling {
               ),
             ),
           );
-        } else if (state is StatusCreateSuccess) {
+        } else if (state is StatusUserCreateSuccess) {
           context.read<StatusBloc>().add(
-            Status(),
+            StatusUser(),
           );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -68,9 +68,9 @@ class _StatusBodyState extends State<StatusBody> with ErrorHandling {
               ),
             ),
           );
-        } else if (state is StatusDeleteSuccess) {
+        } else if (state is StatusUserDeleteSuccess) {
           context.read<StatusBloc>().add(
-            Status(),
+            StatusUser(),
           );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -139,8 +139,8 @@ class _StatusBodyState extends State<StatusBody> with ErrorHandling {
                                   Container(
                                     margin: EdgeInsets.symmetric(
                                       horizontal:
-                                          MediaQuery.of(context).size.height *
-                                              0.05,
+                                      MediaQuery.of(context).size.height *
+                                          0.05,
                                     ),
                                     child: ListTile(
                                       leading: const Icon(
@@ -178,7 +178,7 @@ class _StatusBodyState extends State<StatusBody> with ErrorHandling {
                                                 bloc.add(
                                                   StatusDelete(
                                                     id: status[index]
-                                                        .idStatusEmpleado,
+                                                        .idStatusUsuario.toString(),
                                                   ),
                                                 );
                                               },
@@ -219,8 +219,8 @@ class _StatusBodyState extends State<StatusBody> with ErrorHandling {
   }
 
   _dialogEdit(
-    final model.Status status,
-  ) {
+      final model.StatusUser status,
+      ) {
     showDialog(
       context: context,
       builder: (context) {
@@ -249,7 +249,7 @@ class _StatusBodyState extends State<StatusBody> with ErrorHandling {
                   StatusEdit(
                     nombre: _nombreController.text,
                     usuarioModificacion: name,
-                    idStatusUsuario: status.idStatusEmpleado,
+                    idStatusUsuario: status.idStatusUsuario.toString(),
                   ),
                 );
                 Navigator.of(context).pop();

@@ -47,26 +47,35 @@ class _RolRolBodyState extends State<RolRolBody> with ErrorHandling {
             rols = state.rolRolResponse.rols;
           });
         } else if (state is RolRolEditSuccess) {
+          context.read<RolRolBloc>().add(
+            RolRol(),
+          );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
-                'Se ha actualizado el modulo con exito',
+                'Se ha actualizado el rol con exito',
               ),
             ),
           );
         } else if (state is RolRolCreateSuccess) {
+          context.read<RolRolBloc>().add(
+            RolRol(),
+          );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
-                'Se ha creado el modulo con exito',
+                'Se ha creado el rol con exito',
               ),
             ),
           );
         } else if (state is RolRolDeleteSuccess) {
+          context.read<RolRolBloc>().add(
+            RolRol(),
+          );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
-                'Se ha eliminado el modulo con exito',
+                'Se ha eliminado el rol con exito',
               ),
             ),
           );
@@ -94,7 +103,7 @@ class _RolRolBodyState extends State<RolRolBody> with ErrorHandling {
                         top: 30,
                       ),
                       child: const Text(
-                        'Modulos',
+                        'Roles',
                         style: TextStyle(
                           color: Colors.lightBlue,
                           fontSize: 33,
@@ -218,13 +227,13 @@ class _RolRolBodyState extends State<RolRolBody> with ErrorHandling {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Editar Modulo'),
+            title: Text('Editar rol'),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 TextField(
                   controller: _nameController,
-                  decoration: InputDecoration(labelText: 'Nombre del Modulo'),
+                  decoration: InputDecoration(labelText: 'Nombre del rol'),
                 ),
               ],
             ),
@@ -246,6 +255,7 @@ class _RolRolBodyState extends State<RolRolBody> with ErrorHandling {
                       nameCreate: name,
                     ),
                   );
+                  Navigator.of(context).pop();
                 },
               ),
             ],
@@ -258,13 +268,13 @@ class _RolRolBodyState extends State<RolRolBody> with ErrorHandling {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Crear Modulo'),
+            title: Text('Crear rol'),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 TextField(
                   controller: _nameController,
-                  decoration: InputDecoration(labelText: 'Nombre del Modulo'),
+                  decoration: InputDecoration(labelText: 'Nombre del rol'),
                 ),
               ],
             ),
@@ -285,6 +295,7 @@ class _RolRolBodyState extends State<RolRolBody> with ErrorHandling {
                       nameCreate: name,
                     ),
                   );
+                  Navigator.of(context).pop();
                 },
               ),
             ],

@@ -1,45 +1,39 @@
-class BranchResponse {
-  final List<Branch> branches;
+class StatusUserResponse {
+  final List<StatusUser> statusUserList;
 
-  BranchResponse({
-    required this.branches,
+  StatusUserResponse({
+    required this.statusUserList,
   });
 
-  factory BranchResponse.fromJson(List<dynamic> json) => BranchResponse(
-        branches: List<Branch>.from(
-          json.map(
-            (branch) => Branch.fromJson(branch),
-          ),
-        ),
-      );
+  factory StatusUserResponse.fromJson(List<dynamic> json) {
+    return StatusUserResponse(
+      statusUserList: List<StatusUser>.from(
+        json.map((status) => StatusUser.fromJson(status)),
+      ),
+    );
+  }
 }
 
-class Branch {
-  final String idBranch;
+class StatusUser {
+  final String idStatusUsuario;
   final String nombre;
-  final String direccion;
-  final String idEmpresa;
   final DateTime fechaCreacion;
   final String usuarioCreacion;
   final dynamic fechaModificacion;
   final dynamic usuarioModificacion;
 
-  Branch({
-    required this.idBranch,
+  StatusUser({
+    required this.idStatusUsuario,
     required this.nombre,
-    required this.direccion,
-    required this.idEmpresa,
     required this.fechaCreacion,
     required this.usuarioCreacion,
     required this.fechaModificacion,
     required this.usuarioModificacion,
   });
 
-  factory Branch.fromJson(Map<String, dynamic> json) => Branch(
-        idBranch: json["IdSucursal"],
+  factory StatusUser.fromJson(Map<String, dynamic> json) => StatusUser(
+        idStatusUsuario: json["IdStatusUsuario"],
         nombre: json["Nombre"],
-        direccion: json["Direccion"],
-        idEmpresa: json["IdEmpresa"],
         fechaCreacion: DateTime.parse(json["FechaCreacion"]),
         usuarioCreacion: json["UsuarioCreacion"],
         fechaModificacion: json["FechaModificacion"],
@@ -47,10 +41,8 @@ class Branch {
       );
 
   Map<String, dynamic> toJson() => {
-        "IdSucursal": idBranch,
+        "IdStatusUsuario": idStatusUsuario,
         "Nombre": nombre,
-        "Direccion": direccion,
-        "IdEmpresa": idEmpresa,
         "FechaCreacion": fechaCreacion.toIso8601String(),
         "UsuarioCreacion": usuarioCreacion,
         "FechaModificacion": fechaModificacion,

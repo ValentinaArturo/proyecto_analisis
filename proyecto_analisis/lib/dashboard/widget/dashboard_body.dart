@@ -17,6 +17,7 @@ import 'package:proyecto_analisis/rolrol/rolrol_screen.dart';
 import 'package:proyecto_analisis/rols/rols_screen.dart';
 import 'package:proyecto_analisis/rolsUser/rols_user_screen.dart';
 import 'package:proyecto_analisis/status/status_screen.dart';
+import 'package:proyecto_analisis/statusUser/status_user_screen.dart';
 
 import '../../common/responsive.dart';
 
@@ -168,7 +169,7 @@ class _DashboardBodyState extends State<DashboardBody> {
       } else if (obj.nombre == 'Generos') {
         return const GenresScreen();
       } else if (obj.nombre == 'Estatus Usuario') {
-        return StatusScreen();
+        return  StatusUserScreen();
       } else if (obj.nombre == 'Roles') {
         return const RolRolScreen();
       } else if (obj.nombre == 'Modulos') {

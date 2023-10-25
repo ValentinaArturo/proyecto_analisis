@@ -11,10 +11,10 @@ import 'package:proyecto_analisis/common/validation/validate_email.dart';
 import 'package:proyecto_analisis/repository/user_repository.dart';
 import 'package:proyecto_analisis/resources/constants.dart';
 import 'package:proyecto_analisis/rols/model/user_response.dart';
-import 'package:proyecto_analisis/routes/landing_routes_constants.dart';
 import 'package:proyecto_analisis/signUp/model/genre.dart';
-import 'package:proyecto_analisis/status/model/status.dart' as model;
+import 'package:proyecto_analisis/status/model/status_user.dart' as model;
 import 'package:proyecto_analisis/userDetail/bloc/user_detail_bloc.dart';
+
 import '../../common/loader/loader.dart';
 
 class UserDetailBody extends StatefulWidget {
@@ -42,20 +42,22 @@ class _UserDetailBodyState extends State<UserDetailBody> with ErrorHandling {
   List<GenreItem> genres = [];
   late UserDetailBloc bloc;
   List<model.Branch> branch = [];
-  List<model.Status> status = [];
+  List<model.StatusUser> status = [];
   late model.Branch dropdownValueBranch;
-  late model.Status dropdownValueStatus;
+  late model.StatusUser dropdownValueStatus;
 
   @override
   void initState() {
     super.initState();
     _name = '';
     _getName();
-    dropdownValueStatus = model.Status(
-      idStatusEmpleado: '',
+    dropdownValueStatus = model.StatusUser(
       nombre: '',
-      fechaCreacion: '',
+      fechaCreacion: DateTime(0),
       usuarioCreacion: '',
+      fechaModificacion: DateTime(0),
+      idStatusUsuario: '',
+      usuarioModificacion: '',
     );
     dropdownValueBranch = model.Branch(
       idBranch: '',
@@ -103,10 +105,8 @@ class _UserDetailBodyState extends State<UserDetailBody> with ErrorHandling {
                   title: Text(state.successResponse.msg),
                   content: ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(
-                        context,
-                        loginRoute,
-                      );
+                      Navigator.of(context).pop(true);
+                      Navigator.of(context).pop(true);
                     },
                     child: Text('Aceptar'),
                   ),
@@ -121,10 +121,9 @@ class _UserDetailBodyState extends State<UserDetailBody> with ErrorHandling {
           });
         } else if (state is StatusSuccess) {
           setState(() {
-            status = state.statusResponse.statusList;
+            status = state.statusResponse.statusUserList;
             dropdownValueStatus = status.firstWhere(
-              (objeto) =>
-                  objeto.idStatusEmpleado == widget.user.idStatusUsuario,
+              (objeto) => objeto.idStatusUsuario == widget.user.idStatusUsuario,
             );
           });
         } else if (state is GenreSuccess) {
@@ -255,27 +254,31 @@ class _UserDetailBodyState extends State<UserDetailBody> with ErrorHandling {
                                 const SizedBox(
                                   height: 40,
                                 ),
-                                DropdownButton2<model.Branch>(
-                                  value: dropdownValueBranch,
-                                  items: branch.map((company) {
-                                    return DropdownMenuItem<model.Branch>(
-                                      value: company,
-                                      child: Text(company.nombre),
-                                    );
-                                  }).toList(),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      dropdownValueBranch = value!;
-                                    });
-                                  },
-                                ),
+                                branch.length == 1
+                                    ? Text(
+                                        dropdownValueBranch.nombre,
+                                      )
+                                    : DropdownButton2<model.Branch>(
+                                        value: dropdownValueBranch,
+                                        items: branch.map((company) {
+                                          return DropdownMenuItem<model.Branch>(
+                                            value: company,
+                                            child: Text(company.nombre),
+                                          );
+                                        }).toList(),
+                                        onChanged: (value) {
+                                          setState(() {
+                                            dropdownValueBranch = value!;
+                                          });
+                                        },
+                                      ),
                                 const SizedBox(
                                   height: 40,
                                 ),
-                                DropdownButton2<model.Status>(
+                                DropdownButton2<model.StatusUser>(
                                   value: dropdownValueStatus,
                                   items: status.map((company) {
-                                    return DropdownMenuItem<model.Status>(
+                                    return DropdownMenuItem<model.StatusUser>(
                                       value: company,
                                       child: Text(company.nombre),
                                     );
@@ -307,14 +310,14 @@ class _UserDetailBodyState extends State<UserDetailBody> with ErrorHandling {
                                               idUsuario: widget.user.idUsuario,
                                               idStatusUsuario:
                                                   dropdownValueStatus
-                                                      .idStatusEmpleado,
+                                                      .idStatusUsuario,
                                             ),
                                           );
                                         }
                                       },
                                       style: const ButtonStyle(),
                                       child: const Text(
-                                        'Registrar',
+                                        'Guardar',
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                           decoration: TextDecoration.underline,
