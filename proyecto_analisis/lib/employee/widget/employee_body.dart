@@ -47,11 +47,6 @@ class _EmployeeBodyState extends State<EmployeeBody> with ErrorHandling {
       TextEditingController();
   final TextEditingController _ingresoOtrosIngresosController =
       TextEditingController();
-  final TextEditingController _descuentoIgssController =
-      TextEditingController();
-  final TextEditingController _decuentoISRController = TextEditingController();
-  final TextEditingController _descuentoInasistenciasController =
-      TextEditingController();
 
   @override
   void initState() {
@@ -194,9 +189,6 @@ class _EmployeeBodyState extends State<EmployeeBody> with ErrorHandling {
                           _ingresoSueldoBaseController.text = '';
                           _ingresoBonificacionDecretoController.text = '';
                           _ingresoOtrosIngresosController.text = '';
-                          _descuentoIgssController.text = '';
-                          _decuentoISRController.text = '';
-                          _descuentoInasistenciasController.text = '';
                         });
                         _dialogCreate();
                       },
@@ -291,17 +283,6 @@ class _EmployeeBodyState extends State<EmployeeBody> with ErrorHandling {
                                                           .text =
                                                       employees[index]
                                                           .ingresoOtrosIngresos;
-                                                  _descuentoIgssController
-                                                          .text =
-                                                      employees[index]
-                                                          .descuentoIgss;
-                                                  _decuentoISRController.text =
-                                                      employees[index]
-                                                          .descuentoIsr;
-                                                  _descuentoInasistenciasController
-                                                      .text = employees[
-                                                          index]
-                                                      .descuentoInasistencias;
                                                 });
                                                 _dialogEdit(
                                                   employees[index],
@@ -363,125 +344,112 @@ class _EmployeeBodyState extends State<EmployeeBody> with ErrorHandling {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text('Editar Empleado'),
-          content: SingleChildScrollView(
-            child: Container(
-              width: 800,
-              height: 800,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  DropdownButton2<model.Branch>(
-                    value: dropdownValueBranch,
-                    items: branch.map((company) {
-                      return DropdownMenuItem<model.Branch>(
-                        value: company,
-                        child: Text(company.nombre),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        dropdownValueBranch = value!;
-                      });
-                    },
+        return StatefulBuilder(
+            builder: (context, StateSetter setState) {
+            return AlertDialog(
+              title: Text('Editar Empleado'),
+              content: SingleChildScrollView(
+                child: Container(
+                  width: 800,
+                  height: 800,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      DropdownButton2<model.Branch>(
+                        value: dropdownValueBranch,
+                        items: branch.map((company) {
+                          return DropdownMenuItem<model.Branch>(
+                            value: company,
+                            child: Text(company.nombre),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            dropdownValueBranch = value!;
+                          });
+                        },
+                      ),
+                      TextField(
+                        controller: _fechaContratacionController,
+                        decoration: InputDecoration(labelText: 'FechaContratacion'),
+                      ),
+                      DropdownButton2<model.Position>(
+                        value: dropdownValuePosition,
+                        items: position.map((company) {
+                          return DropdownMenuItem<model.Position>(
+                            value: company,
+                            child: Text(company.nombre),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            dropdownValuePosition = value!;
+                          });
+                        },
+                      ),
+                      DropdownButton2<model.Status>(
+                        value: dropdownValueStatus,
+                        items: status.map((company) {
+                          return DropdownMenuItem<model.Status>(
+                            value: company,
+                            child: Text(company.nombre),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            dropdownValueStatus = value!;
+                          });
+                        },
+                      ),
+                      TextField(
+                        controller: _ingresoSueldoBaseController,
+                        decoration: InputDecoration(labelText: 'IngresoSueldoBase'),
+                      ),
+                      TextField(
+                        controller: _ingresoBonificacionDecretoController,
+                        decoration: InputDecoration(
+                            labelText: 'IngresoBonificacionDecreto'),
+                      ),
+                      TextField(
+                        controller: _ingresoOtrosIngresosController,
+                        decoration:
+                            InputDecoration(labelText: 'IngresoOtrosIngresos'),
+                      ),
+                    ],
                   ),
-                  TextField(
-                    controller: _fechaContratacionController,
-                    decoration: InputDecoration(labelText: 'FechaContratacion'),
-                  ),
-                  DropdownButton2<model.Position>(
-                    value: dropdownValuePosition,
-                    items: position.map((company) {
-                      return DropdownMenuItem<model.Position>(
-                        value: company,
-                        child: Text(company.nombre),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        dropdownValuePosition = value!;
-                      });
-                    },
-                  ),
-                  DropdownButton2<model.Status>(
-                    value: dropdownValueStatus,
-                    items: status.map((company) {
-                      return DropdownMenuItem<model.Status>(
-                        value: company,
-                        child: Text(company.nombre),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        dropdownValueStatus = value!;
-                      });
-                    },
-                  ),
-                  TextField(
-                    controller: _ingresoSueldoBaseController,
-                    decoration: InputDecoration(labelText: 'IngresoSueldoBase'),
-                  ),
-                  TextField(
-                    controller: _ingresoBonificacionDecretoController,
-                    decoration: InputDecoration(
-                        labelText: 'IngresoBonificacionDecreto'),
-                  ),
-                  TextField(
-                    controller: _ingresoOtrosIngresosController,
-                    decoration:
-                        InputDecoration(labelText: 'IngresoOtrosIngresos'),
-                  ),
-                  TextField(
-                    controller: _descuentoIgssController,
-                    decoration: InputDecoration(labelText: 'DescuentoIgss'),
-                  ),
-                  TextField(
-                    controller: _decuentoISRController,
-                    decoration: InputDecoration(labelText: 'DecuentoISR'),
-                  ),
-                  TextField(
-                    controller: _descuentoInasistenciasController,
-                    decoration:
-                        InputDecoration(labelText: 'DescuentoInasistencias'),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Guardar'),
-              onPressed: () {
-                bloc.add(
-                  EmployeeEdit(
-                    idPersona: employee.idPersona,
-                    idSucursal: _idSucursalController.text,
-                    fechaContratacion: _fechaContratacionController.text,
-                    idPuesto: _idPuestoController.text,
-                    idStatusEmpleado: _idStatusEmpleadoController.text,
-                    ingresoSueldoBase: _ingresoSueldoBaseController.text,
-                    ingresoBonificacionDecreto:
-                        _ingresoBonificacionDecretoController.text,
-                    ingresoOtrosIngresos: _ingresoOtrosIngresosController.text,
-                    descuentoIgss: _descuentoIgssController.text,
-                    decuentoISR: _decuentoISRController.text,
-                    descuentoInasistencias:
-                        _descuentoInasistenciasController.text,
-                    usuarioCreacion: employee.usuarioCreacion,
-                    idEmpleado: employee.idEmpleado,
-                  ),
-                );
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Cancelar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text('Guardar'),
+                  onPressed: () {
+                    bloc.add(
+                      EmployeeEdit(
+                        idPersona: dropdownValue.idPersona,
+                        idSucursal: dropdownValueBranch.idBranch,
+                        fechaContratacion: _fechaContratacionController.text,
+                        idPuesto: dropdownValuePosition.idPuesto,
+                        idStatusEmpleado: dropdownValueStatus.idStatusEmpleado,
+                        ingresoSueldoBase: _ingresoSueldoBaseController.text,
+                        ingresoBonificacionDecreto:
+                            _ingresoBonificacionDecretoController.text,
+                        ingresoOtrosIngresos: _ingresoOtrosIngresosController.text,
+                        usuarioCreacion: name,
+                        idEmpleado: employee.idEmpleado,
+                      ),
+                    );
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          }
         );
       },
     );
@@ -491,138 +459,127 @@ class _EmployeeBodyState extends State<EmployeeBody> with ErrorHandling {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text('Crear Empleado'),
-          content: SingleChildScrollView(
-            child: Container(
-              width: 800,
-              height: 800,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  DropdownButton2<model.Person>(
-                    value: dropdownValue,
-                    items: person.map((company) {
-                      return DropdownMenuItem<model.Person>(
-                        value: company,
-                        child: Text(company.nombre),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        dropdownValue = value!;
-                      });
-                    },
+        return StatefulBuilder(
+          builder: (context, StateSetter setState) {
+            return AlertDialog(
+              title: Text('Crear Empleado'),
+              content: SingleChildScrollView(
+                child: Container(
+                  width: 800,
+                  height: 800,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      DropdownButton2<model.Person>(
+                        value: dropdownValue,
+                        items: person.map((company) {
+                          return DropdownMenuItem<model.Person>(
+                            value: company,
+                            child: Text(company.nombre),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            dropdownValue = value!;
+                          });
+                        },
+                      ),
+                      DropdownButton2<model.Branch>(
+                        value: dropdownValueBranch,
+                        items: branch.map((company) {
+                          return DropdownMenuItem<model.Branch>(
+                            value: company,
+                            child: Text(company.nombre),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            dropdownValueBranch = value!;
+                          });
+                        },
+                      ),
+                      TextField(
+                        controller: _fechaContratacionController,
+                        decoration: InputDecoration(labelText: 'FechaContratacion'),
+                      ),
+                      DropdownButton2<model.Position>(
+                        value: dropdownValuePosition,
+                        items: position.map((company) {
+                          return DropdownMenuItem<model.Position>(
+                            value: company,
+                            child: Text(company.nombre),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            dropdownValuePosition = value!;
+                            print(value.nombre);
+                            print(dropdownValuePosition.nombre);
+                          });
+                        },
+                      ),
+                      DropdownButton2<model.Status>(
+                        value: dropdownValueStatus,
+                        items: status.map((company) {
+                          return DropdownMenuItem<model.Status>(
+                            value: company,
+                            child: Text(company.nombre),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            dropdownValueStatus = value!;
+                          });
+                        },
+                      ),
+                      TextField(
+                        controller: _ingresoSueldoBaseController,
+                        decoration: InputDecoration(labelText: 'IngresoSueldoBase'),
+                      ),
+                      TextField(
+                        controller: _ingresoBonificacionDecretoController,
+                        decoration: InputDecoration(
+                            labelText: 'IngresoBonificacionDecreto'),
+                      ),
+                      TextField(
+                        controller: _ingresoOtrosIngresosController,
+                        decoration:
+                            InputDecoration(labelText: 'IngresoOtrosIngresos'),
+                      ),
+                    ],
                   ),
-                  DropdownButton2<model.Branch>(
-                    value: dropdownValueBranch,
-                    items: branch.map((company) {
-                      return DropdownMenuItem<model.Branch>(
-                        value: company,
-                        child: Text(company.nombre),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        dropdownValueBranch = value!;
-                      });
-                    },
-                  ),
-                  TextField(
-                    controller: _fechaContratacionController,
-                    decoration: InputDecoration(labelText: 'FechaContratacion'),
-                  ),
-                  DropdownButton2<model.Position>(
-                    value: dropdownValuePosition,
-                    items: position.map((company) {
-                      return DropdownMenuItem<model.Position>(
-                        value: company,
-                        child: Text(company.nombre),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        dropdownValuePosition = value!;
-                      });
-                    },
-                  ),
-                  DropdownButton2<model.Status>(
-                    value: dropdownValueStatus,
-                    items: status.map((company) {
-                      return DropdownMenuItem<model.Status>(
-                        value: company,
-                        child: Text(company.nombre),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        dropdownValueStatus = value!;
-                      });
-                    },
-                  ),
-                  TextField(
-                    controller: _ingresoSueldoBaseController,
-                    decoration: InputDecoration(labelText: 'IngresoSueldoBase'),
-                  ),
-                  TextField(
-                    controller: _ingresoBonificacionDecretoController,
-                    decoration: InputDecoration(
-                        labelText: 'IngresoBonificacionDecreto'),
-                  ),
-                  TextField(
-                    controller: _ingresoOtrosIngresosController,
-                    decoration:
-                        InputDecoration(labelText: 'IngresoOtrosIngresos'),
-                  ),
-                  TextField(
-                    controller: _descuentoIgssController,
-                    decoration: InputDecoration(labelText: 'DescuentoIgss'),
-                  ),
-                  TextField(
-                    controller: _decuentoISRController,
-                    decoration: InputDecoration(labelText: 'DecuentoISR'),
-                  ),
-                  TextField(
-                    controller: _descuentoInasistenciasController,
-                    decoration:
-                        InputDecoration(labelText: 'DescuentoInasistencias'),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Crear'),
-              onPressed: () {
-                bloc.add(
-                  EmployeeCreate(
-                    idPersona: _idPersonaController.text,
-                    idSucursal: _idSucursalController.text,
-                    fechaContratacion: _fechaContratacionController.text,
-                    idPuesto: _idPuestoController.text,
-                    idStatusEmpleado: _idStatusEmpleadoController.text,
-                    ingresoSueldoBase: _ingresoSueldoBaseController.text,
-                    ingresoBonificacionDecreto:
-                        _ingresoBonificacionDecretoController.text,
-                    ingresoOtrosIngresos: _ingresoOtrosIngresosController.text,
-                    descuentoIgss: _descuentoIgssController.text,
-                    decuentoISR: _decuentoISRController.text,
-                    descuentoInasistencias:
-                        _descuentoInasistenciasController.text,
-                    usuarioCreacion: name,
-                  ),
-                );
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Cancelar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text('Crear'),
+                  onPressed: () {
+                    bloc.add(
+                      EmployeeCreate(
+                        idPersona: dropdownValue.idPersona,
+                        idSucursal: dropdownValueBranch.idBranch,
+                        fechaContratacion: _fechaContratacionController.text,
+                        idPuesto: dropdownValuePosition.idPuesto,
+                        idStatusEmpleado: dropdownValueStatus.idStatusEmpleado,
+                        ingresoSueldoBase: _ingresoSueldoBaseController.text,
+                        ingresoBonificacionDecreto:
+                            _ingresoBonificacionDecretoController.text,
+                        ingresoOtrosIngresos: _ingresoOtrosIngresosController.text,
+                        usuarioCreacion: name,
+                      ),
+                    );
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          }
         );
       },
     );

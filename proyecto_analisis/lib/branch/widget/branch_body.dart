@@ -263,53 +263,57 @@ class _BranchBodyState extends State<BranchBody> with ErrorHandling {
     showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
-            title: Text('Editar sucursal'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextField(
-                  controller: _nameController,
-                  decoration:
-                      InputDecoration(labelText: 'Nombre de la sucursal'),
-                ),
-                TextField(
-                  controller: _addressController,
-                  decoration:
-                      InputDecoration(labelText: 'Direccion de sucursal'),
-                  keyboardType: TextInputType.number,
-                ),
-              ],
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: Text('Cancelar'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: Text('Guardar'),
-                onPressed: () {
-                  String branchName = _nameController.text;
-                  String branchNumber = _addressController.text;
-                  bloc.add(
-                    BranchEdit(
-                      nombre: branchName,
-                      id: branch.idEmpresa,
-                      idBranch: branch.idBranch,
-                      idEmpresa: branch.idEmpresa,
-                      direccion: branchNumber,
-                      usuarioCreacion: name,
+          return StatefulBuilder(
+              builder: (context, StateSetter setState) {
+              return AlertDialog(
+                title: Text('Editar sucursal'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    TextField(
+                      controller: _nameController,
+                      decoration:
+                          InputDecoration(labelText: 'Nombre de la sucursal'),
                     ),
-                  );
-                  Navigator.of(context).pop();
-                  context.read<BranchBloc>().add(
-                    Branch(),
-                  );
-                },
-              ),
-            ],
+                    TextField(
+                      controller: _addressController,
+                      decoration:
+                          InputDecoration(labelText: 'Direccion de sucursal'),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ],
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('Cancelar'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  TextButton(
+                    child: Text('Guardar'),
+                    onPressed: () {
+                      String branchName = _nameController.text;
+                      String branchNumber = _addressController.text;
+                      bloc.add(
+                        BranchEdit(
+                          nombre: branchName,
+                          id: branch.idEmpresa,
+                          idBranch: branch.idBranch,
+                          idEmpresa: branch.idEmpresa,
+                          direccion: branchNumber,
+                          usuarioCreacion: name,
+                        ),
+                      );
+                      Navigator.of(context).pop();
+                      context.read<BranchBloc>().add(
+                        Branch(),
+                      );
+                    },
+                  ),
+                ],
+              );
+            }
           );
         });
   }
@@ -318,70 +322,74 @@ class _BranchBodyState extends State<BranchBody> with ErrorHandling {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text('Crear sucursal'),
-          content: SingleChildScrollView(
-            child: Container(
-              width:200,
-              height: 200,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  TextField(
-                    controller: _nameController,
-                    decoration:
-                        InputDecoration(labelText: 'Nombre de la sucursal'),
+        return StatefulBuilder(
+            builder: (context, StateSetter setState) {
+            return AlertDialog(
+              title: Text('Crear sucursal'),
+              content: SingleChildScrollView(
+                child: Container(
+                  width:200,
+                  height: 200,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      TextField(
+                        controller: _nameController,
+                        decoration:
+                            InputDecoration(labelText: 'Nombre de la sucursal'),
+                      ),
+                      TextField(
+                        controller: _addressController,
+                        decoration:
+                            InputDecoration(labelText: 'Número de sucursal'),
+                        keyboardType: TextInputType.number,
+                      ),
+                      DropdownButton2<model.Company>(
+                        value: dropdownValue,
+                        items: company.map((company) {
+                          return DropdownMenuItem<model.Company>(
+                            value: company,
+                            child: Text(company.nombre),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            dropdownValue = value!;
+                          });
+                        },
+                      ),
+                    ],
                   ),
-                  TextField(
-                    controller: _addressController,
-                    decoration:
-                        InputDecoration(labelText: 'Número de sucursal'),
-                    keyboardType: TextInputType.number,
-                  ),
-                  DropdownButton2<model.Company>(
-                    value: dropdownValue,
-                    items: company.map((company) {
-                      return DropdownMenuItem<model.Company>(
-                        value: company,
-                        child: Text(company.nombre),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        dropdownValue = value!;
-                      });
-                    },
-                  ),
-                ],
+                ),
               ),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Crear'),
-              onPressed: () {
-                String branchName = _nameController.text;
-                String branchNumber = _addressController.text;
-                bloc.add(
-                  BranchCreate(
-                    nombre: branchName,
-                    usuarioCreacion: name,
-                    direccion: branchNumber,
-                    id: _companyController.text,
-                    idEmpresa: dropdownValue.idEmpresa,
-                  ),
-                );
-                Navigator.of(context)
-                    .pop();
-              },
-            ),
-          ],
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Cancelar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text('Crear'),
+                  onPressed: () {
+                    String branchName = _nameController.text;
+                    String branchNumber = _addressController.text;
+                    bloc.add(
+                      BranchCreate(
+                        nombre: branchName,
+                        usuarioCreacion: name,
+                        direccion: branchNumber,
+                        id: _companyController.text,
+                        idEmpresa: dropdownValue.idEmpresa,
+                      ),
+                    );
+                    Navigator.of(context)
+                        .pop();
+                  },
+                ),
+              ],
+            );
+          }
         );
       },
     );

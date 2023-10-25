@@ -45,17 +45,14 @@ class EmployeeService {
   }
 
   Future<Response<dynamic>> createEmployee({
-    required String idPersona,
-    required String idSucursal,
+    required int idPersona,
+    required int idSucursal,
     required String fechaContratacion,
-    required String idPuesto,
-    required String idStatusEmpleado,
+    required int idPuesto,
+    required int idStatusEmpleado,
     required String ingresoSueldoBase,
     required String ingresoBonificacionDecreto,
     required String ingresoOtrosIngresos,
-    required String descuentoIgss,
-    required String decuentoISR,
-    required String descuentoInasistencias,
     required String usuarioCreacion,
   }) async {
     return client.post(
@@ -69,28 +66,22 @@ class EmployeeService {
         "IngresoSueldoBase": ingresoSueldoBase,
         "IngresoBonificacionDecreto": ingresoBonificacionDecreto,
         "IngresoOtrosIngresos": ingresoOtrosIngresos,
-        "DescuentoIgss": descuentoIgss,
-        "DecuentoISR": decuentoISR,
-        "DescuentoInasistencias": descuentoInasistencias,
         "UsuarioCreacion": usuarioCreacion,
       },
     );
   }
 
   Future<Response<dynamic>> editEmployee({
-    required String idPersona,
-    required String idSucursal,
+    required int idPersona,
+    required int idSucursal,
     required String fechaContratacion,
-    required String idPuesto,
-    required String idStatusEmpleado,
+    required int idPuesto,
+    required int idStatusEmpleado,
     required String ingresoSueldoBase,
     required String ingresoBonificacionDecreto,
     required String ingresoOtrosIngresos,
-    required String descuentoIgss,
-    required String decuentoISR,
-    required String descuentoInasistencias,
     required String usuarioCreacion,
-    required String idEmpleado,
+    required int idEmpleado,
   }) async {
     return client.put(
       employeePath,
@@ -103,9 +94,6 @@ class EmployeeService {
         "IngresoSueldoBase": ingresoSueldoBase,
         "IngresoBonificacionDecreto": ingresoBonificacionDecreto,
         "IngresoOtrosIngresos": ingresoOtrosIngresos,
-        "DescuentoIgss": descuentoIgss,
-        "DecuentoISR": decuentoISR,
-        "DescuentoInasistencias": descuentoInasistencias,
         "UsuarioModificacion": usuarioCreacion,
         "IdEmpleado": idEmpleado,
       },

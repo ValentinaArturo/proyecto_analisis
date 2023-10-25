@@ -245,68 +245,11 @@ class _PositionBodyState extends State<PositionBody> with ErrorHandling {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text('Editar Posición'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              TextField(
-                controller: _nombreController,
-                decoration: InputDecoration(labelText: 'Nombre'),
-              ),
-              DropdownButton2<model.Department>(
-                value: dropdownValue,
-                items: departments.map((company) {
-                  return DropdownMenuItem<model.Department>(
-                    value: company,
-                    child: Text(company.nombre),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    dropdownValue = value!;
-                  });
-                },
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Guardar'),
-              onPressed: () {
-                bloc.add(
-                  PositionEdit(
-                    nombre: _nombreController.text,
-                    idDepartamento: _idDepartamentoController.text,
-                    usuarioModificacion: name,
-                    idPuesto: position.idPuesto,
-                  ),
-                );
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  _dialogCreate() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Crear posición'),
-          content: IntrinsicHeight(
-            child: Container(
-              width: 400,
-              child: Column(
+        return StatefulBuilder(
+            builder: (context, StateSetter setState) {
+            return AlertDialog(
+              title: Text('Editar Posición'),
+              content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   TextField(
@@ -329,29 +272,94 @@ class _PositionBodyState extends State<PositionBody> with ErrorHandling {
                   ),
                 ],
               ),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Crear'),
-              onPressed: () {
-                bloc.add(
-                  PositionCreate(
-                    nombre: _nombreController.text,
-                    idDepartamento: _idDepartamentoController.text,
-                    usuarioModificacion: name,
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Cancelar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text('Guardar'),
+                  onPressed: () {
+                    bloc.add(
+                      PositionEdit(
+                        nombre: _nombreController.text,
+                        idDepartamento: _idDepartamentoController.text,
+                        usuarioModificacion: name,
+                        idPuesto: position.idPuesto,
+                      ),
+                    );
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          }
+        );
+      },
+    );
+  }
+
+  _dialogCreate() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+            builder: (context, StateSetter setState) {
+            return AlertDialog(
+              title: Text('Crear posición'),
+              content: IntrinsicHeight(
+                child: Container(
+                  width: 400,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      TextField(
+                        controller: _nombreController,
+                        decoration: InputDecoration(labelText: 'Nombre'),
+                      ),
+                      DropdownButton2<model.Department>(
+                        value: dropdownValue,
+                        items: departments.map((company) {
+                          return DropdownMenuItem<model.Department>(
+                            value: company,
+                            child: Text(company.nombre),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            dropdownValue = value!;
+                          });
+                        },
+                      ),
+                    ],
                   ),
-                );
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Cancelar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text('Crear'),
+                  onPressed: () {
+                    bloc.add(
+                      PositionCreate(
+                        nombre: _nombreController.text,
+                        idDepartamento: _idDepartamentoController.text,
+                        usuarioModificacion: name,
+                      ),
+                    );
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          }
         );
       },
     );

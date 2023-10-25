@@ -11,6 +11,7 @@ import 'package:proyecto_analisis/person/model/person.dart';
 import 'package:proyecto_analisis/position/model/position.dart';
 import 'package:proyecto_analisis/repository/user_repository.dart';
 import 'package:proyecto_analisis/status/model/status.dart';
+import 'package:supercharged/supercharged.dart';
 
 part 'employee_event.dart';
 part 'employee_state.dart';
@@ -201,17 +202,14 @@ class EmployeeBloc extends BaseBloc<EmployeeEvent, BaseState> {
     try {
       final response = await service.createEmployee(
         usuarioCreacion: event.usuarioCreacion,
-        idPersona: event.idPersona,
-        idSucursal: event.idSucursal,
+        idPersona: event.idPersona.toInt()!,
+        idSucursal: event.idSucursal.toInt()!,
         fechaContratacion: event.fechaContratacion,
-        idPuesto: event.idPuesto,
-        idStatusEmpleado: event.idStatusEmpleado,
+        idPuesto: event.idPuesto.toInt()!,
+        idStatusEmpleado: event.idStatusEmpleado.toInt()!,
         ingresoSueldoBase: event.ingresoSueldoBase,
         ingresoBonificacionDecreto: event.ingresoBonificacionDecreto,
         ingresoOtrosIngresos: event.ingresoOtrosIngresos,
-        descuentoIgss: event.descuentoIgss,
-        decuentoISR: event.decuentoISR,
-        descuentoInasistencias: event.descuentoInasistencias,
       );
 
       if (response.statusCode == 401) {
@@ -230,18 +228,15 @@ class EmployeeBloc extends BaseBloc<EmployeeEvent, BaseState> {
     try {
       final response = await service.editEmployee(
         usuarioCreacion: event.usuarioCreacion,
-        idPersona: event.idPersona,
-        idSucursal: event.idSucursal,
+        idPersona: event.idPersona.toInt()!,
+        idSucursal: event.idSucursal.toInt()!,
         fechaContratacion: event.fechaContratacion,
-        idPuesto: event.idPuesto,
-        idStatusEmpleado: event.idStatusEmpleado,
+        idPuesto: event.idPuesto.toInt()!,
+        idStatusEmpleado: event.idStatusEmpleado.toInt()!,
         ingresoSueldoBase: event.ingresoSueldoBase,
         ingresoBonificacionDecreto: event.ingresoBonificacionDecreto,
         ingresoOtrosIngresos: event.ingresoOtrosIngresos,
-        descuentoIgss: event.descuentoIgss,
-        decuentoISR: event.decuentoISR,
-        descuentoInasistencias: event.descuentoInasistencias,
-        idEmpleado: event.idEmpleado,
+        idEmpleado: event.idEmpleado.toInt()!,
       );
 
       if (response.statusCode == 401) {

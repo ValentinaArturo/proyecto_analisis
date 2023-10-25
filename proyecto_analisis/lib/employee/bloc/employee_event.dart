@@ -21,9 +21,6 @@ class EmployeeEdit extends EmployeeEvent {
   final String ingresoSueldoBase;
   final String ingresoBonificacionDecreto;
   final String ingresoOtrosIngresos;
-  final String descuentoIgss;
-  final String decuentoISR;
-  final String descuentoInasistencias;
   final String usuarioCreacion;
   final String idEmpleado;
 
@@ -36,9 +33,6 @@ class EmployeeEdit extends EmployeeEvent {
     required this.ingresoSueldoBase,
     required this.ingresoBonificacionDecreto,
     required this.ingresoOtrosIngresos,
-    required this.descuentoIgss,
-    required this.decuentoISR,
-    required this.descuentoInasistencias,
     required this.usuarioCreacion,
     required this.idEmpleado,
   });
@@ -53,9 +47,7 @@ class EmployeeCreate extends EmployeeEvent {
   final String ingresoSueldoBase;
   final String ingresoBonificacionDecreto;
   final String ingresoOtrosIngresos;
-  final String descuentoIgss;
-  final String decuentoISR;
-  final String descuentoInasistencias;
+
   final String usuarioCreacion;
 
   EmployeeCreate({
@@ -67,9 +59,6 @@ class EmployeeCreate extends EmployeeEvent {
     required this.ingresoSueldoBase,
     required this.ingresoBonificacionDecreto,
     required this.ingresoOtrosIngresos,
-    required this.descuentoIgss,
-    required this.decuentoISR,
-    required this.descuentoInasistencias,
     required this.usuarioCreacion,
   });
 }

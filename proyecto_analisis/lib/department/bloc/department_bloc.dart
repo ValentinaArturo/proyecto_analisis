@@ -9,8 +9,10 @@ import 'package:proyecto_analisis/company/model/company.dart' as model;
 import 'package:proyecto_analisis/department/model/department.dart';
 import 'package:proyecto_analisis/department/service/department_service.dart';
 import 'package:proyecto_analisis/repository/user_repository.dart';
+import 'package:supercharged/supercharged.dart';
 
 part 'department_event.dart';
+
 part 'department_state.dart';
 
 class DepartmentBloc extends BaseBloc<DepartmentEvent, BaseState> {
@@ -94,7 +96,7 @@ class DepartmentBloc extends BaseBloc<DepartmentEvent, BaseState> {
       final response = await service.createDepartment(
         nombre: event.nombre,
         usuarioModificacion: event.usuarioModificacion,
-        idEmpresa: event.idEmpresa,
+        idEmpresa: event.idEmpresa.toInt()!,
       );
 
       if (response.statusCode == 401) {
@@ -117,8 +119,8 @@ class DepartmentBloc extends BaseBloc<DepartmentEvent, BaseState> {
       final response = await service.editDepartment(
         nombre: event.nombre,
         usuarioModificacion: event.usuarioModificacion,
-        idEmpresa: event.idEmpresa,
-        idDepartamento: event.idDepartamento,
+        idEmpresa: event.idEmpresa.toInt()!,
+        idDepartamento: event.idDepartamento.toInt()!,
       );
 
       if (response.statusCode == 401) {

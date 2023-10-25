@@ -256,68 +256,11 @@ class _DepartmentBodyState extends State<DepartmentBody> with ErrorHandling {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text('Editar Departamento'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              TextField(
-                controller: _nombreController,
-                decoration: InputDecoration(labelText: 'Nombre'),
-              ),
-              DropdownButton2<model.Company>(
-                value: dropdownValue,
-                items: company.map((company) {
-                  return DropdownMenuItem<model.Company>(
-                    value: company,
-                    child: Text(company.nombre),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    dropdownValue = value!;
-                  });
-                },
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Guardar'),
-              onPressed: () {
-                bloc.add(
-                  DepartmentEdit(
-                    nombre: _nombreController.text,
-                    usuarioModificacion: name,
-                    idEmpresa: _idEmpresaController.text,
-                    idDepartamento: department.idDepartamento,
-                  ),
-                );
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  _dialogCreate() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Crear Departamento'),
-          content: IntrinsicHeight(
-            child: Container(
-              width: 300,
-              child: Column(
+        return StatefulBuilder(
+            builder: (context, StateSetter setState) {
+            return AlertDialog(
+              title: Text('Editar Departamento'),
+              content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   TextField(
@@ -340,30 +283,95 @@ class _DepartmentBodyState extends State<DepartmentBody> with ErrorHandling {
                   ),
                 ],
               ),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Crear'),
-              onPressed: () {
-                bloc.add(
-                  DepartmentCreate(
-                    nombre: _nombreController.text,
-                    usuarioModificacion: name,
-                    idEmpresa: _idEmpresaController.text,
-                  ),
-                );
-                Navigator.of(context).pop();
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Cancelar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text('Guardar'),
+                  onPressed: () {
+                    bloc.add(
+                      DepartmentEdit(
+                        nombre: _nombreController.text,
+                        usuarioModificacion: name,
+                        idEmpresa: dropdownValue.idEmpresa,
+                        idDepartamento: department.idDepartamento,
+                      ),
+                    );
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          }
+        );
+      },
+    );
+  }
 
-              },
-            ),
-          ],
+  _dialogCreate() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+            builder: (context, StateSetter setState) {
+            return AlertDialog(
+              title: Text('Crear Departamento'),
+              content: IntrinsicHeight(
+                child: Container(
+                  width: 300,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      TextField(
+                        controller: _nombreController,
+                        decoration: InputDecoration(labelText: 'Nombre'),
+                      ),
+                      DropdownButton2<model.Company>(
+                        value: dropdownValue,
+                        items: company.map((company) {
+                          return DropdownMenuItem<model.Company>(
+                            value: company,
+                            child: Text(company.nombre),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            dropdownValue = value!;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Cancelar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text('Crear'),
+                  onPressed: () {
+                    bloc.add(
+                      DepartmentCreate(
+                        nombre: _nombreController.text,
+                        usuarioModificacion: name,
+                        idEmpresa: dropdownValue.idEmpresa,
+                      ),
+                    );
+                    Navigator.of(context).pop();
+
+                  },
+                ),
+              ],
+            );
+          }
         );
       },
     );

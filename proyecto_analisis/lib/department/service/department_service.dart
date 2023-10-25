@@ -27,7 +27,7 @@ class DepartmentService {
   Future<Response<dynamic>> createDepartment({
     required final String nombre,
     required final String usuarioModificacion,
-    required final String idEmpresa,
+    required final int idEmpresa,
   }) async {
     return client.post(
       departmentPath,
@@ -42,8 +42,8 @@ class DepartmentService {
   Future<Response<dynamic>> editDepartment({
     required final String nombre,
     required final String usuarioModificacion,
-    required final String idEmpresa,
-    required final String idDepartamento,
+    required final int idEmpresa,
+    required final int idDepartamento,
   }) async {
     return client.put(
       departmentPath,

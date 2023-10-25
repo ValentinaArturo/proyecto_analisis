@@ -239,65 +239,11 @@ class _MenuBodyState extends State<MenuBody> with ErrorHandling {
     showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
-            title: Text('Editar módulo'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextField(
-                  controller: _nameController,
-                  decoration: InputDecoration(labelText: 'Nombre del menu'),
-                ),
-                TextField(
-                  controller: _menuNumberController,
-                  decoration: InputDecoration(labelText: 'Número de menú'),
-                  keyboardType: TextInputType.number,
-                ),
-                TextField(
-                  controller: _moduleNumberController,
-                  decoration: InputDecoration(labelText: 'Número de modulo'),
-                  keyboardType: TextInputType.number,
-                ),
-              ],
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: Text('Cancelar'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: Text('Guardar'),
-                onPressed: () {
-                  String moduleName = _nameController.text;
-                  String menuNumber = _menuNumberController.text;
-                  bloc.add(
-                    MenuEdit(
-                      name: moduleName,
-                      id: menu.idModulo,
-                      nameCreate: name,
-                      menuOrder: menuNumber,
-                      idMenu: menu.idMenu,
-                    ),
-                  );
-                },
-              ),
-            ],
-          );
-        });
-  }
-
-  _dialogCreate() {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Crear menu'),
-            content: IntrinsicHeight(
-              child: Container(
-                width: 300,
-                child: Column(
+          return StatefulBuilder(
+              builder: (context, StateSetter setState) {
+              return AlertDialog(
+                title: Text('Editar módulo'),
+                content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     TextField(
@@ -311,37 +257,99 @@ class _MenuBodyState extends State<MenuBody> with ErrorHandling {
                     ),
                     TextField(
                       controller: _moduleNumberController,
-                      decoration:
-                          InputDecoration(labelText: 'Número de modulo'),
+                      decoration: InputDecoration(labelText: 'Número de modulo'),
                       keyboardType: TextInputType.number,
                     ),
                   ],
                 ),
-              ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: Text('Cancelar'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: Text('Crear'),
-                onPressed: () {
-                  String moduleName = _nameController.text;
-                  String menuNumber = _menuNumberController.text;
-                  bloc.add(
-                    MenuCreate(
-                      name: moduleName,
-                      nameCreate: name,
-                      menuOrder: menuNumber,
-                      id: _moduleNumberController.text,
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('Cancelar'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  TextButton(
+                    child: Text('Guardar'),
+                    onPressed: () {
+                      String moduleName = _nameController.text;
+                      String menuNumber = _menuNumberController.text;
+                      bloc.add(
+                        MenuEdit(
+                          name: moduleName,
+                          id: menu.idModulo,
+                          nameCreate: name,
+                          menuOrder: menuNumber,
+                          idMenu: menu.idMenu,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              );
+            }
+          );
+        });
+  }
+
+  _dialogCreate() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+              builder: (context, StateSetter setState) {
+              return AlertDialog(
+                title: Text('Crear menu'),
+                content: IntrinsicHeight(
+                  child: Container(
+                    width: 300,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        TextField(
+                          controller: _nameController,
+                          decoration: InputDecoration(labelText: 'Nombre del menu'),
+                        ),
+                        TextField(
+                          controller: _menuNumberController,
+                          decoration: InputDecoration(labelText: 'Número de menú'),
+                          keyboardType: TextInputType.number,
+                        ),
+                        TextField(
+                          controller: _moduleNumberController,
+                          decoration:
+                              InputDecoration(labelText: 'Número de modulo'),
+                          keyboardType: TextInputType.number,
+                        ),
+                      ],
                     ),
-                  );
-                },
-              ),
-            ],
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('Cancelar'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  TextButton(
+                    child: Text('Crear'),
+                    onPressed: () {
+                      String moduleName = _nameController.text;
+                      String menuNumber = _menuNumberController.text;
+                      bloc.add(
+                        MenuCreate(
+                          name: moduleName,
+                          nameCreate: name,
+                          menuOrder: menuNumber,
+                          id: _moduleNumberController.text,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              );
+            }
           );
         });
   }
