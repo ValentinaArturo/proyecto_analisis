@@ -286,43 +286,47 @@ class _RolsUserBodyState extends State<RolsUserBody> with ErrorHandling {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Selecciona un rol'),
-          content: DropdownButton2<Rol>(
-            value: _selectedRole,
-            items: _roles.map((role) {
-              return DropdownMenuItem<Rol>(
-                value: role,
-                child: Text(role.nombre ),
-              );
-            }).toList(),
-            onChanged: (value) {
-              setState(() {
-                _selectedRole = value!;
-              });
-            },
-          ),
-          actions: [
-            ElevatedButton(
-              child: const Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            ElevatedButton(
-              child: const Text('Editar'),
-              onPressed: () {
-                bloc.add(
-                  RolEdit(
-                    user: name,
-                    id: _selectedRole.idRole,
-                    userCreate: name,
-                  ),
-                );
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+        return StatefulBuilder(
+            builder: (context, StateSetter setState) {
+            return AlertDialog(
+              title: const Text('Selecciona un rol'),
+              content: DropdownButton2<Rol>(
+                value: _selectedRole,
+                items: _roles.map((role) {
+                  return DropdownMenuItem<Rol>(
+                    value: role,
+                    child: Text(role.nombre ),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedRole = value!;
+                  });
+                },
+              ),
+              actions: [
+                ElevatedButton(
+                  child: const Text('Cancelar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                ElevatedButton(
+                  child: const Text('Editar'),
+                  onPressed: () {
+                    bloc.add(
+                      RolEdit(
+                        user: name,
+                        id: _selectedRole.idRole,
+                        userCreate: name,
+                      ),
+                    );
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          }
         );
       },
     );
@@ -332,61 +336,65 @@ class _RolsUserBodyState extends State<RolsUserBody> with ErrorHandling {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Selecciona un usuario rol'),
-          content: Column(
-            children: [
-              DropdownButton2<Rol>(
-                value: _selectedRole,
-                items: _roles.map((role) {
-                  return DropdownMenuItem<Rol>(
-                    value: role,
-                    child: Text(role.nombre),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedRole = value!;
-                  });
-                },
-              ),
-              DropdownButton2<model.User>(
-                value: _selectedUser,
-                items: user.map((user) {
-                  return DropdownMenuItem<model.User>(
-                    value: user,
-                    child: Text(user.correoElectronico),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedUser = value!;
-                  });
-                },
-              ),
-            ],
-          ),
-          actions: [
-            ElevatedButton(
-              child: const Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            ElevatedButton(
-              child: const Text('Crear'),
-              onPressed: () {
-                bloc.add(
-                  RolCreate(
-                    user: name,
-                    id: _selectedRole.idRole,
-                    userCreate: name,
+        return StatefulBuilder(
+            builder: (context, StateSetter setState) {
+            return AlertDialog(
+              title: const Text('Selecciona un usuario rol'),
+              content: Column(
+                children: [
+                  DropdownButton2<Rol>(
+                    value: _selectedRole,
+                    items: _roles.map((role) {
+                      return DropdownMenuItem<Rol>(
+                        value: role,
+                        child: Text(role.nombre),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedRole = value!;
+                      });
+                    },
                   ),
-                );
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+                  DropdownButton2<model.User>(
+                    value: _selectedUser,
+                    items: user.map((user) {
+                      return DropdownMenuItem<model.User>(
+                        value: user,
+                        child: Text(user.correoElectronico),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedUser = value!;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              actions: [
+                ElevatedButton(
+                  child: const Text('Cancelar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                ElevatedButton(
+                  child: const Text('Crear'),
+                  onPressed: () {
+                    bloc.add(
+                      RolCreate(
+                        user: name,
+                        id: _selectedRole.idRole,
+                        userCreate: name,
+                      ),
+                    );
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          }
         );
       },
     );

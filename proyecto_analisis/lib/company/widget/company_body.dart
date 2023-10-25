@@ -298,110 +298,114 @@ class _CompanyBodyState extends State<CompanyBody> with ErrorHandling {
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Editar empresa'),
-            content: SingleChildScrollView(
-              child: Container(
-                width: 800,
-                height: 800,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    TextField(
-                      controller: _nameController,
-                      decoration:
-                          const InputDecoration(labelText: 'Nombre de la empresa'),
+          return StatefulBuilder(
+              builder: (context, StateSetter setState) {
+              return AlertDialog(
+                title: const Text('Editar empresa'),
+                content: SingleChildScrollView(
+                  child: Container(
+                    width: 800,
+                    height: 800,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        TextField(
+                          controller: _nameController,
+                          decoration:
+                              const InputDecoration(labelText: 'Nombre de la empresa'),
+                        ),
+                        TextField(
+                          controller: _direccionController,
+                          decoration: const InputDecoration(labelText: 'Dirección'),
+                        ),
+                        TextField(
+                          controller: _nitController,
+                          decoration: const InputDecoration(labelText: 'NIT'),
+                        ),
+                        TextField(
+                          controller: _passwordCantidadMayusculasController,
+                          decoration: const InputDecoration(
+                              labelText: 'Cantidad de Mayúsculas en la Contraseña'),
+                        ),
+                        TextField(
+                          controller: _passwordCantidadMinusculasController,
+                          decoration: const InputDecoration(
+                              labelText: 'Cantidad de Minúsculas en la Contraseña'),
+                        ),
+                        TextField(
+                          controller: _passwordCantidadCaracteresEspecialesController,
+                          decoration: const InputDecoration(
+                              labelText:
+                                  'Cantidad de Caracteres Especiales en la Contraseña'),
+                        ),
+                        TextField(
+                          controller: _passwordCantidadCaducidadDiasController,
+                          decoration: const InputDecoration(
+                              labelText: 'Días de Caducidad de la Contraseña'),
+                        ),
+                        TextField(
+                          controller: _passwordLargoController,
+                          decoration: const InputDecoration(
+                              labelText: 'Largo de la Contraseña'),
+                        ),
+                        TextField(
+                          controller: _passwordIntentosAntesDeBloquearController,
+                          decoration: const InputDecoration(
+                              labelText: 'Intentos antes de Bloquear la Contraseña'),
+                        ),
+                        TextField(
+                          controller: _passwordCantidadNumerosController,
+                          decoration: const InputDecoration(
+                              labelText: 'Cantidad de Números en la Contraseña'),
+                        ),
+                        TextField(
+                          controller: _passwordCantidadPreguntasValidarController,
+                          decoration: const InputDecoration(
+                              labelText: 'Cantidad de Preguntas para Validar'),
+                        ),
+                      ],
                     ),
-                    TextField(
-                      controller: _direccionController,
-                      decoration: const InputDecoration(labelText: 'Dirección'),
-                    ),
-                    TextField(
-                      controller: _nitController,
-                      decoration: const InputDecoration(labelText: 'NIT'),
-                    ),
-                    TextField(
-                      controller: _passwordCantidadMayusculasController,
-                      decoration: const InputDecoration(
-                          labelText: 'Cantidad de Mayúsculas en la Contraseña'),
-                    ),
-                    TextField(
-                      controller: _passwordCantidadMinusculasController,
-                      decoration: const InputDecoration(
-                          labelText: 'Cantidad de Minúsculas en la Contraseña'),
-                    ),
-                    TextField(
-                      controller: _passwordCantidadCaracteresEspecialesController,
-                      decoration: const InputDecoration(
-                          labelText:
-                              'Cantidad de Caracteres Especiales en la Contraseña'),
-                    ),
-                    TextField(
-                      controller: _passwordCantidadCaducidadDiasController,
-                      decoration: const InputDecoration(
-                          labelText: 'Días de Caducidad de la Contraseña'),
-                    ),
-                    TextField(
-                      controller: _passwordLargoController,
-                      decoration: const InputDecoration(
-                          labelText: 'Largo de la Contraseña'),
-                    ),
-                    TextField(
-                      controller: _passwordIntentosAntesDeBloquearController,
-                      decoration: const InputDecoration(
-                          labelText: 'Intentos antes de Bloquear la Contraseña'),
-                    ),
-                    TextField(
-                      controller: _passwordCantidadNumerosController,
-                      decoration: const InputDecoration(
-                          labelText: 'Cantidad de Números en la Contraseña'),
-                    ),
-                    TextField(
-                      controller: _passwordCantidadPreguntasValidarController,
-                      decoration: const InputDecoration(
-                          labelText: 'Cantidad de Preguntas para Validar'),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('Cancelar'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: const Text('Guardar'),
-                onPressed: () {
-                  bloc.add(
-                    CompanyEdit(
-                      name: _nameController.text,
-                      direccion: _direccionController.text,
-                      nit: _nitController.text,
-                      passwordCantidadMayusculas:
-                          _passwordCantidadMayusculasController.text,
-                      passwordCantidadMinusculas:
-                          _passwordCantidadMinusculasController.text,
-                      passwordCantidadCaracteresEspeciales:
-                          _passwordCantidadCaracteresEspecialesController.text,
-                      passwordCantidadCaducidadDias:
-                          _passwordCantidadCaducidadDiasController.text,
-                      passwordLargo: _passwordLargoController.text,
-                      passwordIntentosAntesDeBloquear:
-                          _passwordIntentosAntesDeBloquearController.text,
-                      passwordCantidadNumeros:
-                          _passwordCantidadNumerosController.text,
-                      passwordCantidadPreguntasValidar:
-                          _passwordCantidadPreguntasValidarController.text,
-                      nameCreate: name,
-                    ),
-                  );
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('Cancelar'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  TextButton(
+                    child: const Text('Guardar'),
+                    onPressed: () {
+                      bloc.add(
+                        CompanyEdit(
+                          name: _nameController.text,
+                          direccion: _direccionController.text,
+                          nit: _nitController.text,
+                          passwordCantidadMayusculas:
+                              _passwordCantidadMayusculasController.text,
+                          passwordCantidadMinusculas:
+                              _passwordCantidadMinusculasController.text,
+                          passwordCantidadCaracteresEspeciales:
+                              _passwordCantidadCaracteresEspecialesController.text,
+                          passwordCantidadCaducidadDias:
+                              _passwordCantidadCaducidadDiasController.text,
+                          passwordLargo: _passwordLargoController.text,
+                          passwordIntentosAntesDeBloquear:
+                              _passwordIntentosAntesDeBloquearController.text,
+                          passwordCantidadNumeros:
+                              _passwordCantidadNumerosController.text,
+                          passwordCantidadPreguntasValidar:
+                              _passwordCantidadPreguntasValidarController.text,
+                          nameCreate: name,
+                        ),
+                      );
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            }
           );
         });
   }
@@ -410,112 +414,116 @@ class _CompanyBodyState extends State<CompanyBody> with ErrorHandling {
     showDialog(
         context: context,
         builder: (context) {
-          return SizedBox(
-            child: AlertDialog(
-              title: const Text('Crear empresa'),
-              content: SingleChildScrollView(
-                child: Container(
-                  width: 800,
-                  height: 800,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      TextField(
-                        controller: _nameController,
-                        decoration:
-                            const InputDecoration(labelText: 'Nombre de la empresa'),
+          return StatefulBuilder(
+              builder: (context, StateSetter setState) {
+              return SizedBox(
+                child: AlertDialog(
+                  title: const Text('Crear empresa'),
+                  content: SingleChildScrollView(
+                    child: Container(
+                      width: 800,
+                      height: 800,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          TextField(
+                            controller: _nameController,
+                            decoration:
+                                const InputDecoration(labelText: 'Nombre de la empresa'),
+                          ),
+                          TextField(
+                            controller: _direccionController,
+                            decoration: const InputDecoration(labelText: 'Dirección'),
+                          ),
+                          TextField(
+                            controller: _nitController,
+                            decoration: const InputDecoration(labelText: 'NIT'),
+                          ),
+                          TextField(
+                            controller: _passwordCantidadMayusculasController,
+                            decoration: const InputDecoration(
+                                labelText: 'Cantidad de Mayúsculas en la Contraseña'),
+                          ),
+                          TextField(
+                            controller: _passwordCantidadMinusculasController,
+                            decoration: const InputDecoration(
+                                labelText: 'Cantidad de Minúsculas en la Contraseña'),
+                          ),
+                          TextField(
+                            controller: _passwordCantidadCaracteresEspecialesController,
+                            decoration: const InputDecoration(
+                                labelText:
+                                    'Cantidad de Caracteres Especiales en la Contraseña'),
+                          ),
+                          TextField(
+                            controller: _passwordCantidadCaducidadDiasController,
+                            decoration: const InputDecoration(
+                                labelText: 'Días de Caducidad de la Contraseña'),
+                          ),
+                          TextField(
+                            controller: _passwordLargoController,
+                            decoration: const InputDecoration(
+                                labelText: 'Largo de la Contraseña'),
+                          ),
+                          TextField(
+                            controller: _passwordIntentosAntesDeBloquearController,
+                            decoration: const InputDecoration(
+                                labelText: 'Intentos antes de Bloquear la Contraseña'),
+                          ),
+                          TextField(
+                            controller: _passwordCantidadNumerosController,
+                            decoration: const InputDecoration(
+                                labelText: 'Cantidad de Números en la Contraseña'),
+                          ),
+                          TextField(
+                            controller: _passwordCantidadPreguntasValidarController,
+                            decoration: const InputDecoration(
+                                labelText: 'Cantidad de Preguntas para Validar'),
+                          ),
+                        ],
                       ),
-                      TextField(
-                        controller: _direccionController,
-                        decoration: const InputDecoration(labelText: 'Dirección'),
-                      ),
-                      TextField(
-                        controller: _nitController,
-                        decoration: const InputDecoration(labelText: 'NIT'),
-                      ),
-                      TextField(
-                        controller: _passwordCantidadMayusculasController,
-                        decoration: const InputDecoration(
-                            labelText: 'Cantidad de Mayúsculas en la Contraseña'),
-                      ),
-                      TextField(
-                        controller: _passwordCantidadMinusculasController,
-                        decoration: const InputDecoration(
-                            labelText: 'Cantidad de Minúsculas en la Contraseña'),
-                      ),
-                      TextField(
-                        controller: _passwordCantidadCaracteresEspecialesController,
-                        decoration: const InputDecoration(
-                            labelText:
-                                'Cantidad de Caracteres Especiales en la Contraseña'),
-                      ),
-                      TextField(
-                        controller: _passwordCantidadCaducidadDiasController,
-                        decoration: const InputDecoration(
-                            labelText: 'Días de Caducidad de la Contraseña'),
-                      ),
-                      TextField(
-                        controller: _passwordLargoController,
-                        decoration: const InputDecoration(
-                            labelText: 'Largo de la Contraseña'),
-                      ),
-                      TextField(
-                        controller: _passwordIntentosAntesDeBloquearController,
-                        decoration: const InputDecoration(
-                            labelText: 'Intentos antes de Bloquear la Contraseña'),
-                      ),
-                      TextField(
-                        controller: _passwordCantidadNumerosController,
-                        decoration: const InputDecoration(
-                            labelText: 'Cantidad de Números en la Contraseña'),
-                      ),
-                      TextField(
-                        controller: _passwordCantidadPreguntasValidarController,
-                        decoration: const InputDecoration(
-                            labelText: 'Cantidad de Preguntas para Validar'),
-                      ),
-                    ],
+                    ),
                   ),
+                  actions: <Widget>[
+                    TextButton(
+                      child: const Text('Cancelar'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    TextButton(
+                      child: const Text('Crear'),
+                      onPressed: () {
+                        bloc.add(
+                          CompanyCreate(
+                            name: _nameController.text,
+                            direccion: _direccionController.text,
+                            nit: _nitController.text,
+                            passwordCantidadMayusculas:
+                                _passwordCantidadMayusculasController.text,
+                            passwordCantidadMinusculas:
+                                _passwordCantidadMinusculasController.text,
+                            passwordCantidadCaracteresEspeciales:
+                                _passwordCantidadCaracteresEspecialesController.text,
+                            passwordCantidadCaducidadDias:
+                                _passwordCantidadCaducidadDiasController.text,
+                            passwordLargo: _passwordLargoController.text,
+                            passwordIntentosAntesDeBloquear:
+                                _passwordIntentosAntesDeBloquearController.text,
+                            passwordCantidadNumeros:
+                                _passwordCantidadNumerosController.text,
+                            passwordCantidadPreguntasValidar:
+                                _passwordCantidadPreguntasValidarController.text,
+                            nameCreate: name,
+                          ),
+                        );
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
                 ),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('Cancelar'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                TextButton(
-                  child: const Text('Crear'),
-                  onPressed: () {
-                    bloc.add(
-                      CompanyCreate(
-                        name: _nameController.text,
-                        direccion: _direccionController.text,
-                        nit: _nitController.text,
-                        passwordCantidadMayusculas:
-                            _passwordCantidadMayusculasController.text,
-                        passwordCantidadMinusculas:
-                            _passwordCantidadMinusculasController.text,
-                        passwordCantidadCaracteresEspeciales:
-                            _passwordCantidadCaracteresEspecialesController.text,
-                        passwordCantidadCaducidadDias:
-                            _passwordCantidadCaducidadDiasController.text,
-                        passwordLargo: _passwordLargoController.text,
-                        passwordIntentosAntesDeBloquear:
-                            _passwordIntentosAntesDeBloquearController.text,
-                        passwordCantidadNumeros:
-                            _passwordCantidadNumerosController.text,
-                        passwordCantidadPreguntasValidar:
-                            _passwordCantidadPreguntasValidarController.text,
-                        nameCreate: name,
-                      ),
-                    );
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
+              );
+            }
           );
         });
   }

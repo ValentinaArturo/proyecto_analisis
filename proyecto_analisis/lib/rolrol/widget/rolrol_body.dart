@@ -226,39 +226,43 @@ class _RolRolBodyState extends State<RolRolBody> with ErrorHandling {
     showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
-            title: Text('Editar rol'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextField(
-                  controller: _nameController,
-                  decoration: InputDecoration(labelText: 'Nombre del rol'),
-                ),
-              ],
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: Text('Cancelar'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: Text('Guardar'),
-                onPressed: () {
-                  String moduleName = _nameController.text;
-                  bloc.add(
-                    RolEdit(
-                      name: moduleName,
-                      id: int.parse(rol.idRole),
-                      nameCreate: name,
+          return StatefulBuilder(
+              builder: (context, StateSetter setState) {
+              return AlertDialog(
+                title: Text('Editar rol'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    TextField(
+                      controller: _nameController,
+                      decoration: InputDecoration(labelText: 'Nombre del rol'),
                     ),
-                  );
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
+                  ],
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('Cancelar'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  TextButton(
+                    child: Text('Guardar'),
+                    onPressed: () {
+                      String moduleName = _nameController.text;
+                      bloc.add(
+                        RolEdit(
+                          name: moduleName,
+                          id: int.parse(rol.idRole),
+                          nameCreate: name,
+                        ),
+                      );
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            }
           );
         });
   }
@@ -267,38 +271,42 @@ class _RolRolBodyState extends State<RolRolBody> with ErrorHandling {
     showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
-            title: Text('Crear rol'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextField(
-                  controller: _nameController,
-                  decoration: InputDecoration(labelText: 'Nombre del rol'),
-                ),
-              ],
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: Text('Cancelar'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: Text('Crear'),
-                onPressed: () {
-                  String moduleName = _nameController.text;
-                  bloc.add(
-                    RolCreate(
-                      name: moduleName,
-                      nameCreate: name,
+          return StatefulBuilder(
+              builder: (context, StateSetter setState) {
+              return AlertDialog(
+                title: Text('Crear rol'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    TextField(
+                      controller: _nameController,
+                      decoration: InputDecoration(labelText: 'Nombre del rol'),
                     ),
-                  );
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
+                  ],
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('Cancelar'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  TextButton(
+                    child: Text('Crear'),
+                    onPressed: () {
+                      String moduleName = _nameController.text;
+                      bloc.add(
+                        RolCreate(
+                          name: moduleName,
+                          nameCreate: name,
+                        ),
+                      );
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            }
           );
         });
   }

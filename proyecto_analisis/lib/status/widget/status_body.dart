@@ -224,39 +224,43 @@ class _StatusBodyState extends State<StatusBody> with ErrorHandling {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text('Editar status'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              TextField(
-                controller: _nombreController,
-                decoration: InputDecoration(labelText: 'Nombre'),
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Guardar'),
-              onPressed: () {
-                bloc.add(
-                  StatusEdit(
-                    nombre: _nombreController.text,
-                    usuarioModificacion: name,
-                    idStatusUsuario: status.idStatusEmpleado,
+        return StatefulBuilder(
+            builder: (context, StateSetter setState) {
+            return AlertDialog(
+              title: Text('Editar status'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  TextField(
+                    controller: _nombreController,
+                    decoration: InputDecoration(labelText: 'Nombre'),
                   ),
-                );
-                Navigator.of(context).pop();
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Cancelar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text('Guardar'),
+                  onPressed: () {
+                    bloc.add(
+                      StatusEdit(
+                        nombre: _nombreController.text,
+                        usuarioModificacion: name,
+                        idStatusUsuario: status.idStatusEmpleado,
+                      ),
+                    );
+                    Navigator.of(context).pop();
 
-              },
-            ),
-          ],
+                  },
+                ),
+              ],
+            );
+          }
         );
       },
     );
@@ -266,42 +270,46 @@ class _StatusBodyState extends State<StatusBody> with ErrorHandling {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text('Crear status'),
-          content: IntrinsicHeight(
-            child: Container(
-              width: 300,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  TextField(
-                    controller: _nombreController,
-                    decoration: InputDecoration(labelText: 'Nombre'),
+        return StatefulBuilder(
+            builder: (context, StateSetter setState) {
+            return AlertDialog(
+              title: Text('Crear status'),
+              content: IntrinsicHeight(
+                child: Container(
+                  width: 300,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      TextField(
+                        controller: _nombreController,
+                        decoration: InputDecoration(labelText: 'Nombre'),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Crear'),
-              onPressed: () {
-                bloc.add(
-                  StatusCreate(
-                    nombre: _nombreController.text,
-                    usuarioModificacion: name,
-                  ),
-                );
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Cancelar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text('Crear'),
+                  onPressed: () {
+                    bloc.add(
+                      StatusCreate(
+                        nombre: _nombreController.text,
+                        usuarioModificacion: name,
+                      ),
+                    );
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          }
         );
       },
     );

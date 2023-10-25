@@ -222,37 +222,41 @@ class _GenresBodyState extends State<GenresBody> with ErrorHandling {
     showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
-            title: Text('Editar genero'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextField(
-                  controller: _nameController,
-                  decoration: InputDecoration(labelText: 'Nombre del genero'),
-                ),
-              ],
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: Text('Cancelar'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: Text('Guardar'),
-                onPressed: () {
-                  bloc.add(
-                    GenreEdit(
-                      name: _nameController.text,
-                      id: genre.idGenero,
-                      nameCreate: name,
+          return StatefulBuilder(
+              builder: (context, StateSetter setState) {
+              return AlertDialog(
+                title: Text('Editar genero'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    TextField(
+                      controller: _nameController,
+                      decoration: InputDecoration(labelText: 'Nombre del genero'),
                     ),
-                  );
-                },
-              ),
-            ],
+                  ],
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('Cancelar'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  TextButton(
+                    child: Text('Guardar'),
+                    onPressed: () {
+                      bloc.add(
+                        GenreEdit(
+                          name: _nameController.text,
+                          id: genre.idGenero,
+                          nameCreate: name,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              );
+            }
           );
         });
   }
@@ -261,36 +265,40 @@ class _GenresBodyState extends State<GenresBody> with ErrorHandling {
     showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
-            title: Text('Crear genero'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextField(
-                  controller: _nameController,
-                  decoration: InputDecoration(labelText: 'Nombre del genero'),
-                ),
-              ],
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: Text('Cancelar'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: Text('Crear'),
-                onPressed: () {
-                  bloc.add(
-                    GenreCreate(
-                      name: _nameController.text,
-                      nameCreate: name,
+          return StatefulBuilder(
+              builder: (context, StateSetter setState) {
+              return AlertDialog(
+                title: Text('Crear genero'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    TextField(
+                      controller: _nameController,
+                      decoration: InputDecoration(labelText: 'Nombre del genero'),
                     ),
-                  );
-                },
-              ),
-            ],
+                  ],
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('Cancelar'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  TextButton(
+                    child: Text('Crear'),
+                    onPressed: () {
+                      bloc.add(
+                        GenreCreate(
+                          name: _nameController.text,
+                          nameCreate: name,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              );
+            }
           );
         });
   }

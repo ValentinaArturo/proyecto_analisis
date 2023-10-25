@@ -226,65 +226,16 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
     showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
-            title: Text('Editar módulo'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextField(
-                  controller: _nameController,
-                  decoration: InputDecoration(labelText: 'Nombre del módulo'),
-                ),
-                TextField(
-                  controller: _menuNumberController,
-                  decoration: InputDecoration(labelText: 'Número de menú'),
-                  keyboardType: TextInputType.number,
-                ),
-              ],
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: Text('Cancelar'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: Text('Guardar'),
-                onPressed: () {
-                  String moduleName = _nameController.text;
-                  String menuNumber = _menuNumberController.text;
-                  bloc.add(
-                    ModuleEdit(
-                      name: moduleName,
-                      id: module.idModulo,
-                      nameCreate: name,
-                      menuOrder: menuNumber,
-                    ),
-                  );
-                },
-              ),
-            ],
-          );
-        });
-  }
-
-  _dialogCreate() {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Crear módulo'),
-            content: IntrinsicHeight(
-              child: Container(
-                width: 300,
-                child: Column(
+          return StatefulBuilder(
+              builder: (context, StateSetter setState) {
+              return AlertDialog(
+                title: Text('Editar módulo'),
+                content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     TextField(
                       controller: _nameController,
-                      decoration:
-                          InputDecoration(labelText: 'Nombre del módulo'),
+                      decoration: InputDecoration(labelText: 'Nombre del módulo'),
                     ),
                     TextField(
                       controller: _menuNumberController,
@@ -293,30 +244,87 @@ class _ModulesBodyState extends State<ModulesBody> with ErrorHandling {
                     ),
                   ],
                 ),
-              ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: Text('Cancelar'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: Text('Crear'),
-                onPressed: () {
-                  String moduleName = _nameController.text;
-                  String menuNumber = _menuNumberController.text;
-                  bloc.add(
-                    ModuleCreate(
-                      name: moduleName,
-                      nameCreate: name,
-                      menuOrder: menuNumber,
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('Cancelar'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  TextButton(
+                    child: Text('Guardar'),
+                    onPressed: () {
+                      String moduleName = _nameController.text;
+                      String menuNumber = _menuNumberController.text;
+                      bloc.add(
+                        ModuleEdit(
+                          name: moduleName,
+                          id: module.idModulo,
+                          nameCreate: name,
+                          menuOrder: menuNumber,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              );
+            }
+          );
+        });
+  }
+
+  _dialogCreate() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+              builder: (context, StateSetter setState) {
+              return AlertDialog(
+                title: Text('Crear módulo'),
+                content: IntrinsicHeight(
+                  child: Container(
+                    width: 300,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        TextField(
+                          controller: _nameController,
+                          decoration:
+                              InputDecoration(labelText: 'Nombre del módulo'),
+                        ),
+                        TextField(
+                          controller: _menuNumberController,
+                          decoration: InputDecoration(labelText: 'Número de menú'),
+                          keyboardType: TextInputType.number,
+                        ),
+                      ],
                     ),
-                  );
-                },
-              ),
-            ],
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('Cancelar'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  TextButton(
+                    child: Text('Crear'),
+                    onPressed: () {
+                      String moduleName = _nameController.text;
+                      String menuNumber = _menuNumberController.text;
+                      bloc.add(
+                        ModuleCreate(
+                          name: moduleName,
+                          nameCreate: name,
+                          menuOrder: menuNumber,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              );
+            }
           );
         });
   }

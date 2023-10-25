@@ -217,39 +217,43 @@ class _CivilStatusBodyState extends State<CivilStatusBody> with ErrorHandling {
     showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
-            title: Text('Editar Estado Civil'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextField(
-                  controller: _nameController,
-                  decoration:
-                      InputDecoration(labelText: 'Nombre del Estado Civil'),
-                ),
-              ],
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: Text('Cancelar'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: Text('Guardar'),
-                onPressed: () {
-                  String civilStatusName = _nameController.text;
-                  bloc.add(
-                    EditCivilStatus(
-                      nombre: civilStatusName,
-                      idCivilStatus: civilStatus.idEstadoCivil,
-                      idUsuarioModificacion: name,
+          return StatefulBuilder(
+              builder: (context, StateSetter setState) {
+              return AlertDialog(
+                title: Text('Editar Estado Civil'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    TextField(
+                      controller: _nameController,
+                      decoration:
+                          InputDecoration(labelText: 'Nombre del Estado Civil'),
                     ),
-                  );
-                },
-              ),
-            ],
+                  ],
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('Cancelar'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  TextButton(
+                    child: Text('Guardar'),
+                    onPressed: () {
+                      String civilStatusName = _nameController.text;
+                      bloc.add(
+                        EditCivilStatus(
+                          nombre: civilStatusName,
+                          idCivilStatus: civilStatus.idEstadoCivil,
+                          idUsuarioModificacion: name,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              );
+            }
           );
         });
   }
@@ -258,44 +262,48 @@ class _CivilStatusBodyState extends State<CivilStatusBody> with ErrorHandling {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text('Crear Estado Civil'),
-          content: IntrinsicHeight(
-            child: Container(
-              width: 300,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  TextField(
-                    controller: _nameController,
-                    decoration:
-                        InputDecoration(labelText: 'Nombre del Estado Civil'),
+        return StatefulBuilder(
+            builder: (context, StateSetter setState) {
+            return AlertDialog(
+              title: Text('Crear Estado Civil'),
+              content: IntrinsicHeight(
+                child: Container(
+                  width: 300,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      TextField(
+                        controller: _nameController,
+                        decoration:
+                            InputDecoration(labelText: 'Nombre del Estado Civil'),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Crear'),
-              onPressed: () {
-                String civilStatusName = _nameController.text;
-                bloc.add(
-                  CreateCivilStatus(
-                    nombre: civilStatusName,
-                    idUsuarioCreacion: name,
-                  ),
-                );
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Cancelar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text('Crear'),
+                  onPressed: () {
+                    String civilStatusName = _nameController.text;
+                    bloc.add(
+                      CreateCivilStatus(
+                        nombre: civilStatusName,
+                        idUsuarioCreacion: name,
+                      ),
+                    );
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          }
         );
       },
     );

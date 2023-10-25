@@ -325,108 +325,11 @@ class _PersonBodyState extends State<PersonBody> with ErrorHandling {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text('Editar Persona'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              TextField(
-                controller: _nombreController,
-                decoration: InputDecoration(labelText: 'Nombre'),
-              ),
-              TextField(
-                controller: _direccionController,
-                decoration: InputDecoration(labelText: 'Dirección'),
-              ),
-              DropdownButton2<Genre>(
-                value: dropdownValueG,
-                items: genres.map((company) {
-                  return DropdownMenuItem<Genre>(
-                    value: company,
-                    child: Text(company.nombre),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    dropdownValueG = value!;
-                  });
-                },
-              ),
-              TextField(
-                controller: _telefonoController,
-                decoration: InputDecoration(labelText: 'Teléfono'),
-              ),
-              TextField(
-                controller: _correoElectronicoController,
-                decoration: InputDecoration(labelText: 'Correo Electrónico'),
-              ),
-              DropdownButton2<model.CivilStatus>(
-                value: dropdownValueS,
-                items: civilStatusList.map((company) {
-                  return DropdownMenuItem<model.CivilStatus>(
-                    value: company,
-                    child: Text(company.nombre),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    dropdownValueS = value!;
-                  });
-                },
-              ),
-              TextField(
-                controller: _apellidoController,
-                decoration: InputDecoration(labelText: 'Apellido'),
-              ),
-              TextField(
-                controller: _fechaNacimientoController,
-                decoration: InputDecoration(labelText: 'Fecha de Nacimiento'),
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Guardar'),
-              onPressed: () {
-                bloc.add(
-                  PersonEdit(
-                    nombre: _nombreController.text,
-                    direccion: _direccionController.text,
-                    usuarioModificacion: name,
-                    idGenero: dropdownValueG.idGenero,
-                    telefono: _telefonoController.text,
-                    correoElectronico: _correoElectronicoController.text,
-                    idEstadoCivil: dropdownValueS.idEstadoCivil,
-                    apellido: _apellidoController.text,
-                    fechaNacimiento: _fechaNacimientoController.text,
-                    id: person.idPersona,
-                  ),
-                );
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  _dialogCreate() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Crear persona'),
-          content: IntrinsicHeight(
-            child: Container(
-              width: 300,
-              child: Column(
+        return StatefulBuilder(
+            builder: (context, StateSetter setState) {
+            return AlertDialog(
+              title: Text('Editar Persona'),
+              content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   TextField(
@@ -457,8 +360,7 @@ class _PersonBodyState extends State<PersonBody> with ErrorHandling {
                   ),
                   TextField(
                     controller: _correoElectronicoController,
-                    decoration:
-                        InputDecoration(labelText: 'Correo Electrónico'),
+                    decoration: InputDecoration(labelText: 'Correo Electrónico'),
                   ),
                   DropdownButton2<model.CivilStatus>(
                     value: dropdownValueS,
@@ -480,40 +382,146 @@ class _PersonBodyState extends State<PersonBody> with ErrorHandling {
                   ),
                   TextField(
                     controller: _fechaNacimientoController,
-                    decoration:
-                        InputDecoration(labelText: 'Fecha de Nacimiento'),
+                    decoration: InputDecoration(labelText: 'Fecha de Nacimiento'),
                   ),
                 ],
               ),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Crear'),
-              onPressed: () {
-                bloc.add(
-                  PersonCreate(
-                    nombre: _nombreController.text,
-                    direccion: _direccionController.text,
-                    idGenero: dropdownValueG.idGenero,
-                    telefono: _telefonoController.text,
-                    correoElectronico: _correoElectronicoController.text,
-                    idEstadoCivil: dropdownValueS.idEstadoCivil,
-                    apellido: _apellidoController.text,
-                    fechaNacimiento: _fechaNacimientoController.text,
-                    usuarioCreacion: name,
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Cancelar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text('Guardar'),
+                  onPressed: () {
+                    bloc.add(
+                      PersonEdit(
+                        nombre: _nombreController.text,
+                        direccion: _direccionController.text,
+                        usuarioModificacion: name,
+                        idGenero: dropdownValueG.idGenero,
+                        telefono: _telefonoController.text,
+                        correoElectronico: _correoElectronicoController.text,
+                        idEstadoCivil: dropdownValueS.idEstadoCivil,
+                        apellido: _apellidoController.text,
+                        fechaNacimiento: _fechaNacimientoController.text,
+                        id: person.idPersona,
+                      ),
+                    );
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          }
+        );
+      },
+    );
+  }
+
+  _dialogCreate() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+            builder: (context, StateSetter setState) {
+            return AlertDialog(
+              title: Text('Crear persona'),
+              content: IntrinsicHeight(
+                child: Container(
+                  width: 300,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      TextField(
+                        controller: _nombreController,
+                        decoration: InputDecoration(labelText: 'Nombre'),
+                      ),
+                      TextField(
+                        controller: _direccionController,
+                        decoration: InputDecoration(labelText: 'Dirección'),
+                      ),
+                      DropdownButton2<Genre>(
+                        value: dropdownValueG,
+                        items: genres.map((company) {
+                          return DropdownMenuItem<Genre>(
+                            value: company,
+                            child: Text(company.nombre),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            dropdownValueG = value!;
+                          });
+                        },
+                      ),
+                      TextField(
+                        controller: _telefonoController,
+                        decoration: InputDecoration(labelText: 'Teléfono'),
+                      ),
+                      TextField(
+                        controller: _correoElectronicoController,
+                        decoration:
+                            InputDecoration(labelText: 'Correo Electrónico'),
+                      ),
+                      DropdownButton2<model.CivilStatus>(
+                        value: dropdownValueS,
+                        items: civilStatusList.map((company) {
+                          return DropdownMenuItem<model.CivilStatus>(
+                            value: company,
+                            child: Text(company.nombre),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            dropdownValueS = value!;
+                          });
+                        },
+                      ),
+                      TextField(
+                        controller: _apellidoController,
+                        decoration: InputDecoration(labelText: 'Apellido'),
+                      ),
+                      TextField(
+                        controller: _fechaNacimientoController,
+                        decoration:
+                            InputDecoration(labelText: 'Fecha de Nacimiento'),
+                      ),
+                    ],
                   ),
-                );
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Cancelar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text('Crear'),
+                  onPressed: () {
+                    bloc.add(
+                      PersonCreate(
+                        nombre: _nombreController.text,
+                        direccion: _direccionController.text,
+                        idGenero: dropdownValueG.idGenero,
+                        telefono: _telefonoController.text,
+                        correoElectronico: _correoElectronicoController.text,
+                        idEstadoCivil: dropdownValueS.idEstadoCivil,
+                        apellido: _apellidoController.text,
+                        fechaNacimiento: _fechaNacimientoController.text,
+                        usuarioCreacion: name,
+                      ),
+                    );
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          }
         );
       },
     );
