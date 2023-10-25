@@ -67,7 +67,6 @@ class _RolsBodyState extends State<RolsBody> with ErrorHandling {
               children: [
                 Column(
                   children: [
-
                     Container(
                       padding: const EdgeInsets.only(
                         left: 35,
@@ -121,7 +120,7 @@ class _RolsBodyState extends State<RolsBody> with ErrorHandling {
                                         color: Colors.purpleAccent,
                                       ),
                                       title: Text(
-                                        'Nombre:   ${users[index].nombre}',
+                                        'Nombre:   ${users[index].nombre}  ${users[index].correoElectronico}',
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
@@ -143,11 +142,13 @@ class _RolsBodyState extends State<RolsBody> with ErrorHandling {
                                                   context,
                                                   userDetailRoute,
                                                   arguments: users[index],
-                                                ).then((value){
-                                                  if(value != null){
-                                                    context.read<RolsBloc>().add(
-                                                      Rols(),
-                                                    );
+                                                ).then((value) {
+                                                  if (value != null) {
+                                                    context
+                                                        .read<RolsBloc>()
+                                                        .add(
+                                                          Rols(),
+                                                        );
                                                   }
                                                 });
                                               },
@@ -200,9 +201,10 @@ class _RolsBodyState extends State<RolsBody> with ErrorHandling {
       ),
     );
   }
+
   _getName() async {
     final UserRepository userRepository = UserRepository();
-    final name = await userRepository.getName();
+    final name = await userRepository.getUser();
     setState(() {
       this.name = name;
     });

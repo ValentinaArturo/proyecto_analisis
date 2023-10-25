@@ -13,7 +13,11 @@ class DepartmentService {
   DepartmentService.withClient(
     this.client,
   );
-
+  Future<Response<dynamic>> company() async {
+    return client.get(
+      companyPath,
+    );
+  }
   Future<Response<dynamic>> department() async {
     return client.get(
       departmentPath,

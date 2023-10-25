@@ -90,6 +90,9 @@ class _RolsUserBodyState extends State<RolsUserBody> with ErrorHandling {
             _selectedRole = state.rolResponse.rols.first;
           });
         } else if (state is RolsUserEditSuccess) {
+          context.read<RolsBloc>().add(
+            RolsUser(),
+          );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -98,6 +101,9 @@ class _RolsUserBodyState extends State<RolsUserBody> with ErrorHandling {
             ),
           );
         } else if (state is RolsUserCreateSuccess) {
+          context.read<RolsBloc>().add(
+            RolsUser(),
+          );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -106,6 +112,9 @@ class _RolsUserBodyState extends State<RolsUserBody> with ErrorHandling {
             ),
           );
         } else if (state is RolsUserDeleteSuccess) {
+          context.read<RolsBloc>().add(
+            RolsUser(),
+          );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -284,7 +293,7 @@ class _RolsUserBodyState extends State<RolsUserBody> with ErrorHandling {
             items: _roles.map((role) {
               return DropdownMenuItem<Rol>(
                 value: role,
-                child: Text(role.nombre),
+                child: Text(role.nombre ),
               );
             }).toList(),
             onChanged: (value) {
@@ -346,7 +355,7 @@ class _RolsUserBodyState extends State<RolsUserBody> with ErrorHandling {
                 items: user.map((user) {
                   return DropdownMenuItem<model.User>(
                     value: user,
-                    child: Text(user.nombre),
+                    child: Text(user.correoElectronico),
                   );
                 }).toList(),
                 onChanged: (value) {
@@ -385,7 +394,7 @@ class _RolsUserBodyState extends State<RolsUserBody> with ErrorHandling {
 
   _getName() async {
     final UserRepository userRepository = UserRepository();
-    final name = await userRepository.getName();
+    final name = await userRepository.getUser();
     setState(() {
       this.name = name;
     });

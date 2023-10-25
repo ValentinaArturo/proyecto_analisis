@@ -19,7 +19,16 @@ class PersonService {
       personPath,
     );
   }
-
+  Future<Response<dynamic>> genres() async {
+    return client.get(
+      genresPath,
+    );
+  }
+  Future<Response<dynamic>> getCivilStatus() async {
+    return client.get(
+      civilStatusPath,
+    );
+  }
   Future<Response<dynamic>> createPerson({
     required final String nombre,
     required final String apellido,

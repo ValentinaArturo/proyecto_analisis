@@ -25,3 +25,10 @@ class DepartmentError extends DepartmentState {
 
   DepartmentError(this.error);
 }
+class CompanySuccess extends DepartmentState {
+  final CompanyResponse companyResponse;
+
+  CompanySuccess({
+    required this.companyResponse,
+  });
+}

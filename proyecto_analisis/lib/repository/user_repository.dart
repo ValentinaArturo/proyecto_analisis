@@ -9,6 +9,7 @@ class UserRepository {
   static const String token = 'token';
   static const String id = 'id';
   static const String passwordPolicy = 'passwordPolicy';
+  static const String user = 'user';
 
   final FlutterSecureStorage storage;
 
@@ -78,6 +79,22 @@ class UserRepository {
   ) async {
     (await storage.write(
       key: name,
+      value: nameValue,
+    ));
+  }
+
+  Future<String> getUser() async {
+    return (await storage.read(
+          key: user,
+        )) ??
+        emptyString;
+  }
+
+  Future<void> setUser(
+    final String nameValue,
+  ) async {
+    (await storage.write(
+      key: user,
       value: nameValue,
     ));
   }

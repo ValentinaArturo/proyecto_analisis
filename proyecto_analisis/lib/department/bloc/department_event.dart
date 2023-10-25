@@ -3,6 +3,7 @@ part of 'department_bloc.dart';
 abstract class DepartmentEvent {}
 
 class Department extends DepartmentEvent {}
+class Company extends DepartmentEvent {}
 
 class DepartmentEdit extends DepartmentEvent {
   final String nombre;

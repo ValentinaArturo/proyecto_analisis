@@ -70,6 +70,9 @@ class LoginBloc extends BaseBloc<LoginEvent, BaseState> {
         await repository.setName(
           '${userSession.data!.nombreUsuario} ${userSession.data!.apellido}',
         );
+        await repository.setUser(
+         userSession.data!.idUsuario,
+        );
         emit(
           LoginSuccess(
             userSession: userSession,

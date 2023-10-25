@@ -1,7 +1,9 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
 import 'package:proyecto_analisis/common/bloc/mixin/error_handling.dart';
+import 'package:proyecto_analisis/company/model/company.dart' as model;
 import 'package:proyecto_analisis/department/bloc/department_bloc.dart';
 import 'package:proyecto_analisis/department/model/department.dart' as model;
 import 'package:proyecto_analisis/repository/user_repository.dart';
@@ -22,6 +24,8 @@ class _DepartmentBodyState extends State<DepartmentBody> with ErrorHandling {
   late String name;
   final TextEditingController _nombreController = TextEditingController();
   final TextEditingController _idEmpresaController = TextEditingController();
+  List<model.Company> company = [];
+  late model.Company dropdownValue;
 
   @override
   void initState() {
@@ -29,6 +33,9 @@ class _DepartmentBodyState extends State<DepartmentBody> with ErrorHandling {
     _getName();
     context.read<DepartmentBloc>().add(
           Department(),
+        );
+    context.read<DepartmentBloc>().add(
+          Company(),
         );
   }
 
@@ -47,7 +54,16 @@ class _DepartmentBodyState extends State<DepartmentBody> with ErrorHandling {
           setState(() {
             departments = state.departmentResponse.departments;
           });
+        }
+        if (state is CompanySuccess) {
+          setState(() {
+            company = state.companyResponse.comapnies;
+            dropdownValue = company[0];
+          });
         } else if (state is DepartmentEditSuccess) {
+          context.read<DepartmentBloc>().add(
+                Department(),
+              );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -56,6 +72,9 @@ class _DepartmentBodyState extends State<DepartmentBody> with ErrorHandling {
             ),
           );
         } else if (state is DepartmentCreateSuccess) {
+          context.read<DepartmentBloc>().add(
+                Department(),
+              );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -64,6 +83,9 @@ class _DepartmentBodyState extends State<DepartmentBody> with ErrorHandling {
             ),
           );
         } else if (state is DepartmentDeleteSuccess) {
+          context.read<DepartmentBloc>().add(
+                Department(),
+              );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -147,7 +169,11 @@ class _DepartmentBodyState extends State<DepartmentBody> with ErrorHandling {
                                         ),
                                       ),
                                       subtitle: Text(
-                                        'Id Empresa:   ${departments[index].idEmpresa}',
+                                        'Id Empresa:   ${company.firstWhere(
+                                              (objeto) =>
+                                                  objeto.idEmpresa ==
+                                                  departments[index].idEmpresa,
+                                            ).nombre}',
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
@@ -162,6 +188,13 @@ class _DepartmentBodyState extends State<DepartmentBody> with ErrorHandling {
                                                 setState(() {
                                                   _nombreController.text =
                                                       departments[index].nombre;
+                                                  dropdownValue =
+                                                      company.firstWhere(
+                                                    (objeto) =>
+                                                        objeto.idEmpresa ==
+                                                        departments[index]
+                                                            .idEmpresa,
+                                                  );
                                                 });
                                                 _dialogEdit(
                                                   departments[index],
@@ -232,9 +265,19 @@ class _DepartmentBodyState extends State<DepartmentBody> with ErrorHandling {
                 controller: _nombreController,
                 decoration: InputDecoration(labelText: 'Nombre'),
               ),
-              TextField(
-                controller: _idEmpresaController,
-                decoration: InputDecoration(labelText: 'ID Empresa'),
+              DropdownButton2<model.Company>(
+                value: dropdownValue,
+                items: company.map((company) {
+                  return DropdownMenuItem<model.Company>(
+                    value: company,
+                    child: Text(company.nombre),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    dropdownValue = value!;
+                  });
+                },
               ),
             ],
           ),
@@ -256,6 +299,7 @@ class _DepartmentBodyState extends State<DepartmentBody> with ErrorHandling {
                     idDepartamento: department.idDepartamento,
                   ),
                 );
+                Navigator.of(context).pop();
               },
             ),
           ],
@@ -280,9 +324,19 @@ class _DepartmentBodyState extends State<DepartmentBody> with ErrorHandling {
                     controller: _nombreController,
                     decoration: InputDecoration(labelText: 'Nombre'),
                   ),
-                  TextField(
-                    controller: _idEmpresaController,
-                    decoration: InputDecoration(labelText: 'ID Empresa'),
+                  DropdownButton2<model.Company>(
+                    value: dropdownValue,
+                    items: company.map((company) {
+                      return DropdownMenuItem<model.Company>(
+                        value: company,
+                        child: Text(company.nombre),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        dropdownValue = value!;
+                      });
+                    },
                   ),
                 ],
               ),
@@ -305,6 +359,8 @@ class _DepartmentBodyState extends State<DepartmentBody> with ErrorHandling {
                     idEmpresa: _idEmpresaController.text,
                   ),
                 );
+                Navigator.of(context).pop();
+
               },
             ),
           ],
@@ -315,7 +371,7 @@ class _DepartmentBodyState extends State<DepartmentBody> with ErrorHandling {
 
   _getName() async {
     final UserRepository userRepository = UserRepository();
-    final name = await userRepository.getName();
+    final name = await userRepository.getUser();
     setState(() {
       this.name = name;
     });

@@ -2,11 +2,14 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:proyecto_analisis/civilStatus/model/civil_status.dart';
 import 'package:proyecto_analisis/common/bloc/base_bloc.dart';
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
 import 'package:proyecto_analisis/person/model/person.dart';
 import 'package:proyecto_analisis/person/service/person_service.dart';
 import 'package:proyecto_analisis/repository/user_repository.dart';
+
+import '../../genres/model/genres.dart';
 
 part 'person_event.dart';
 part 'person_state.dart';
@@ -21,10 +24,82 @@ class PersonBloc extends BaseBloc<PersonEvent, BaseState> {
     on<PersonCreate>(personCreate);
     on<PersonEdit>(personEdit);
     on<PersonDelete>(personDelete);
+    on<GetCivilStatus>(getCivilStatus);
+    on<Genres>(genres);
   }
 
   final PersonService service;
   final UserRepository userRepository;
+  Future<void> genres(
+      Genres event,
+      Emitter<BaseState> emit,
+      ) async {
+    emit(
+      PersonInProgress(),
+    );
+
+    try {
+      final response = await service.genres();
+
+      if (response.statusCode == 401) {
+        emit(
+          PersonError(
+            response.data['msg'],
+          ),
+        );
+      } else if (response.statusCode == 200) {
+        final success = GenresResponse.fromJson(
+          response.data!,
+        );
+        emit(
+          GenresSuccess(
+            genresResponse: success,
+          ),
+        );
+      }
+    } on DioError catch (dioError) {
+      emit(
+        PersonError(
+          dioError.response!.data['msg'],
+        ),
+      );
+    }
+  }
+  Future<void> getCivilStatus(
+    GetCivilStatus event,
+    Emitter<BaseState> emit,
+  ) async {
+    emit(
+      PersonInProgress(),
+    );
+
+    try {
+      final response = await service.getCivilStatus();
+
+      if (response.statusCode == 401) {
+        emit(
+          PersonError(
+            response.data['msg'],
+          ),
+        );
+      } else if (response.statusCode == 200) {
+        final success = CivilStatusResponse.fromJson(
+          response.data!,
+        );
+        emit(
+          CivilStatusSuccess(
+            success: success,
+          ),
+        );
+      }
+    } on DioError catch (dioError) {
+      emit(
+        PersonError(
+          dioError.response!.data['msg'],
+        ),
+      );
+    }
+  }
 
   Future<void> person(
     Person event,

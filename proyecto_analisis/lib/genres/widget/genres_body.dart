@@ -297,7 +297,7 @@ class _GenresBodyState extends State<GenresBody> with ErrorHandling {
 
   _getName() async {
     final UserRepository userRepository = UserRepository();
-    final name = await userRepository.getName();
+    final name = await userRepository.getUser();
     setState(() {
       this.name = name;
     });

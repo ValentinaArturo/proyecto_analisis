@@ -4,6 +4,10 @@ abstract class PersonEvent {}
 
 class Person extends PersonEvent {}
 
+class Genres extends PersonEvent {}
+
+class GetCivilStatus extends PersonEvent {}
+
 class PersonEdit extends PersonEvent {
   final String nombre;
   final String id;
@@ -15,6 +19,7 @@ class PersonEdit extends PersonEvent {
   final String telefono;
   final String correoElectronico;
   final String idEstadoCivil;
+
   PersonEdit({
     required this.nombre,
     required this.id,
@@ -39,6 +44,7 @@ class PersonCreate extends PersonEvent {
   final String idEstadoCivil;
   final String apellido;
   final String fechaNacimiento;
+
   PersonCreate({
     required this.nombre,
     required this.direccion,

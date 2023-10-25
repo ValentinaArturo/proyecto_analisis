@@ -1,6 +1,5 @@
 part of 'person_bloc.dart';
 
-
 abstract class PersonState extends BaseState {}
 
 class PersonInitial extends PersonState {}
@@ -25,6 +24,22 @@ class PersonError extends PersonState {
   final String? error;
 
   PersonError(
-      this.error,
-      );
+    this.error,
+  );
+}
+
+class GenresSuccess extends PersonState {
+  final GenresResponse genresResponse;
+
+  GenresSuccess({
+    required this.genresResponse,
+  });
+}
+
+class CivilStatusSuccess extends PersonState {
+  final CivilStatusResponse success;
+
+  CivilStatusSuccess({
+    required this.success,
+  });
 }

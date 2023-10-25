@@ -1,7 +1,10 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:proyecto_analisis/civilStatus/model/civil_status.dart' as model;
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
 import 'package:proyecto_analisis/common/bloc/mixin/error_handling.dart';
+import 'package:proyecto_analisis/genres/model/genres.dart';
 import 'package:proyecto_analisis/person/bloc/person_bloc.dart';
 import 'package:proyecto_analisis/person/model/person.dart' as model;
 import 'package:proyecto_analisis/repository/user_repository.dart';
@@ -31,13 +34,35 @@ class _PersonBodyState extends State<PersonBody> with ErrorHandling {
   final TextEditingController _apellidoController = TextEditingController();
   final TextEditingController _fechaNacimientoController =
       TextEditingController();
+  List<model.CivilStatus> civilStatusList = [];
+  List<Genre> genres = [];
+  late model.CivilStatus dropdownValueS;
+  late Genre dropdownValueG;
 
   @override
   void initState() {
     super.initState();
+    dropdownValueG = Genre(
+      idGenero: '',
+      nombre: '',
+    );
+    dropdownValueS = model.CivilStatus(
+      idEstadoCivil: '',
+      nombre: '',
+      usuarioModificacion: '',
+      fechaModificacion: '',
+      fechaCreacion: DateTime(0),
+      usuarioCreacion: '',
+    );
     _getName();
     context.read<PersonBloc>().add(
           Person(),
+        );
+    context.read<PersonBloc>().add(
+          Genres(),
+        );
+    context.read<PersonBloc>().add(
+          GetCivilStatus(),
         );
   }
 
@@ -56,7 +81,20 @@ class _PersonBodyState extends State<PersonBody> with ErrorHandling {
           setState(() {
             person = state.personResponse.users;
           });
+        } else if (state is GenresSuccess) {
+          setState(() {
+            genres = state.genresResponse.users;
+            dropdownValueG = state.genresResponse.users[0];
+          });
+        } else if (state is CivilStatusSuccess) {
+          setState(() {
+            civilStatusList = state.success.civilStatusList;
+            dropdownValueS = state.success.civilStatusList[0];
+          });
         } else if (state is PersonEditSuccess) {
+          context.read<PersonBloc>().add(
+            Person(),
+          );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -65,6 +103,9 @@ class _PersonBodyState extends State<PersonBody> with ErrorHandling {
             ),
           );
         } else if (state is PersonCreateSuccess) {
+          context.read<PersonBloc>().add(
+            Person(),
+          );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -73,6 +114,9 @@ class _PersonBodyState extends State<PersonBody> with ErrorHandling {
             ),
           );
         } else if (state is PersonDeleteSuccess) {
+          context.read<PersonBloc>().add(
+            Person(),
+          );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -189,6 +233,20 @@ class _PersonBodyState extends State<PersonBody> with ErrorHandling {
                                                       person[index].nombre;
                                                   _direccionController.text =
                                                       person[index].direccion;
+                                                  dropdownValueG =
+                                                      genres.firstWhere(
+                                                    (objeto) =>
+                                                        objeto.idGenero ==
+                                                        person[index].idGenero,
+                                                  );
+                                                  dropdownValueS =
+                                                      civilStatusList
+                                                          .firstWhere(
+                                                    (objeto) =>
+                                                        objeto.idEstadoCivil ==
+                                                        person[index]
+                                                            .idEstadoCivil,
+                                                  );
                                                   _idGeneroController.text =
                                                       person[index].idGenero;
                                                   _telefonoController.text =
@@ -280,9 +338,19 @@ class _PersonBodyState extends State<PersonBody> with ErrorHandling {
                 controller: _direccionController,
                 decoration: InputDecoration(labelText: 'Dirección'),
               ),
-              TextField(
-                controller: _idGeneroController,
-                decoration: InputDecoration(labelText: 'ID de Género'),
+              DropdownButton2<Genre>(
+                value: dropdownValueG,
+                items: genres.map((company) {
+                  return DropdownMenuItem<Genre>(
+                    value: company,
+                    child: Text(company.nombre),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    dropdownValueG = value!;
+                  });
+                },
               ),
               TextField(
                 controller: _telefonoController,
@@ -292,9 +360,19 @@ class _PersonBodyState extends State<PersonBody> with ErrorHandling {
                 controller: _correoElectronicoController,
                 decoration: InputDecoration(labelText: 'Correo Electrónico'),
               ),
-              TextField(
-                controller: _idEstadoCivilController,
-                decoration: InputDecoration(labelText: 'ID de Estado Civil'),
+              DropdownButton2<model.CivilStatus>(
+                value: dropdownValueS,
+                items: civilStatusList.map((company) {
+                  return DropdownMenuItem<model.CivilStatus>(
+                    value: company,
+                    child: Text(company.nombre),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    dropdownValueS = value!;
+                  });
+                },
               ),
               TextField(
                 controller: _apellidoController,
@@ -321,15 +399,16 @@ class _PersonBodyState extends State<PersonBody> with ErrorHandling {
                     nombre: _nombreController.text,
                     direccion: _direccionController.text,
                     usuarioModificacion: name,
-                    idGenero: _idGeneroController.text,
+                    idGenero: dropdownValueG.idGenero,
                     telefono: _telefonoController.text,
                     correoElectronico: _correoElectronicoController.text,
-                    idEstadoCivil: _idEstadoCivilController.text,
+                    idEstadoCivil: dropdownValueS.idEstadoCivil,
                     apellido: _apellidoController.text,
                     fechaNacimiento: _fechaNacimientoController.text,
                     id: person.idPersona,
                   ),
                 );
+                Navigator.of(context).pop();
               },
             ),
           ],
@@ -358,9 +437,19 @@ class _PersonBodyState extends State<PersonBody> with ErrorHandling {
                     controller: _direccionController,
                     decoration: InputDecoration(labelText: 'Dirección'),
                   ),
-                  TextField(
-                    controller: _idGeneroController,
-                    decoration: InputDecoration(labelText: 'ID de Género'),
+                  DropdownButton2<Genre>(
+                    value: dropdownValueG,
+                    items: genres.map((company) {
+                      return DropdownMenuItem<Genre>(
+                        value: company,
+                        child: Text(company.nombre),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        dropdownValueG = value!;
+                      });
+                    },
                   ),
                   TextField(
                     controller: _telefonoController,
@@ -371,10 +460,19 @@ class _PersonBodyState extends State<PersonBody> with ErrorHandling {
                     decoration:
                         InputDecoration(labelText: 'Correo Electrónico'),
                   ),
-                  TextField(
-                    controller: _idEstadoCivilController,
-                    decoration:
-                        InputDecoration(labelText: 'ID de Estado Civil'),
+                  DropdownButton2<model.CivilStatus>(
+                    value: dropdownValueS,
+                    items: civilStatusList.map((company) {
+                      return DropdownMenuItem<model.CivilStatus>(
+                        value: company,
+                        child: Text(company.nombre),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        dropdownValueS = value!;
+                      });
+                    },
                   ),
                   TextField(
                     controller: _apellidoController,
@@ -403,15 +501,16 @@ class _PersonBodyState extends State<PersonBody> with ErrorHandling {
                   PersonCreate(
                     nombre: _nombreController.text,
                     direccion: _direccionController.text,
-                    idGenero: _idGeneroController.text,
+                    idGenero: dropdownValueG.idGenero,
                     telefono: _telefonoController.text,
                     correoElectronico: _correoElectronicoController.text,
-                    idEstadoCivil: _idEstadoCivilController.text,
+                    idEstadoCivil: dropdownValueS.idEstadoCivil,
                     apellido: _apellidoController.text,
                     fechaNacimiento: _fechaNacimientoController.text,
                     usuarioCreacion: name,
                   ),
                 );
+                Navigator.of(context).pop();
               },
             ),
           ],
@@ -422,7 +521,7 @@ class _PersonBodyState extends State<PersonBody> with ErrorHandling {
 
   _getName() async {
     final UserRepository userRepository = UserRepository();
-    final name = await userRepository.getName();
+    final name = await userRepository.getUser();
     setState(() {
       this.name = name;
     });
