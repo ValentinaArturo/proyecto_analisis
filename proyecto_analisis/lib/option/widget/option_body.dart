@@ -1,76 +1,101 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:proyecto_analisis/civilStatus/bloc/civil_status_bloc.dart';
-import 'package:proyecto_analisis/civilStatus/model/civil_status.dart' as model;
 import 'package:proyecto_analisis/common/bloc/base_state.dart';
 import 'package:proyecto_analisis/common/bloc/mixin/error_handling.dart';
+import 'package:proyecto_analisis/menu/model/menu.dart' as model;
+import 'package:proyecto_analisis/option/bloc/option_bloc.dart';
+import 'package:proyecto_analisis/option/model/option_response.dart' as model;
 import 'package:proyecto_analisis/repository/user_repository.dart';
 import 'package:proyecto_analisis/resources/constants.dart';
 
 import '../../common/loader/loader.dart';
 
-class CivilStatusBody extends StatefulWidget {
-  const CivilStatusBody({Key? key}) : super(key: key);
+class OptionBody extends StatefulWidget {
+  const OptionBody({Key? key}) : super(key: key);
 
   @override
-  State<CivilStatusBody> createState() => _CivilStatusBodyState();
+  State<OptionBody> createState() => _OptionBodyState();
 }
 
-class _CivilStatusBodyState extends State<CivilStatusBody> with ErrorHandling {
-  List<model.CivilStatus> civilStatusList = [];
-  late CivilStatusBloc bloc;
+class _OptionBodyState extends State<OptionBody> with ErrorHandling {
+  List<model.Option> optionList = [];
+  late OptionBloc bloc;
   late String name;
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _pageController = TextEditingController();
+  final TextEditingController _oderMenuController = TextEditingController();
+
+  List<model.Menu> menu = [];
+  late model.Menu _selectedMenu;
 
   @override
   void initState() {
     super.initState();
     _getName();
-    context.read<CivilStatusBloc>().add(
-          GetCivilStatus(),
+    context.read<OptionBloc>().add(
+          GetOption(),
+        );
+
+    context.read<OptionBloc>().add(
+          Menu(),
         );
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    bloc = context.read<CivilStatusBloc>();
+    bloc = context.read<OptionBloc>();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<CivilStatusBloc, BaseState>(
+    return BlocListener<OptionBloc, BaseState>(
       listener: (context, state) {
         verifyServerError(state);
-        if (state is CivilStatusSuccess) {
+        if (state is OptionSuccess) {
           setState(() {
-            civilStatusList = state.success.civilStatusList;
+            optionList = state.success.option;
           });
-        } else if (state is CivilStatusEditSuccess) {
+        } else if (state is MenuSuccess) {
+          setState(() {
+            menu = state.menuResponse.users;
+            _selectedMenu = state.menuResponse.users.first;
+          });
+        } else if (state is OptionEditSuccess) {
+          context.read<OptionBloc>().add(
+                GetOption(),
+              );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
-                'Se ha actualizado el estado civil con éxito',
+                'Se ha actualizado la opción con éxito',
               ),
             ),
           );
-        } else if (state is CivilStatusCreateSuccess) {
+        } else if (state is OptionCreateSuccess) {
+          context.read<OptionBloc>().add(
+                GetOption(),
+              );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
-                'Se ha creado el estado civil con éxito',
+                'Se ha creado la opción con éxito',
               ),
             ),
           );
-        } else if (state is CivilStatusDeleteSuccess) {
+        } else if (state is OptionDeleteSuccess) {
+          context.read<OptionBloc>().add(
+                GetOption(),
+              );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
-                'Se ha eliminado el estado civil con éxito',
+                'Se ha eliminado la opción con éxito',
               ),
             ),
           );
-        } else if (state is CivilStatusError) {
+        } else if (state is OptionError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
@@ -94,7 +119,7 @@ class _CivilStatusBodyState extends State<CivilStatusBody> with ErrorHandling {
                         top: 30,
                       ),
                       child: const Text(
-                        'Estado Civil',
+                        'Opción',
                         style: TextStyle(
                           color: Colors.lightBlue,
                           fontSize: 33,
@@ -106,6 +131,9 @@ class _CivilStatusBodyState extends State<CivilStatusBody> with ErrorHandling {
                       onTap: () {
                         setState(() {
                           _nameController.text = '';
+                          _pageController.text = '';
+                          _oderMenuController.text = '';
+                          _selectedMenu = menu.first;
                         });
 
                         _dialogCreate();
@@ -123,7 +151,7 @@ class _CivilStatusBodyState extends State<CivilStatusBody> with ErrorHandling {
                             top: MediaQuery.of(context).size.height * 0.05,
                           ),
                           child: ListView.builder(
-                            itemCount: civilStatusList.length,
+                            itemCount: optionList.length,
                             itemBuilder: (context, index) {
                               return Column(
                                 children: [
@@ -139,7 +167,7 @@ class _CivilStatusBodyState extends State<CivilStatusBody> with ErrorHandling {
                                         color: Colors.purpleAccent,
                                       ),
                                       title: Text(
-                                        'Nombre:   ${civilStatusList[index].nombre}',
+                                        'Nombre:   ${optionList[index].nombre}',
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
@@ -153,11 +181,22 @@ class _CivilStatusBodyState extends State<CivilStatusBody> with ErrorHandling {
                                               onTap: () {
                                                 setState(() {
                                                   _nameController.text =
-                                                      civilStatusList[index]
-                                                          .nombre;
+                                                      optionList[index].nombre;
+                                                  _pageController.text =
+                                                      optionList[index].pagina;
+                                                  _oderMenuController.text =
+                                                      optionList[index]
+                                                          .ordenMenu;
+                                                  _selectedMenu =
+                                                      menu.firstWhere(
+                                                    (obj) =>
+                                                        obj.idMenu ==
+                                                        optionList[index]
+                                                            .idMenu,
+                                                  );
                                                 });
                                                 _dialogEdit(
-                                                  civilStatusList[index],
+                                                  optionList[index],
                                                 );
                                               },
                                               child: const Icon(
@@ -168,10 +207,9 @@ class _CivilStatusBodyState extends State<CivilStatusBody> with ErrorHandling {
                                             InkWell(
                                               onTap: () {
                                                 bloc.add(
-                                                  DeleteCivilStatus(
-                                                    idCivilStatus:
-                                                        civilStatusList[index]
-                                                            .idEstadoCivil,
+                                                  DeleteOption(
+                                                    idOption: optionList[index]
+                                                        .idOpcion,
                                                   ),
                                                 );
                                               },
@@ -198,9 +236,9 @@ class _CivilStatusBodyState extends State<CivilStatusBody> with ErrorHandling {
               ],
             ),
           ),
-          BlocBuilder<CivilStatusBloc, BaseState>(
+          BlocBuilder<OptionBloc, BaseState>(
             builder: (context, state) {
-              if (state is CivilStatusInProgress) {
+              if (state is OptionInProgress) {
                 return const Loader();
               }
               return Container();
@@ -212,21 +250,44 @@ class _CivilStatusBodyState extends State<CivilStatusBody> with ErrorHandling {
   }
 
   _dialogEdit(
-    final model.CivilStatus civilStatus,
+    final model.Option option,
   ) {
     showDialog(
         context: context,
         builder: (context) {
           return StatefulBuilder(builder: (context, StateSetter setState) {
             return AlertDialog(
-              title: Text('Editar Estado Civil'),
+              title: Text('Editar Opción'),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   TextField(
                     controller: _nameController,
                     decoration:
-                        InputDecoration(labelText: 'Nombre del Estado Civil'),
+                        InputDecoration(labelText: 'Nombre de la Opción'),
+                  ),
+                  TextField(
+                    controller: _pageController,
+                    decoration:
+                        InputDecoration(labelText: 'Nombre de la pagina'),
+                  ),
+                  TextField(
+                    controller: _oderMenuController,
+                    decoration: InputDecoration(labelText: 'Orden en el menu'),
+                  ),
+                  DropdownButton2<model.Menu>(
+                    value: _selectedMenu,
+                    items: menu.map((role) {
+                      return DropdownMenuItem<model.Menu>(
+                        value: role,
+                        child: Text(role.nombre),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedMenu = value!;
+                      });
+                    },
                   ),
                 ],
               ),
@@ -240,12 +301,15 @@ class _CivilStatusBodyState extends State<CivilStatusBody> with ErrorHandling {
                 TextButton(
                   child: Text('Guardar'),
                   onPressed: () {
-                    String civilStatusName = _nameController.text;
+                    String optionName = _nameController.text;
                     bloc.add(
-                      EditCivilStatus(
-                        nombre: civilStatusName,
-                        idCivilStatus: civilStatus.idEstadoCivil,
+                      EditOption(
+                        nombre: optionName,
+                        idOption: int.parse(option.idOpcion),
                         idUsuarioModificacion: name,
+                        pagina: _pageController.text,
+                        ordenMenu: int.parse(_oderMenuController.text),
+                        idMenu: int.parse(_selectedMenu.idMenu),
                       ),
                     );
                     Navigator.of(context).pop();
@@ -263,7 +327,7 @@ class _CivilStatusBodyState extends State<CivilStatusBody> with ErrorHandling {
       builder: (context) {
         return StatefulBuilder(builder: (context, StateSetter setState) {
           return AlertDialog(
-            title: Text('Crear Estado Civil'),
+            title: Text('Crear Opción'),
             content: IntrinsicHeight(
               child: Container(
                 width: 300,
@@ -273,7 +337,31 @@ class _CivilStatusBodyState extends State<CivilStatusBody> with ErrorHandling {
                     TextField(
                       controller: _nameController,
                       decoration:
-                          InputDecoration(labelText: 'Nombre del Estado Civil'),
+                          InputDecoration(labelText: 'Nombre de la Opción'),
+                    ),
+                    TextField(
+                      controller: _pageController,
+                      decoration:
+                          InputDecoration(labelText: 'Nombre de la pagina'),
+                    ),
+                    TextField(
+                      controller: _oderMenuController,
+                      decoration:
+                          InputDecoration(labelText: 'Orden en el menu'),
+                    ),
+                    DropdownButton2<model.Menu>(
+                      value: _selectedMenu,
+                      items: menu.map((role) {
+                        return DropdownMenuItem<model.Menu>(
+                          value: role,
+                          child: Text(role.nombre),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedMenu = value!;
+                        });
+                      },
                     ),
                   ],
                 ),
@@ -289,11 +377,14 @@ class _CivilStatusBodyState extends State<CivilStatusBody> with ErrorHandling {
               TextButton(
                 child: Text('Crear'),
                 onPressed: () {
-                  String civilStatusName = _nameController.text;
+                  String optionName = _nameController.text;
                   bloc.add(
-                    CreateCivilStatus(
-                      nombre: civilStatusName,
-                      idUsuarioCreacion: name,
+                    CreateOption(
+                      nombre: optionName,
+                      idUsuarioModificacion: name,
+                      pagina: _pageController.text,
+                      ordenMenu: int.parse(_oderMenuController.text),
+                      idMenu: int.parse(_selectedMenu.idMenu),
                     ),
                   );
                   Navigator.of(context).pop();

@@ -8,6 +8,7 @@ import 'package:proyecto_analisis/employee/employee_screen.dart';
 import 'package:proyecto_analisis/genres/genres_screen.dart';
 import 'package:proyecto_analisis/menu/menu_screen.dart';
 import 'package:proyecto_analisis/modules/modules_screen.dart';
+import 'package:proyecto_analisis/option/option_screen.dart';
 import 'package:proyecto_analisis/person/person_screen.dart';
 import 'package:proyecto_analisis/position/position_screen.dart';
 import 'package:proyecto_analisis/repository/user_repository.dart';
@@ -169,7 +170,7 @@ class _DashboardBodyState extends State<DashboardBody> {
       } else if (obj.nombre == 'Generos') {
         return const GenresScreen();
       } else if (obj.nombre == 'Estatus Usuario') {
-        return  StatusUserScreen();
+        return StatusUserScreen();
       } else if (obj.nombre == 'Roles') {
         return const RolRolScreen();
       } else if (obj.nombre == 'Modulos') {
@@ -177,9 +178,7 @@ class _DashboardBodyState extends State<DashboardBody> {
       } else if (obj.nombre == 'Menus') {
         return const MenuScreen();
       } else if (obj.nombre == 'Opciones') {
-        return Container(
-          child: const Text('Opciones'),
-        );
+        return OptionScreen();
       } else if (obj.nombre == 'Usuarios') {
         return const RolsScreen();
       } else if (obj.nombre == 'Asignar Roles a un Usuario') {
