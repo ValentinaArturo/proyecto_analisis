@@ -24,3 +24,4 @@ const statusPath = 'statusEmpleado.php';
 const departmentPath = 'departamento.php';
 const statusUserPath = 'statusUsuario.php';
 const optionsPath = 'opcion.php';
+const bankPath = 'crudbanco.php';

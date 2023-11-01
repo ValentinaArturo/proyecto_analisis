@@ -1,5 +1,6 @@
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
+import 'package:proyecto_analisis/bank/bank_screen.dart';
 import 'package:proyecto_analisis/branch/branch_screen.dart';
 import 'package:proyecto_analisis/civilStatus/civil_status_screen.dart';
 import 'package:proyecto_analisis/company/company_screen.dart';
@@ -210,9 +211,7 @@ class _DashboardBodyState extends State<DashboardBody> {
           child: const Text('Documentos de Personas'),
         );
       } else if (obj.nombre == 'Bancos') {
-        return Container(
-          child: const Text('Bancos'),
-        );
+        return BankScreen();
       } else if (obj.nombre == 'Empleados') {
         return EmployeeScreen();
       }
