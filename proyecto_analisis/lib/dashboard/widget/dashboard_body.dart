@@ -20,6 +20,7 @@ import 'package:proyecto_analisis/rols/rols_screen.dart';
 import 'package:proyecto_analisis/rolsUser/rols_user_screen.dart';
 import 'package:proyecto_analisis/status/status_screen.dart';
 import 'package:proyecto_analisis/statusUser/status_user_screen.dart';
+import 'package:proyecto_analisis/typeDocument/type_document_screen.dart';
 
 import '../../common/responsive.dart';
 
@@ -196,10 +197,8 @@ class _DashboardBodyState extends State<DashboardBody> {
         return Container(
           child: const Text('Flujos Status Empleado'),
         );
-      } else if (obj.nombre == 'Tipos de Documento') {
-        return Container(
-          child: const Text('Tipos de Documento'),
-        );
+      } else if (obj.nombre == 'Tipos de Documentos') {
+        return TypeDocumentScreen();
       } else if (obj.nombre == 'Departamentos') {
         return DepartmentScreen();
       } else if (obj.nombre == 'Puestos') {
@@ -215,7 +214,7 @@ class _DashboardBodyState extends State<DashboardBody> {
       } else if (obj.nombre == 'Empleados') {
         return EmployeeScreen();
       }
-      return Text(obj.nombre);
+      return Text('obj.nombre');
     }).toList();
 
     return myWidgets;
