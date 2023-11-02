@@ -26,3 +26,4 @@ const statusUserPath = 'statusUsuario.php';
 const optionsPath = 'opcion.php';
 const bankPath = 'crudbanco.php';
 const typeDocumentPath = 'crudtipodocumento.php';
+const documentPath = 'cruddocumentopersona.php';
