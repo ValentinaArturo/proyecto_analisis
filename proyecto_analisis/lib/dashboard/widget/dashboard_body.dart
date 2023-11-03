@@ -1,6 +1,7 @@
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_analisis/bank/bank_screen.dart';
+import 'package:proyecto_analisis/bankAccount/bank_account_screen.dart';
 import 'package:proyecto_analisis/branch/branch_screen.dart';
 import 'package:proyecto_analisis/civilStatus/civil_status_screen.dart';
 import 'package:proyecto_analisis/company/company_screen.dart';
@@ -10,7 +11,10 @@ import 'package:proyecto_analisis/employee/employee_screen.dart';
 import 'package:proyecto_analisis/genres/genres_screen.dart';
 import 'package:proyecto_analisis/menu/menu_screen.dart';
 import 'package:proyecto_analisis/modules/modules_screen.dart';
+import 'package:proyecto_analisis/notAttendance/not_attendance_screen.dart';
 import 'package:proyecto_analisis/option/option_screen.dart';
+import 'package:proyecto_analisis/payloadReport/payroll_report_screen.dart';
+import 'package:proyecto_analisis/payrollCalculate/paylroll_calculate_screen.dart';
 import 'package:proyecto_analisis/person/person_screen.dart';
 import 'package:proyecto_analisis/position/position_screen.dart';
 import 'package:proyecto_analisis/repository/user_repository.dart';
@@ -212,10 +216,17 @@ class _DashboardBodyState extends State<DashboardBody> {
         return BankScreen();
       } else if (obj.nombre == 'Empleados') {
         return EmployeeScreen();
+      } else if (obj.nombre == 'Calcular Planilla') {
+        return PayrollCalculateScreen();
+      } else if (obj.nombre == 'Reporte de Planilla') {
+        return PayrollReportScreen();
+      } else if (obj.nombre == 'Inasistencias de Empleados') {
+        return NotAssistanceScreen();
+      } else if (obj.nombre == 'Cuentas Bancarias Empleados') {
+        return BankAccountScreen();
       }
-      return Text('obj.nombre');
+      return Text(obj.nombre);
     }).toList();
-
     return myWidgets;
   }
 }

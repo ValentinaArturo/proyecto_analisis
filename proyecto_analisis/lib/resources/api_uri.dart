@@ -27,3 +27,6 @@ const optionsPath = 'opcion.php';
 const bankPath = 'crudbanco.php';
 const typeDocumentPath = 'crudtipodocumento.php';
 const documentPath = 'cruddocumentopersona.php';
+const payrollReportPath = 'generarPlanilla.php';
+const notAttendancePath = 'inasistencia.php';
+const bankAccountPath = 'crudcuentasbancariasempleados.php';

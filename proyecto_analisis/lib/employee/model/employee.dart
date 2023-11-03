@@ -31,8 +31,6 @@ class Employee {
   final String descuentoInasistencias;
   final String fechaCreacion;
   final String usuarioCreacion;
-  final String? fechaModificacion;
-  final String? usuarioModificacion;
 
   Employee({
     required this.idEmpleado,
@@ -49,8 +47,6 @@ class Employee {
     required this.descuentoInasistencias,
     required this.fechaCreacion,
     required this.usuarioCreacion,
-    this.fechaModificacion,
-    this.usuarioModificacion,
   });
 
   factory Employee.fromJson(Map<String, dynamic> json) {
@@ -69,8 +65,7 @@ class Employee {
       descuentoInasistencias: json['DescuentoInasistencias'],
       fechaCreacion: json['FechaCreacion'],
       usuarioCreacion: json['UsuarioCreacion'],
-      fechaModificacion: json['FechaModificacion'],
-      usuarioModificacion: json['UsuarioModificacion'],
+
     );
   }
 }
